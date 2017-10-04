@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mycillin.partner.activity.PermissionCheckActivity">
+
+    <ImageView
+        android:id="@+id/permissionCheckActivity_iv_permissionImg"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="20dp"
+        android:src="@drawable/mycillin_logo"/>
+
+    <TextView
+        android:id="@+id/permissionCheckActivity_iv_permissionTitle"
+        android:layout_below="@+id/permissionCheckActivity_iv_permissionImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/spacing_medium"
+        android:text="@string/permission_desc"
+        android:textColor="#2b2b2b"
+        android:textSize="17sp" />
+
+    <RelativeLayout
+        android:id="@+id/permissionCheckActivity_rv_pemissionContainer"
+        android:layout_below="@+id/permissionCheckActivity_iv_permissionTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/spacing_medium">
+
+        <RelativeLayout
+            android:id="@+id/permissionCheckActivity_rv_permissionListContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <LinearLayout
+                android:id="@+id/permissionCheckActivity_lv_locationContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/permissionCheckActivity_iv_locationIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location_black"/>
+
+                <TextView
+                    android:id="@+id/permissionCheckActivity_tv_locationTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/location"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/permissionCheckActivity_lv_callContainer"
+                android:layout_below="@+id/permissionCheckActivity_lv_locationContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/permissionCheckActivity_iv_callIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_call_black"/>
+
+                <TextView
+                    android:id="@+id/permissionCheckActivity_tv_callTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/call"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/permissionCheckActivity_lv_cameraContainer"
+                android:layout_below="@+id/permissionCheckActivity_lv_callContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/permissionCheckActivity_iv_cameraIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_camera_black"/>
+
+                <TextView
+                    android:id="@+id/permissionCheckActivity_tv_cameraTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/camera"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/permissionCheckActivity_lv_storageContainer"
+                android:layout_below="@+id/permissionCheckActivity_lv_cameraContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_small">
+
+                <ImageView
+                    android:id="@+id/permissionCheckActivity_iv_storageIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_sd_storage_black"/>
+
+                <TextView
+                    android:id="@+id/permissionCheckActivity_tv_storageTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/storage"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/permissionCheckActivity_bt_permissionsBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/all_permission_button_margin_right"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="10dp"
+        android:padding="@dimen/spacing_small"
+        android:text="@string/izinkan"
+        android:textColor="@color/primaryText"
+        android:background="@drawable/button"/>
+
+</RelativeLayout>

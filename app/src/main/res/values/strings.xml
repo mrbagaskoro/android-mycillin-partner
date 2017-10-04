@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">MyCillin Partner</string>
+    <string name="permission_desc">In order to use MyCillin, you have to allow permissions on your Android device.</string>
+    <string name="permission_rationale_title">This permission needed</string>
+    <string name="permission_rationale_message">All permissions needed to access all features</string>
+    <string name="permission_rationale_settings_button_text">SETTING</string>
+    <string name="all_permissions_denied_feedback">All permissions needed</string>
+    <string name="camera_permission_denied_feedback">Camera permission Needed</string>
+    <string name="storage_permission_denied_feedback">Galerry permission needed</string>
+    <string name="call_permission_denied_dialog_title">Call permission</string>
+    <string name="audio_permission_denied_dialog_feedback">You can\'t make a call until permission granted</string>
+    <string name="version">VERSION</string>
+    <string name="storage">Storage</string>
+    <string name="izinkan">ALLOW</string>
+    <string name="location">Location</string>
+    <string name="call">Call</string>
+    <string name="camera">Camera</string>
+    <string name="intro_one_desc">We do not know when we are sick and need health service</string>
+    <string name="intro_two_desc">Medical field innovation that make it easier for you to access health services</string>
+    <string name="intro_three_desc">Let\'s join with MyCillin big family</string>
+    <string name="intro_three_title">and… happy family is yours</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
