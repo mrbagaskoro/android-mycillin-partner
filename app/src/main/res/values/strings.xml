@@ -19,6 +19,13 @@
     <string name="intro_two_desc">Medical field innovation that make it easier for you to access health services</string>
     <string name="intro_three_desc">Let\'s join with MyCillin big family</string>
     <string name="intro_three_title">and… happy family is yours</string>
+    <string name="loginActivity_tosNotes">By registering, I have read and agreed to MyCillin\'s Term of Use and Privacy Policy</string>
+    <string name="loginActivity_login">Login</string>
+    <string name="loginActivity_alreadyHaveAccount">Already have an account</string>
+    <string name="loginActivity_forgotPassword">Forgot Password</string>
+    <string name="loginActivity_registerEMail">E-Mail</string>
+    <string name="loginActivity_registerPassword">Password</string>
+    <string name="pressBackAgainToLeave">Press back again to leave</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
