@@ -13,6 +13,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.fragment.AboutFragment;
+import com.mycillin.partner.fragment.EWalletFragment;
+import com.mycillin.partner.fragment.HomeFragment;
+import com.mycillin.partner.fragment.ToDoFragment;
 import com.mycillin.partner.util.BottomNavigationViewHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,16 +37,10 @@ public class MainActivity extends AppCompatActivity {
                     getSupportActionBar().setTitle(R.string.app_name);
 
                     return true;
-                case R.id.nav_history:
-                    tx.replace(R.id.mainActivity_fl_framecontainer, new HistoryFragment());
+                case R.id.nav_todo:
+                    tx.replace(R.id.mainActivity_fl_framecontainer, new ToDoFragment());
                     tx.commit();
-                    getSupportActionBar().setTitle(R.string.nav_history);
-
-                    return true;
-                case R.id.nav_medical_record:
-                    tx.replace(R.id.mainActivity_fl_framecontainer, new MedicalRecordFragment());
-                    tx.commit();
-                    getSupportActionBar().setTitle(R.string.nav_medical_record);
+                    getSupportActionBar().setTitle(R.string.nav_todo);
 
                     return true;
                 case R.id.nav_wallet:
@@ -112,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_account) {
-            Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-            startActivity(intent);
+            /*Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+            startActivity(intent);*/
 
             return true;
         }

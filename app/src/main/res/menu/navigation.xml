@@ -8,16 +8,10 @@
         android:title="@string/nav_home"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/nav_history"
+        android:id="@+id/nav_todo"
         android:enabled="true"
         android:icon="@mipmap/ic_launcher"
-        android:title="@string/nav_history"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/nav_medical_record"
-        android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/nav_medical_record"
+        android:title="@string/nav_todo"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/nav_wallet"

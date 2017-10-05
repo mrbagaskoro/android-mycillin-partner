@@ -25,14 +25,18 @@
     <string name="loginActivity_forgotPassword">Forgot Password</string>
     <string name="loginActivity_registerEMail">E-Mail</string>
     <string name="loginActivity_registerPassword">Password</string>
-    <string name="pressBackAgainToLeave">Press back again to leave</string><string name="nav_home">Home</string>
+    <string name="pressBackAgainToLeave">Press back again to leave</string>
+    <string name="nav_home">Home</string>
     <string name="nav_account">Account</string>
     <string name="nav_medical_record">Medical Record</string>
     <string name="nav_setting">Setting</string>
     <string name="nav_about_mycillin">About MyCillin</string>
     <string name="nav_e_wallet">E-Wallet</string>
     <string name="nav_invite_friend">Invite Friend</string>
-    <string name="nav_history">History</string>
+    <string name="nav_todo">To-Do</string>
+    <string name="shareIntent_subject">Join MyCillin Now!</string>
+    <string name="shareIntent_text">Join MyCillin and get the reward. Visit this link to learn more http://mycillin.com/</string>
+    <string name="shareIntent_title">Share MyCillin to...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
