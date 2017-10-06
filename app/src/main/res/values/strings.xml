@@ -58,7 +58,30 @@
     <string name="accountActivity_signOutTitle">Sign Out</string>
     <string name="accountActivity_termsPrivacyPolicyTitle">Terms &amp; Privacy Policy</string>
     <string name="servicesActivity_doctorsName">Doctor\'s Name</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="accountDetailActivity_infoDesc">Please provide your information correctly</string>
+    <string name="accountDetailActivity_fullNameDesc">Full Name</string>
+    <string name="accountDetailActivity_addressDesc">Address</string>
+    <string name="accountDetailActivity_phoneDesc">Phone Number</string>
+    <string name="accountDetailActivity_genderDesc">Gender</string>
+    <string name="accountDetailActivity_maleDesc">Male</string>
+    <string name="accountDetailActivity_femaleDesc">Female</string>
+    <string name="accountDetailActivity_DateOfBirthDesc">Date of Birth</string>
+    <string name="accountDetailActivity_professionCategoryDesc">Profession Category</string>
+    <string name="accountDetailActivity_areaOfExpertiseDesc">Area of Expertise</string>
+    <string name="accountDetailActivity_areaOfWorkDesc">Area of Work</string>
+    <string name="accountDetailActivity_isAgreeDesc">I agree to the terms and conditions and agree to provide personal information to MyCillin.</string>
+    <string name="menu_save">Save</string>
+    <string name="accountDetailActivity_title">Account Detail</string>
+    <string name="accountDetailActivity_emailDesc">E-Mail</string>
+    <string name="accountDetailActivity_professionalInformationDesc">Professional Information</string>
+    <string name="accountDetailActivity_yearsOfPracticeDesc">Years of Practice</string>
+    <string name="accountDetailActivity_permittDesc">SIPP Number:</string>
+    <string name="accountDetailActivity_professionDescriptionDesc">Profession Description</string>
+    <string name="accountDetailActivity_practiceAddressDesc">Practice Address</string>
+    <string name="changePasswordDialog_title">Change Password</string>
+    <string name="changePasswordDialog_old">Old Password</string>
+    <string name="changePasswordDialog_new">New Password</string>
+    <string name="changePasswordDialog_confirmNew">Confirm New Password</string>
+    <string name="filterBookDoctorDIalog_cancelBtn">CANCEL</string>
+    <string name="filterBookDoctorDIalog_applyBtn">APPLY</string>
 </resources>
