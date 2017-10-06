@@ -96,4 +96,9 @@
     <string name="homeVisitDetailActivity_addressInfo">Jl.Asem No.32, Sawangan, Depok</string>
     <string name="homeVisitDetailActivity_feeAmount">Rp 200.000</string>
     <string name="homeVisitDetail_title">Visit Request Detail</string>
+    <string name="rowReservationList_bookType">Reservation Request</string>
+    <string name="homeReservationDetailActivity_scheduleTitle">Schedule</string>
+    <string name="homeReservationDetailActivity_timeTitle">07 October 2017, 15.00 WIB</string>
+    <string name="reservationRequestDetail_title">Reservation Request Detail</string>
+
 </resources>

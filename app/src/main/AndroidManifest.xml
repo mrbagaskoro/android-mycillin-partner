@@ -34,7 +34,7 @@
         <activity android:name=".activity.IntroActivity" />
         <activity android:name=".activity.AccountActivity" />
         <activity android:name=".activity.AccountDetailActivity" />
-        <activity android:name=".activity.HomeVisitDetailActivity"></activity>
+        <activity android:name=".activity.HomeVisitDetailActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -48,6 +48,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".activity.HomeReservationDetailActivity"></activity>
     </application>
 
 </manifest>
