@@ -57,6 +57,7 @@
     <string name="accountActivity_changePasswordTitle">Change Password</string>
     <string name="accountActivity_signOutTitle">Sign Out</string>
     <string name="accountActivity_termsPrivacyPolicyTitle">Terms &amp; Privacy Policy</string>
+    <string name="servicesActivity_doctorsName">Doctor\'s Name</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

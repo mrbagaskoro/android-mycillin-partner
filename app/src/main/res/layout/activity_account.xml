@@ -47,7 +47,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/primaryText"
             android:textSize="15sp"
-            android:text="@string/servicesActivity_patientsName" />
+            android:text="@string/servicesActivity_doctorsName" />
 
     </LinearLayout>
 

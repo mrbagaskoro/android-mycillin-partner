@@ -35,6 +35,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.ahmedjazzar.rosetta:rosetta:1.0.1'
     compile 'com.github.apl-devs:appintro:v4.2.2'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 }
