@@ -36,7 +36,8 @@
     <string name="nav_todo">To-Do</string>
     <string name="shareIntent_subject">Join MyCillin Now!</string>
     <string name="shareIntent_text">Join MyCillin and get the reward. Visit this link to learn more http://mycillin.com/</string>
-    <string name="shareIntent_title">Share MyCillin to...</string><string name="aboutFragment_version">Version</string>
+    <string name="shareIntent_title">Share MyCillin to...</string>
+    <string name="aboutFragment_version">Version</string>
     <string name="aboutFragment_connect">Connect with us</string>
     <string name="aboutFragment_contact">Contact us</string>
     <string name="aboutFragment_facebook">Like us on Facebook</string>
@@ -52,6 +53,10 @@
     <string name="rowEWalletHistoryList_amount">Rp 175.000</string>
     <string name="rowEWalletHistoryList_date">25 Maret 2017</string>
     <string name="rowMedicalRecord_doctorNameDesc">dr Andi Husada</string>
+    <string name="accountActivity_manageAccountTitle">Manage Account</string>
+    <string name="accountActivity_changePasswordTitle">Change Password</string>
+    <string name="accountActivity_signOutTitle">Sign Out</string>
+    <string name="accountActivity_termsPrivacyPolicyTitle">Terms &amp; Privacy Policy</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
