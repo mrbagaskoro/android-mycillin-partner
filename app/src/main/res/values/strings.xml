@@ -84,4 +84,16 @@
     <string name="changePasswordDialog_confirmNew">Confirm New Password</string>
     <string name="filterBookDoctorDIalog_cancelBtn">CANCEL</string>
     <string name="filterBookDoctorDIalog_applyBtn">APPLY</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="HomeFragment_reservationTitle">Reservation</string>
+    <string name="HomeFragment_consultationTitle">Consultation</string>
+    <string name="HomeFragment_visitTitle">Visit</string>
+    <string name="rowVisitList_patientName">Reno Rasiwara</string>
+    <string name="rowVisitList_bookType">Visit request to home</string>
+    <string name="rowVisitList_bookTime">15.00 WIB</string>
+    <string name="homeVisitDetailActivity_addressInfo">Jl.Asem No.32, Sawangan, Depok</string>
+    <string name="homeVisitDetailActivity_feeAmount">Rp 200.000</string>
+    <string name="homeVisitDetail_title">Visit Request Detail</string>
 </resources>
