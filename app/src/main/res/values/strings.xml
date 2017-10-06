@@ -36,7 +36,22 @@
     <string name="nav_todo">To-Do</string>
     <string name="shareIntent_subject">Join MyCillin Now!</string>
     <string name="shareIntent_text">Join MyCillin and get the reward. Visit this link to learn more http://mycillin.com/</string>
-    <string name="shareIntent_title">Share MyCillin to...</string>
+    <string name="shareIntent_title">Share MyCillin to...</string><string name="aboutFragment_version">Version</string>
+    <string name="aboutFragment_connect">Connect with us</string>
+    <string name="aboutFragment_contact">Contact us</string>
+    <string name="aboutFragment_facebook">Like us on Facebook</string>
+    <string name="aboutFragment_twitter">Follow us on Twitter</string>
+    <string name="aboutFragment_instagram">Follow us on Instagram</string>
+    <string name="aboutFragment_youtube">Watch us on Youtube</string>
+    <string name="aboutFragment_playstore">Rate us on Play Store</string>
+    <string name="aboutFragment_aboutDesc">MyCillin is a bridging digital platform between people who need the best, easiest, and cheapest healthcare services with professionals and institutions in the medical field</string>
+    <string name="eWalletFragment_currency">Rp</string>
+    <string name="eWalletFragment_amount">175.000</string>
+    <string name="eWalletFragment_virtualAccNumberTitle">Virtual Account Number</string>
+    <string name="eWalletFragment_virtualAccNumber">1019270000001</string>
+    <string name="rowEWalletHistoryList_amount">Rp 175.000</string>
+    <string name="rowEWalletHistoryList_date">25 Maret 2017</string>
+    <string name="rowMedicalRecord_doctorNameDesc">dr Andi Husada</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
