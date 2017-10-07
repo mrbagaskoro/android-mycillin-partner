@@ -144,5 +144,31 @@
     <string name="medicalRecordDetailActivity_prescription2">3 x 1</string>
     <string name="medicalRecordDetailActivity_prescriptionInfo3">Piccolactocillin</string>
     <string name="medicalRecordDetailActivity_prescription3">3 x 1</string>
+    <string name="completeRequestActivity_title">Complete Request</string>
+    <string name="completeCheckUpResultFragment_infoDesc">Please provide the information on the results of the examination you have done to the patient.</string>
+    <string name="completeCheckUpResultFragment_systole">Systole</string>
+    <string name="completeCheckUpResultFragment_diastole">Diastole</string>
+    <string name="completeCheckUpResultFragment_bodyTemperature">Body Temperature</string>
+    <string name="completeCheckUpResultFragment_physicalCondition">Physical Condition</string>
+    <string name="completeCheckUpResultFragment_patientComplaints">Patient Complaints</string>
+    <string name="completeCheckUpResultFragment_additionalInformation">Additional Information</string>
+    <string name="completeDiagnoseFragment_infoDesc">Please provide the information on the diagnosis of the patient\'s illness.</string>
+    <string name="completeDiagnoseFragment_diagnosisInformation">Diagnosis Information</string>
+    <string name="completeDiagnoseFragment_additionalInformation">Additional Information</string>
+    <string name="completeMedicalActionsFragment_infoDesc">Please provide the information on the medical actions that has been given to the patient.</string>
+    <string name="completeMedicalActionsFragment_medicalActionOne">Medical Action 1</string>
+    <string name="completeMedicalActionsFragment_medicalActionTwo">Medical Action 2</string>
+    <string name="completeMedicalActionsFragment_medicalActionThree">Medical Action 3</string>
+    <string name="completeMedicalActionsFragment_medicalRecommendation">Medical Recommendation</string>
+    <string name="completePrescriptionsFragment_infoDesc">Please provide the information of the prescriptions that has been given to the patient.</string>
+    <string name="completePrescriptionsFragment_togglePrescriptionsInfo">Provide Medical Prescriptions ?</string>
+    <string name="completePrescriptionsFragment_prescriptionType">Prescription Type</string>
+
+    <string-array name="stepLabels">
+        <item>Check Up Results</item>
+        <item>Diagnose</item>
+        <item>Medical Actions</item>
+        <item>Prescriptions</item>
+    </string-array>
 
 </resources>

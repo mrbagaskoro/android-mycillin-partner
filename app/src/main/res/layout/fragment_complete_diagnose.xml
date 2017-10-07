@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mycillin.partner.fragment.CompleteDiagnoseFragment" >
+
+    <LinearLayout
+        android:id="@+id/completeDiagnoseFragment_ll_headerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/completeDiagnoseFragment_tv_infoDesc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/primaryText"
+            android:textSize="15sp"
+            android:text="@string/completeDiagnoseFragment_infoDesc" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_below="@+id/completeDiagnoseFragment_ll_headerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/completeDiagnoseFragment_et_diagnosisInformation"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bg"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="75dp"
+                android:maxLength="250"
+                android:maxLines="10"
+                android:hint="@string/completeDiagnoseFragment_diagnosisInformation" />
+
+            <EditText
+                android:id="@+id/completeDiagnoseFragment_et_additionalInformation"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bg"
+                android:inputType="textMultiLine"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="5dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="75dp"
+                android:maxLength="250"
+                android:maxLines="10"
+                android:hint="@string/completeDiagnoseFragment_additionalInformation" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

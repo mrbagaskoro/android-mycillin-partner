@@ -52,7 +52,8 @@
         <activity android:name=".activity.ToDoInProgressDetailActivity" />
         <activity android:name=".activity.RequesterProfileActivity" />
         <activity android:name=".activity.MedicalRecordActivity" />
-        <activity android:name=".activity.MedicalRecordDetailActivity"></activity>
+        <activity android:name=".activity.MedicalRecordDetailActivity" />
+        <activity android:name=".activity.CompleteRequestActivity"></activity>
     </application>
 
 </manifest>

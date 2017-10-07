@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +33,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     TextView bookDate;
     @BindView(R.id.toDoInProgressDetailActivity_tv_bookType)
     TextView bookType;
+    @BindView(R.id.toDoInProgressDetailActivity_bt_completeBtn)
+    Button completeButton;
 
     private GoogleMap gMap;
 
@@ -64,6 +68,14 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
+
+        completeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ToDoInProgressDetailActivity.this, CompleteRequestActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
