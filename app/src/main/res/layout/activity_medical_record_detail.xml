@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mycillin.partner.activity.MedicalRecordDetailActivity">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/medicalRecordDetailActivity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@android:color/white" />
+
+    <LinearLayout
+        android:id="@+id/medicalRecordDetailActivity_ll_headerContainer"
+        android:layout_below="@id/medicalRecordDetailActivity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/medicalRecordDetailActivity_tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textColor="@color/primaryText"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:text="@string/medicalRecordDetailActivity_dateTitle" />
+
+        <TextView
+            android:id="@+id/medicalRecordDetailActivity_tv_doctor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:textColor="@color/primaryText"
+            android:text="@string/medicalRecordDetailActivity_doctorTitle" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/medicalRecordDetailActivity_sv_mainContainer"
+        android:layout_below="@id/medicalRecordDetailActivity_ll_headerContainer"
+        android:background="@color/bgColor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/medicalRecordDetailActivity_ll_diagnoseContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/frame_alt"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_diagnoseTitleContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:textSize="20sp"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
+                        android:text="@string/medicalRecordDetailActivity_diagnose" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/bgColor" />
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_diagnoseContentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/medicalRecordDetailActivity_tv_diagnose"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp"
+                        android:text="@string/medicalRecordDetailActivity_diagnoseDesc"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/medicalRecordDetailActivity_ll_resultContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/frame_alt"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_resultTitleContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:textSize="20sp"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
+                        android:text="@string/medicalRecordDetailActivity_result" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/bgColor" />
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_resultContentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_resultInfo1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo1"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_result1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:text="@string/medicalRecordDetailActivity_result1"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_resultInfo2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo2"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_result2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:text="@string/medicalRecordDetailActivity_result2"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_resultInfo3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo3"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_result3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:text="@string/medicalRecordDetailActivity_result3"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_resultInfo4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo4"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_result4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:text="@string/medicalRecordDetailActivity_result4"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_resultInfo5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo5"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_result5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:text="@string/medicalRecordDetailActivity_result5"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_resultInfo6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo6"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_result6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:text="@string/medicalRecordDetailActivity_result6"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/medicalRecordDetailActivity_ll_actionContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/frame_alt"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_actionTitleContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:textSize="20sp"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
+                        android:text="@string/medicalRecordDetailActivity_action" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/bgColor" />
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_actionContentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/medicalRecordDetailActivity_tv_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp"
+                        android:text="@string/medicalRecordDetailActivity_actionDesc"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/medicalRecordDetailActivity_ll_prescriptionContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/frame_alt"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_prescriptionTitleContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="15dp"
+                        android:paddingBottom="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:textSize="20sp"
+                        android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
+                        android:text="@string/medicalRecordDetailActivity_prescription" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/bgColor" />
+
+                <LinearLayout
+                    android:id="@+id/medicalRecordDetailActivity_ll_prescriptionContentContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_prescriptionInfo1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_prescriptionInfo1"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_prescription1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_prescription1"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_prescriptionInfo2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_prescriptionInfo2"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_prescription2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_prescription2"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_prescriptionInfo3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:gravity="end"
+                            android:textColor="@color/primaryText"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_prescriptionInfo3"/>
+
+                        <View
+                            android:layout_width="1dip"
+                            android:layout_height="match_parent"
+                            android:background="@color/bgColor" />
+
+                        <TextView
+                            android:id="@+id/medicalRecordDetailActivity_tv_prescription3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:layout_weight="1"
+                            android:text="@string/medicalRecordDetailActivity_prescription3"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

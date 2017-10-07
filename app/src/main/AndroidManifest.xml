@@ -50,7 +50,9 @@
 
         <activity android:name=".activity.HomeReservationDetailActivity" />
         <activity android:name=".activity.ToDoInProgressDetailActivity" />
-        <activity android:name=".activity.RequesterProfileActivity"></activity>
+        <activity android:name=".activity.RequesterProfileActivity" />
+        <activity android:name=".activity.MedicalRecordActivity" />
+        <activity android:name=".activity.MedicalRecordDetailActivity"></activity>
     </application>
 
 </manifest>

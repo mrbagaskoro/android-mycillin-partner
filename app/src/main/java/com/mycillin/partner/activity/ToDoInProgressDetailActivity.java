@@ -83,8 +83,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.action_medical_record) {
-            /*Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-            startActivity(intent);*/
+            Intent intent = new Intent(ToDoInProgressDetailActivity.this, MedicalRecordActivity.class);
+            startActivity(intent);
 
             return true;
         }

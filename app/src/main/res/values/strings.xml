@@ -52,7 +52,6 @@
     <string name="eWalletFragment_virtualAccNumber">1019270000001</string>
     <string name="rowEWalletHistoryList_amount">Rp 175.000</string>
     <string name="rowEWalletHistoryList_date">25 Maret 2017</string>
-    <string name="rowMedicalRecord_doctorNameDesc">dr Andi Husada</string>
     <string name="accountActivity_manageAccountTitle">Manage Account</string>
     <string name="accountActivity_changePasswordTitle">Change Password</string>
     <string name="accountActivity_signOutTitle">Sign Out</string>
@@ -84,8 +83,6 @@
     <string name="changePasswordDialog_confirmNew">Confirm New Password</string>
     <string name="filterBookDoctorDIalog_cancelBtn">CANCEL</string>
     <string name="filterBookDoctorDIalog_applyBtn">APPLY</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="HomeFragment_reservationTitle">Reservation</string>
     <string name="HomeFragment_consultationTitle">Consultation</string>
@@ -109,5 +106,43 @@
     <string name="requesterProfileActivity_height">Height</string>
     <string name="requesterProfileActivity_weight">Weight</string>
     <string name="requesterProfileActivity_bloodType">Blood Type</string>
+    <string name="medicalRecordAvtivity_infoDesc">The usage of these informations are limited to medical treatment purposes only. These informations are very confidential, you are prohibited from divulging this information to anyone.</string>
+    <string name="medicalRecordActivity_filterDesc">Medical Records Of</string>
+    <string name="rowMedicalRecord_month">APR</string>
+    <string name="rowMedicalRecord_day">10</string>
+    <string name="rowMedicalRecord_year">2017</string>
+    <string name="rowMedicalRecord_medicalPersonnelDesc">Medical Personnel :</string>
+    <string name="rowMedicalRecord_doctorNameDesc">dr Andi Husada</string>
+    <string name="medicalRecordDetailActivity_title">Medical Record Detail</string>
+    <string name="medicalRecordDetailActivity_dateTitle">10 JAN 2017</string>
+    <string name="medicalRecordDetailActivity_doctorTitle">dr Andi Husada</string>
+    <string name="medicalRecordDiagnose_info">Diagnose</string>
+    <string name="medicalRecordAction_info">Action</string>
+    <string name="medicalDiagnoseResult_info">Result</string>
+    <string name="medicalRecordPrescription_info">Prescription</string>
+    <string name="medicalRecordDetailActivity_diagnose">Diagnose</string>
+    <string name="medicalRecordDetailActivity_diagnoseDesc">Acute diarrhea with abdominal cramps</string>
+    <string name="medicalRecordDetailActivity_result">Check Up Result</string>
+    <string name="medicalRecordDetailActivity_resultInfo1">Systole</string>
+    <string name="medicalRecordDetailActivity_result1">120 mm/hg</string>
+    <string name="medicalRecordDetailActivity_resultInfo2">Diastole</string>
+    <string name="medicalRecordDetailActivity_result2">75 mm/hg</string>
+    <string name="medicalRecordDetailActivity_resultInfo3">Weight (estimated)</string>
+    <string name="medicalRecordDetailActivity_result3">60 kg</string>
+    <string name="medicalRecordDetailActivity_resultInfo4">Blood Sugar</string>
+    <string name="medicalRecordDetailActivity_result4">Normal</string>
+    <string name="medicalRecordDetailActivity_resultInfo5">Cholesterol</string>
+    <string name="medicalRecordDetailActivity_result5">Normal</string>
+    <string name="medicalRecordDetailActivity_resultInfo6">Other Condition</string>
+    <string name="medicalRecordDetailActivity_result6">Pale</string>
+    <string name="medicalRecordDetailActivity_action">Medical Action</string>
+    <string name="medicalRecordDetailActivity_actionDesc">On-Demand direct actions</string>
+    <string name="medicalRecordDetailActivity_prescription">Prescription</string>
+    <string name="medicalRecordDetailActivity_prescriptionInfo1">Xitoplam 250mg (10 pcs)</string>
+    <string name="medicalRecordDetailActivity_prescription1">3 x 1</string>
+    <string name="medicalRecordDetailActivity_prescriptionInfo2">Litacid (1 bottle)</string>
+    <string name="medicalRecordDetailActivity_prescription2">3 x 1</string>
+    <string name="medicalRecordDetailActivity_prescriptionInfo3">Piccolactocillin</string>
+    <string name="medicalRecordDetailActivity_prescription3">3 x 1</string>
 
 </resources>
