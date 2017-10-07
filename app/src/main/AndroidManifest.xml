@@ -53,7 +53,8 @@
         <activity android:name=".activity.RequesterProfileActivity" />
         <activity android:name=".activity.MedicalRecordActivity" />
         <activity android:name=".activity.MedicalRecordDetailActivity" />
-        <activity android:name=".activity.CompleteRequestActivity"></activity>
+        <activity android:name=".activity.CompleteRequestActivity" />
+        <activity android:name=".activity.TermAndPrivacyPolicyActivity"></activity>
     </application>
 
 </manifest>

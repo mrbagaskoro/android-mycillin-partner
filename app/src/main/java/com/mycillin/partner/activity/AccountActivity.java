@@ -23,6 +23,8 @@ public class AccountActivity extends AppCompatActivity {
     LinearLayout changePassword;
     @BindView(R.id.accountActivity_ll_signOut)
     LinearLayout signOut;
+    @BindView(R.id.accountActivity_ll_termsPrivacyPolicy)
+    LinearLayout termsAndPrivacyPolicy;
 
     @BindView(R.id.accountActivity_toolbar)
     Toolbar toolbar;
@@ -46,6 +48,13 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showChangePasswordDialog();
+            }
+        });
+        termsAndPrivacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AccountActivity.this, TermAndPrivacyPolicyActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -163,6 +163,9 @@
     <string name="completePrescriptionsFragment_infoDesc">Please provide the information of the prescriptions that has been given to the patient.</string>
     <string name="completePrescriptionsFragment_togglePrescriptionsInfo">Provide Medical Prescriptions ?</string>
     <string name="completePrescriptionsFragment_prescriptionType">Prescription Type</string>
+    <string name="termAndPrivacyPolicyActivity_termOfUse">Terms of Use</string>
+    <string name="termAndPrivacyPolicyActivity_termsAndConditions">Terms and Conditions</string>
+    <string name="termAndPrivacyPolicyActivity_privacyPolicy">Privacy Policy</string>
 
     <string-array name="stepLabels">
         <item>Check Up Results</item>
