@@ -144,7 +144,7 @@
     <string name="medicalRecordDetailActivity_prescription2">3 x 1</string>
     <string name="medicalRecordDetailActivity_prescriptionInfo3">Piccolactocillin</string>
     <string name="medicalRecordDetailActivity_prescription3">3 x 1</string>
-    <string name="completeRequestActivity_title">Complete Request</string>
+    <string name="completeRequestActivity_title">Complete the Request</string>
     <string name="completeCheckUpResultFragment_infoDesc">Please provide the information on the results of the examination you have done to the patient.</string>
     <string name="completeCheckUpResultFragment_systole">Systole</string>
     <string name="completeCheckUpResultFragment_diastole">Diastole</string>
