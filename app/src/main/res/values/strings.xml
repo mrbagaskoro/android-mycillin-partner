@@ -103,5 +103,11 @@
     <string name="toDoInProgressDetail_title">In Progress Detail</string>
     <string name="inProgressDetail_requesterProfile">Requester Profile</string>
     <string name="inProgressDetail_medicalRecord">Medical Record</string>
+    <string name="requesterProfileActivity_name">Name</string>
+    <string name="requesterProfileActivity_gender">Gender</string>
+    <string name="requesterProfileActivity_age">Age</string>
+    <string name="requesterProfileActivity_height">Height</string>
+    <string name="requesterProfileActivity_weight">Weight</string>
+    <string name="requesterProfileActivity_bloodType">Blood Type</string>
 
 </resources>

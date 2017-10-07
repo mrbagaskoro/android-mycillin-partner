@@ -49,7 +49,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".activity.HomeReservationDetailActivity" />
-        <activity android:name=".activity.ToDoInProgressDetailActivity"></activity>
+        <activity android:name=".activity.ToDoInProgressDetailActivity" />
+        <activity android:name=".activity.RequesterProfileActivity"></activity>
     </application>
 
 </manifest>

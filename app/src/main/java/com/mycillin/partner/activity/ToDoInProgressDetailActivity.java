@@ -77,8 +77,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_requester_profile) {
-            /*Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-            startActivity(intent);*/
+            Intent intent = new Intent(ToDoInProgressDetailActivity.this, RequesterProfileActivity.class);
+            startActivity(intent);
 
             return true;
         }
