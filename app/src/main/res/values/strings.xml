@@ -166,6 +166,7 @@
     <string name="termAndPrivacyPolicyActivity_termOfUse">Terms of Use</string>
     <string name="termAndPrivacyPolicyActivity_termsAndConditions">Terms and Conditions</string>
     <string name="termAndPrivacyPolicyActivity_privacyPolicy">Privacy Policy</string>
+    <string name="toDoInProgressDetailActivity_bt_completeBtn">COMLPETE THE REQUEST</string>
 
     <string-array name="stepLabels">
         <item>Check Up Results</item>

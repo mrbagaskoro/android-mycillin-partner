@@ -203,7 +203,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/button_no_rad_primary"
                 android:layout_weight="1"
-                android:text="COMLPETE REQUEST"/>
+                android:text="@string/toDoInProgressDetailActivity_bt_completeBtn"/>
 
         </LinearLayout>
 

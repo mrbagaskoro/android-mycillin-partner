@@ -13,7 +13,7 @@
     <string name="storage">Penyimpanan</string>
     <string name="izinkan">IZINKAN</string>
     <string name="location">Lokasi</string>
-    <string name="call">Panggilan</string>
+    <string name="call">Telepon</string>
     <string name="camera">Kamera</string>
     <string name="intro_one_desc">Kita tidak akan tahu kapan kita akan sakit dan membutuhkan layanan kesehatan</string>
     <string name="intro_two_desc">Inovasi di bidang medis yang memberi kemudahan untuk mengakses layanan kesehatan</string>
@@ -99,7 +99,7 @@
     <string name="reservationRequestDetail_title">Detail Request Berobat</string>
     <string name="toDoInProgressDetail_title">Detail Berlangsung</string>
     <string name="inProgressDetail_requesterProfile">Profil Pemohon</string>
-    <string name="inProgressDetail_medicalRecord">Medical Record</string>
+    <string name="inProgressDetail_medicalRecord">Rekam Medis</string>
     <string name="requesterProfileActivity_name">Nama</string>
     <string name="requesterProfileActivity_gender">Jenis Kelamin</string>
     <string name="requesterProfileActivity_age">Usia</string>
@@ -107,7 +107,7 @@
     <string name="requesterProfileActivity_weight">Berat Badan</string>
     <string name="requesterProfileActivity_bloodType">Golongan Darah</string>
     <string name="medicalRecordAvtivity_infoDesc">Penggunaan dari informasi ini terbatas hanya untuk keperluan penanganan medis saja. Informasi ini sangatlah rahasia, anda dilarang membocorkan informasi ini kepada siapapun.</string>
-    <string name="medicalRecordActivity_filterDesc">Medical Records Milik</string>
+    <string name="medicalRecordActivity_filterDesc">Rekam Medis Milik</string>
     <string name="rowMedicalRecord_month">APR</string>
     <string name="rowMedicalRecord_day">10</string>
     <string name="rowMedicalRecord_year">2017</string>
@@ -168,10 +168,11 @@
     <string name="termAndPrivacyPolicyActivity_privacyPolicy">Kebijakan Privasi</string>
 
     <string-array name="stepLabels">
-        <item>Check Up Results</item>
-        <item>Diagnose</item>
-        <item>Medical Actions</item>
-        <item>Prescriptions</item>
+        <item>Hasil Pemeriksaan</item>
+        <item>Diagnosa</item>
+        <item>Penanganan Medis</item>
+        <item>Resep Obat</item>
     </string-array>
     <string name="app_name">MyCillin Partner</string>
+    <string name="toDoInProgressDetailActivity_bt_completeBtn">SELESAIKAN REQUEST</string>
 </resources>
