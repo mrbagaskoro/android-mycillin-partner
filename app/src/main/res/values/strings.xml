@@ -100,5 +100,8 @@
     <string name="homeReservationDetailActivity_scheduleTitle">Schedule</string>
     <string name="homeReservationDetailActivity_timeTitle">07 October 2017, 15.00 WIB</string>
     <string name="reservationRequestDetail_title">Reservation Request Detail</string>
+    <string name="toDoInProgressDetail_title">In Progress Detail</string>
+    <string name="inProgressDetail_requesterProfile">Requester Profile</string>
+    <string name="inProgressDetail_medicalRecord">Medical Record</string>
 
 </resources>

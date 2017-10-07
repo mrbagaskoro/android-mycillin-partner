@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.activity.ToDoInProgressDetailActivity;
 import com.mycillin.partner.adapter.ToDoInProgressAdapter;
 import com.mycillin.partner.list.ToDoInProgressList;
 import com.mycillin.partner.util.RecyclerTouchListener;
@@ -66,13 +67,13 @@ public class ToDoInProgressFragment extends Fragment {
             public void onClick(View view, int position) {
                 ToDoInProgressList list = toDoInProgressLists.get(position);
 
-                /*Intent intent = new Intent(getContext(), ToDoInProgressDetailActivity.class);
+                Intent intent = new Intent(getContext(), ToDoInProgressDetailActivity.class);
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
-                startActivity(intent);*/
+                startActivity(intent);
             }
 
             @Override
