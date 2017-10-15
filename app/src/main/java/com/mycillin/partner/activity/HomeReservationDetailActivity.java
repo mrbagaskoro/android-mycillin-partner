@@ -1,5 +1,6 @@
 package com.mycillin.partner.activity;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.mycillin.partner.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class HomeReservationDetailActivity extends AppCompatActivity {
 
@@ -62,5 +64,11 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
+    }
+
+    @OnClick(R.id.homeReservationDetailActivity_fab_callFAB)
+    public void onClickCall() {
+        Intent intent = new Intent(HomeReservationDetailActivity.this, ChatActivity.class);
+        startActivity(intent);
     }
 }

@@ -167,7 +167,8 @@
     <string name="termAndPrivacyPolicyActivity_termsAndConditions">Terms and Conditions</string>
     <string name="termAndPrivacyPolicyActivity_privacyPolicy">Privacy Policy</string>
     <string name="toDoInProgressDetailActivity_bt_completeBtn">COMLPETE THE REQUEST</string>
-
+    <string name="confirmed">Confirmed</string>
+    <string name="reject">Reject</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

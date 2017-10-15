@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/chat_background"
+    android:orientation="vertical"
+    android:paddingBottom="0dp"
+
+    android:paddingTop="16dp"
+    tools:context="com.mycillin.partner.activity.ChatActivity">
+
+    <ScrollView
+        android:id="@+id/chat_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="20">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/chat_rl_reference2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/chat_ll_reference1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/chat_btn_confirm"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:text="@string/confirmed" />
+
+        <Button
+            android:id="@+id/chat_btn_reject"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:textColor="@color/darkRed"
+            android:text="@string/reject" />
+    </LinearLayout>
+
+    <include
+        layout="@layout/activity_chat_message_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="bottom" />
+</LinearLayout>

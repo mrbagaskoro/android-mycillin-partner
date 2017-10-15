@@ -166,7 +166,8 @@
     <string name="termAndPrivacyPolicyActivity_termOfUse">Ketentuan Penggunaan</string>
     <string name="termAndPrivacyPolicyActivity_termsAndConditions">Syarat dan Ketentuan</string>
     <string name="termAndPrivacyPolicyActivity_privacyPolicy">Kebijakan Privasi</string>
-
+    <string name="confirmed">Konfirmasi</string>
+    <string name="reject">Tolak</string>
     <string-array name="stepLabels">
         <item>Hasil Pemeriksaan</item>
         <item>Diagnosa</item>
