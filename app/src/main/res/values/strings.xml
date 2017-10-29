@@ -169,6 +169,8 @@
     <string name="toDoInProgressDetailActivity_bt_completeBtn">COMLPETE THE REQUEST</string>
     <string name="confirmed">Confirmed</string>
     <string name="reject">Reject</string>
+    <string name="email_error">Email Must Be Filled</string>
+    <string name="pass_error">Password Must Be Filled</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

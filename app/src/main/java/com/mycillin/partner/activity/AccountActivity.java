@@ -1,19 +1,22 @@
 package com.mycillin.partner.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.util.SessionManager;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AccountActivity extends AppCompatActivity {
 
@@ -28,6 +31,9 @@ public class AccountActivity extends AppCompatActivity {
 
     @BindView(R.id.accountActivity_toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.accountActivity_tv_signOut)
+    TextView tvSignOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,4 +74,16 @@ public class AccountActivity extends AppCompatActivity {
 
         View dialogPlusView = dialogPlus.getHolderView();
     }
+
+
+    @OnClick(R.id.accountActivity_tv_signOut)
+    public void signOutClicked() {
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        sessionManager.logoutUser();
+
+        Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+
 }

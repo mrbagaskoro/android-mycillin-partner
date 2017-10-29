@@ -1,12 +1,14 @@
 package com.mycillin.partner.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +20,12 @@ import com.mycillin.partner.fragment.EWalletFragment;
 import com.mycillin.partner.fragment.HomeFragment;
 import com.mycillin.partner.fragment.ToDoFragment;
 import com.mycillin.partner.util.BottomNavigationViewHelper;
+import com.mycillin.partner.util.DataHelper;
+import com.mycillin.partner.util.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    private SessionManager sessionManager;
 
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -70,6 +76,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        sessionManager = new SessionManager(getApplicationContext());
+
+        Snackbar.make(getWindow().getDecorView().getRootView(), DataHelper.token, Snackbar.LENGTH_LONG).show();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "SELAMAT DATANG " + sessionManager.getUserFullName(), Snackbar.LENGTH_SHORT).show();
+            }
+        }, 5000); // 2000 milliseconds delay
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -114,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
             return true;
-        }
-        else if(id == R.id.action_invite) {
+        } else if (id == R.id.action_invite) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.shareIntent_subject));

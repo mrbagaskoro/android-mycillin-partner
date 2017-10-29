@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     android:background="@drawable/bg_login_alt"
-    android:animateLayoutChanges="true">
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/loginActivity_rl_loginLandingContainer"
@@ -18,22 +18,23 @@
             android:id="@+id/loginActivity_iv_loginLandingLogo"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginTop="30dp"
             android:layout_gravity="top"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="10dp"
             android:contentDescription="@null"
             android:src="@drawable/mycillin_logo" />
 
         <LinearLayout
-            android:layout_below="@+id/loginActivity_iv_loginLandingLogo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/loginActivity_iv_loginLandingLogo"
             android:gravity="bottom"
-            android:paddingStart="20dp"
+            android:orientation="vertical"
             android:paddingEnd="20dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:layout_alignParentBottom="true" >
+            android:paddingStart="20dp">
 
             <Button
                 android:id="@+id/loginActivity_bt_showHaveAccBtn"
@@ -52,8 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_small"
                 android:gravity="center"
-                android:textColor="@color/primaryText"
-                android:text="@string/loginActivity_tosNotes" />
+                android:text="@string/loginActivity_tosNotes"
+                android:textColor="@color/primaryText" />
 
         </LinearLayout>
 
@@ -70,18 +71,23 @@
             android:id="@+id/loginActivity_iv_loginLogo"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginTop="30dp"
             android:layout_gravity="top"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="10dp"
             android:contentDescription="@null"
             android:src="@drawable/mycillin_logo" />
 
+
         <LinearLayout
-            android:id="@+id/loginActivity_ll_loginBodyContainer"
-            android:layout_below="@+id/loginActivity_iv_loginLogo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/loginActivity_iv_loginLogo"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -100,7 +106,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_small"
                 app:passwordToggleEnabled="true" >
 
@@ -111,20 +117,6 @@
                     android:hint="@string/loginActivity_registerPassword"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_below="@+id/loginActivity_ll_loginBodyContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_alignParentBottom="true" >
 
             <Button
                 android:id="@+id/loginActivity_bt_loginBtn"
@@ -143,8 +135,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_small"
                 android:gravity="center"
-                android:textColor="@color/primaryText"
-                android:text="@string/loginActivity_forgotPassword" />
+                android:text="@string/loginActivity_forgotPassword"
+                android:textColor="@color/primaryText" />
 
         </LinearLayout>
 

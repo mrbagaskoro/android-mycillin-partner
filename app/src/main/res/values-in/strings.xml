@@ -168,6 +168,8 @@
     <string name="termAndPrivacyPolicyActivity_privacyPolicy">Kebijakan Privasi</string>
     <string name="confirmed">Konfirmasi</string>
     <string name="reject">Tolak</string>
+    <string name="email_error">Email Harus di Isi</string>
+    <string name="pass_error">Password Harus di Isi</string>
     <string-array name="stepLabels">
         <item>Hasil Pemeriksaan</item>
         <item>Diagnosa</item>
