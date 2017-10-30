@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Snackbar.make(getWindow().getDecorView().getRootView(), "SELAMAT DATANG " + sessionManager.getUserFullName(), Snackbar.LENGTH_SHORT).show();
             }
-        }, 5000); // 2000 milliseconds delay
+        }, 2000); // 2000 milliseconds delay
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(navigation);

@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.mycillin.partner.R;
 import com.mycillin.partner.util.SessionManager;
@@ -28,12 +27,8 @@ public class AccountActivity extends AppCompatActivity {
     LinearLayout signOut;
     @BindView(R.id.accountActivity_ll_termsPrivacyPolicy)
     LinearLayout termsAndPrivacyPolicy;
-
     @BindView(R.id.accountActivity_toolbar)
     Toolbar toolbar;
-
-    @BindView(R.id.accountActivity_tv_signOut)
-    TextView tvSignOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +71,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.accountActivity_tv_signOut)
+    @OnClick(R.id.accountActivity_ll_signOut)
     public void signOutClicked() {
         SessionManager sessionManager = new SessionManager(getApplicationContext());
         sessionManager.logoutUser();

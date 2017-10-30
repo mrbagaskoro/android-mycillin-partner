@@ -3,7 +3,7 @@ package com.mycillin.partner.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +16,8 @@ import com.mycillin.partner.restful.PartnerAPI;
 import com.mycillin.partner.restful.RestClient;
 import com.mycillin.partner.restful.login.ModelRestLogin;
 import com.mycillin.partner.util.DataHelper;
+import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.SessionManager;
 
 import java.util.HashMap;
@@ -42,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText edtxPassword;
     private PartnerAPI partnerAPI;
     private SessionManager session;
+    private Handler mHandler;
+    private ProgressBarHandler mProgressBarHandler;
     private boolean doubleBackToExitPressedOnce = false;
     private int MENU_FLAG_LANDING = 1001;
     private int MENU_FLAG_LOGIN = 1003;
@@ -55,6 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         partnerAPI = RestClient.getPartnerRestInterfaceToken();
         session = new SessionManager(getApplicationContext());
         MENU_FLAG = MENU_FLAG_LANDING;
+        edtxEmail.setText("tommi.asmara3@gmail.com");
+        edtxPassword.setText("rahasia");
+
+        mHandler = new Handler(Looper.getMainLooper());
+        mProgressBarHandler = new ProgressBarHandler(this);
     }
 
 
@@ -79,8 +88,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin(String email, String password) {
-
-
+        mProgressBarHandler.show();
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
@@ -88,9 +96,10 @@ public class LoginActivity extends AppCompatActivity {
         partnerAPI.doLogin(params).enqueue(new Callback<ModelRestLogin>() {
             @Override
             public void onResponse(Call<ModelRestLogin> call, Response<ModelRestLogin> response) {
+                ModelRestLogin result = response.body();
+                mProgressBarHandler.hide();
+                assert result != null;
                 if (response.isSuccessful()) {
-                    ModelRestLogin result = response.body();
-                    assert result != null;
                     if (!result.getResult().getMessage().contains("invalid login")) {
                         session.createLoginSession(
                                 result.getResult().getData().getEmail(),
@@ -103,19 +112,17 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
-                    } else {
-                        Snackbar.make(getWindow().getDecorView().getRootView(), "Password Salah", Snackbar.LENGTH_SHORT).show();
                     }
                 } else {
-                    Snackbar.make(getWindow().getDecorView().getRootView(), response.code(), Snackbar.LENGTH_SHORT).show();
+                    mProgressBarHandler.hide();
+                    DialogHelper.showDialog(mHandler, LoginActivity.this, "Error", "Invalid Password", false);
                 }
-
-
             }
 
             @Override
             public void onFailure(Call<ModelRestLogin> call, Throwable t) {
-                Snackbar.make(getWindow().getDecorView().getRootView(), t.getMessage(), Snackbar.LENGTH_SHORT).show();
+                mProgressBarHandler.hide();
+                DialogHelper.showDialog(mHandler, LoginActivity.this, "Error", "Connection Problem", false);
             }
         });
     }
