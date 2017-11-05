@@ -171,6 +171,16 @@
     <string name="reject">Reject</string>
     <string name="email_error">Email Must Be Filled</string>
     <string name="pass_error">Password Must Be Filled</string>
+    <string name="loginActivity_passwordMatchWarning">Password Confirmation doesn\'t match !</string>
+    <string name="loginActivity_passwordWarning">Password is required !</string>
+    <string name="loginActivity_passwordConfirmationWarning">Password Confirmation is required !</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="finish">Finish</string>
+    <string name="full_name">Full Name</string>
+    <string name="register">Register</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

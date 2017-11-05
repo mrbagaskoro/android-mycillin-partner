@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -30,18 +31,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+
     @BindView(R.id.loginActivity_rl_loginLandingContainer)
     RelativeLayout loginLandingContainer;
     @BindView(R.id.loginActivity_rl_loginContainer)
     RelativeLayout loginContainer;
     @BindView(R.id.loginActivity_bt_showHaveAccBtn)
     Button showHaveAccBtn;
+    @BindView(R.id.loginActivity_bt_register)
+    Button btnRegister;
     @BindView(R.id.loginActivity_bt_loginBtn)
     Button doLoginBtn;
     @BindView(R.id.loginActivity_et_loginEmail)
     EditText edtxEmail;
     @BindView(R.id.loginActivity_et_loginPassword)
     EditText edtxPassword;
+
     private PartnerAPI partnerAPI;
     private SessionManager session;
     private Handler mHandler;
@@ -87,6 +92,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.loginActivity_bt_register)
+    public void registerFunction() {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void doLogin(String email, String password) {
         mProgressBarHandler.show();
         HashMap<String, String> params = new HashMap<>();
@@ -95,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
         partnerAPI.doLogin(params).enqueue(new Callback<ModelRestLogin>() {
             @Override
-            public void onResponse(Call<ModelRestLogin> call, Response<ModelRestLogin> response) {
+            public void onResponse(@NonNull Call<ModelRestLogin> call, @NonNull Response<ModelRestLogin> response) {
                 ModelRestLogin result = response.body();
                 mProgressBarHandler.hide();
                 assert result != null;
@@ -120,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ModelRestLogin> call, Throwable t) {
+            public void onFailure(@NonNull Call<ModelRestLogin> call, @NonNull Throwable t) {
                 mProgressBarHandler.hide();
                 DialogHelper.showDialog(mHandler, LoginActivity.this, "Error", "Connection Problem", false);
             }

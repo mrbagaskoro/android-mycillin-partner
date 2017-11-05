@@ -47,6 +47,17 @@
                 android:text="@string/loginActivity_alreadyHaveAccount"
                 android:textColor="@color/primaryText" />
 
+            <Button
+                android:id="@+id/loginActivity_bt_register"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button"
+                android:padding="@dimen/spacing_small"
+                android:text="@string/register"
+                android:textColor="@color/primaryText" />
+
             <TextView
                 android:id="@+id/loginActivity_tv_notesTxt"
                 android:layout_width="fill_parent"
