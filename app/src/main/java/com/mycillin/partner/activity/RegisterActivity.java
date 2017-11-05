@@ -1,6 +1,7 @@
 package com.mycillin.partner.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,25 +9,28 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.mycillin.partner.R;
 import com.mycillin.partner.restful.PartnerAPI;
-import com.mycillin.partner.restful.RestClient;
-import com.mycillin.partner.restful.register.ModelRestRegister;
+import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.ProgressBarHandler;
 
-import java.util.HashMap;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -124,6 +128,8 @@ public class RegisterActivity extends AppCompatActivity {
                 return true;
 
             case android.R.id.home:
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
                 finish();
                 return true;
 
@@ -134,57 +140,77 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void doRegister(String email, String name, String password, String phoneNumber) {
-        mProgressBarHandler.show();
-
-        PartnerAPI xPartnerApi = RestClient.getPartnerRestInterfaceNoToken();
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("email", email);
-        params.put("password", password);
-        params.put("name", name);
-        params.put("ref_id", "");
-        params.put("telephone", phoneNumber);
-
-        Log.d("", "doRegister: " + params.get("email"));
-        Log.d("", "doRegister: " + params.get("password"));
-        Log.d("", "doRegister: " + params.get("name"));
-        Log.d("", "doRegister: " + params.get("ref_id"));
-
-        xPartnerApi.doRegister(params.get("email"),
-                params.get("password"),
-                params.get("name"),
-                params.get("ref_id")).enqueue(new Callback<ModelRestRegister>() {
+        mHandler.post(new Runnable() {
             @Override
-            public void onResponse(@NonNull Call<ModelRestRegister> call, @NonNull Response<ModelRestRegister> response) {
-                mProgressBarHandler.hide();
-                ModelRestRegister modelRestRegister = response.body();
-                Log.d("###", "onResponse: " + response.body());
-                Log.d("###", "onResponse: " + response.headers());
-                Log.d("###", "onResponse: " + response.code());
-                assert modelRestRegister != null;
-                //Log.d("###", "onResponse: " + modelRestRegister.getResult());
-
-                /*
-                if (response.isSuccessful()) {
-                    ModelRestRegister modelRestRegister = response.body();
-
-                    assert modelRestRegister != null;
-                    if (modelRestRegister.getResult().isStatus()) {
-                        DialogHelper.showDialog(mHandler, RegisterActivity.this, "Info", "Register Successfully, Please Login", true);
-                    }
-                } else {
-                    ModelRestRegister modelRestRegister = response.body();
-                    assert modelRestRegister != null;
-                    String errorMessage = modelRestRegister.getResult().getMessage();
-                    DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", errorMessage, false);
-                }*/
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ModelRestRegister> call, @NonNull Throwable t) {
-                DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", "Connection Problem, Please Try Again Later.", false);
+            public void run() {
+                mProgressBarHandler.show();
             }
         });
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("email", email)
+                .add("password", password)
+                .add("name", name)
+                .add("ref_id", "")
+                .build();
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "register/")
+                .post(requestBody)
+                .build();
 
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull Response response) throws IOException {
+                String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                DialogHelper.showDialog(mHandler, RegisterActivity.this, "Info", "Register Successfully, Please Login", false);
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", message, false);
+                            }
+                        } else {
+                            DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", "Please Try Again", false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", message, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

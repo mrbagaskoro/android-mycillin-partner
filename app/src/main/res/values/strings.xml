@@ -185,6 +185,7 @@
     <string name="accept_clinic_reservation">Accept clinic reservation</string>
     <string name="accept_consultation">Accept consultation</string>
     <string name="accept_bpjs_payment">Accept BPJS Payment</string>
+    <string name="task">Task</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>
