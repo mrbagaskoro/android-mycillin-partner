@@ -33,9 +33,9 @@
     <string name="nav_about_mycillin">About MyCillin</string>
     <string name="nav_e_wallet">E-Wallet</string>
     <string name="nav_invite_friend">Invite Friend</string>
-    <string name="nav_todo">To-Do</string>
+    <string name="nav_todo">Task</string>
     <string name="shareIntent_subject">Join MyCillin Now!</string>
-    <string name="shareIntent_text">Join MyCillin and get the reward. Visit this link to learn more http://mycillin.com/</string>
+    <string name="shareIntent_text">Join MyCillin and get the reward. Visit this link to learn more http://mycillin.com/services/web/registration/</string>
     <string name="shareIntent_title">Share MyCillin to...</string>
     <string name="aboutFragment_version">Version</string>
     <string name="aboutFragment_connect">Connect with us</string>

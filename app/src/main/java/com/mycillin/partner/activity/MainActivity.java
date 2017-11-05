@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(getApplicationContext());
-
+        DataHelper.token = sessionManager.getUserToken();
         Snackbar.make(getWindow().getDecorView().getRootView(), DataHelper.token, Snackbar.LENGTH_LONG).show();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.shareIntent_subject));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.shareIntent_text));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.shareIntent_text) + sessionManager.getUserId());
             startActivity(Intent.createChooser(intent, getString(R.string.shareIntent_title)));
 
             return true;

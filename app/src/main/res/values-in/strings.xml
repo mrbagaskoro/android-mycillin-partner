@@ -33,9 +33,9 @@
     <string name="nav_about_mycillin">Tentang MyCillin</string>
     <string name="nav_e_wallet">E-Wallet</string>
     <string name="nav_invite_friend">Undang Friend</string>
-    <string name="nav_todo">To-Do</string>
+    <string name="nav_todo">Task</string>
     <string name="shareIntent_subject">Bergabung dengan MyCillin Sekarang!</string>
-    <string name="shareIntent_text">Bergabung dengan MyCillin dan dapatkan hadiahnya. Kunjungi tautan berikut untuk lebih lenjut http://mycillin.com/</string>
+    <string name="shareIntent_text">Bergabung dengan MyCillin dan dapatkan hadiahnya. Kunjungi tautan berikut untuk lebih lenjut http://mycillin.com/services/web/registration/</string>
     <string name="shareIntent_title">Berbagi MyCillin ke...</string>
     <string name="aboutFragment_version">Versi</string>
     <string name="aboutFragment_connect">Terhubung dengan kami</string>

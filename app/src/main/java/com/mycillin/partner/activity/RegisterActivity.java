@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .add("ref_id", "")
                 .build();
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "register/")
+                .url(Configs.URL_REST_CLIENT + "register_partner/")
                 .post(requestBody)
                 .build();
 

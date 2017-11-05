@@ -1,5 +1,7 @@
 package com.mycillin.partner.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mycillin.partner.BuildConfig;
 import com.mycillin.partner.R;
@@ -55,14 +56,25 @@ public class AboutFragment extends Fragment {
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.aboutFragment_contact), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_EMAIL, "mycillin@gmail.com");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                intent.putExtra(Intent.EXTRA_TEXT, "Please Fill This Body");
+                startActivity(Intent.createChooser(intent, "Send Email"));
             }
         });
 
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.aboutFragment_facebook), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/mycillin.mycillin.9"));
+                intent.setPackage("com.facebook.katana");
+                try {
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/mycillin.mycillin.9")));
+                }
             }
         });
 
@@ -70,7 +82,11 @@ public class AboutFragment extends Fragment {
         twitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.aboutFragment_twitter), Toast.LENGTH_SHORT).show();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=mycillin")));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/#!/mycillin")));
+                }
             }
         });
 
@@ -78,7 +94,13 @@ public class AboutFragment extends Fragment {
         instagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.aboutFragment_instagram), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://instagram.com/_u/mycillin"));
+                intent.setPackage("com.instagram.android");
+                try {
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com.com/mycillin")));
+                }
             }
         });
 
@@ -86,7 +108,11 @@ public class AboutFragment extends Fragment {
         youtube.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.aboutFragment_youtube), Toast.LENGTH_SHORT).show();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:cSPfeTxl8Kw")));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtube.com/watch?v=cSPfeTxl8Kw")));
+                }
             }
         });
 
@@ -94,7 +120,11 @@ public class AboutFragment extends Fragment {
         playstore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.aboutFragment_playstore), Toast.LENGTH_SHORT).show();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.supercell.clashofclans")));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.supercell.clashofclans")));
+                }
             }
         });
 
