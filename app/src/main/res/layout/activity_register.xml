@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -60,13 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
+                android:layout_marginTop="@dimen/spacing_small"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:id="@+id/register_ET_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
                     android:hint="@string/password"
                     android:inputType="textPassword"
                     android:textColor="@color/colorPrimaryDark" />
@@ -76,13 +77,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
+                android:layout_marginTop="@dimen/spacing_small"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:id="@+id/register_ET_confirmpassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
                     android:hint="@string/confirm_password"
                     android:inputType="textPassword"
                     android:textColor="@color/colorPrimaryDark" />

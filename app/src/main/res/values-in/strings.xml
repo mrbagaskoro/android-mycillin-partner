@@ -185,4 +185,8 @@
     <string name="finish">Finish</string>
     <string name="full_name">Full Name</string>
     <string name="register">Register</string>
+    <string name="accept_in_house_visit">Accept in house visit</string>
+    <string name="accept_clinic_reservation">Accept clinic reservation</string>
+    <string name="accept_consultation">Accept consultation</string>
+    <string name="accept_bpjs_payment">Accept BPJS Payment</string>
 </resources>

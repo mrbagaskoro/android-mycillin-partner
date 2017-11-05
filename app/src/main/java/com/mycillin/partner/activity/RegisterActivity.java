@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -18,6 +19,8 @@ import com.mycillin.partner.restful.RestClient;
 import com.mycillin.partner.restful.register.ModelRestRegister;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.ProgressBarHandler;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(this);
-        mPartnerApi = RestClient.getPartnerRestInterfaceNoToken();
 
         setSupportActionBar(toolbar);
 
@@ -133,18 +135,36 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void doRegister(String email, String name, String password, String phoneNumber) {
         mProgressBarHandler.show();
-/*
+
+        PartnerAPI xPartnerApi = RestClient.getPartnerRestInterfaceNoToken();
+
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
         params.put("name", name);
         params.put("ref_id", "");
         params.put("telephone", phoneNumber);
-*/
-        mPartnerApi.doRegister(email, password, name, "", phoneNumber).enqueue(new Callback<ModelRestRegister>() {
+
+        Log.d("", "doRegister: " + params.get("email"));
+        Log.d("", "doRegister: " + params.get("password"));
+        Log.d("", "doRegister: " + params.get("name"));
+        Log.d("", "doRegister: " + params.get("ref_id"));
+
+        xPartnerApi.doRegister(params.get("email"),
+                params.get("password"),
+                params.get("name"),
+                params.get("ref_id")).enqueue(new Callback<ModelRestRegister>() {
             @Override
             public void onResponse(@NonNull Call<ModelRestRegister> call, @NonNull Response<ModelRestRegister> response) {
                 mProgressBarHandler.hide();
+                ModelRestRegister modelRestRegister = response.body();
+                Log.d("###", "onResponse: " + response.body());
+                Log.d("###", "onResponse: " + response.headers());
+                Log.d("###", "onResponse: " + response.code());
+                assert modelRestRegister != null;
+                //Log.d("###", "onResponse: " + modelRestRegister.getResult());
+
+                /*
                 if (response.isSuccessful()) {
                     ModelRestRegister modelRestRegister = response.body();
 
@@ -157,7 +177,7 @@ public class RegisterActivity extends AppCompatActivity {
                     assert modelRestRegister != null;
                     String errorMessage = modelRestRegister.getResult().getMessage();
                     DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", errorMessage, false);
-                }
+                }*/
             }
 
             @Override

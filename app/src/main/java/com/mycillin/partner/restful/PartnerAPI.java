@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 
 public interface PartnerAPI {
 
-    @POST("api/login_doctor")
+    @POST("login_doctor/")
     Call<ModelRestLogin> doLogin(@Body HashMap<String, String> params);
 
     @FormUrlEncoded
@@ -21,8 +21,7 @@ public interface PartnerAPI {
     Call<ModelRestRegister> doRegister(@Field("email") String email,
                                        @Field("password") String password,
                                        @Field("name") String name,
-                                       @Field("ref_id") String referral,
-                                       @Field("ref_id") String phone);
+                                       @Field("ref_id") String referral);
 
 
 }

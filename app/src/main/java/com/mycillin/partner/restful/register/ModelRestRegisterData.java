@@ -3,6 +3,8 @@ package com.mycillin.partner.restful.register;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ModelRestRegisterData {
 
     @SerializedName("status")
@@ -10,7 +12,7 @@ public class ModelRestRegisterData {
     private boolean status;
     @SerializedName("message")
     @Expose
-    private String message;
+    private List<String> message = null;
 
     public boolean isStatus() {
         return status;
@@ -20,11 +22,11 @@ public class ModelRestRegisterData {
         this.status = status;
     }
 
-    public String getMessage() {
+    public List<String> getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(List<String> message) {
         this.message = message;
     }
 }

@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        partnerAPI = RestClient.getPartnerRestInterfaceToken();
+        partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         session = new SessionManager(getApplicationContext());
         MENU_FLAG = MENU_FLAG_LANDING;
         edtxEmail.setText("tommi.asmara3@gmail.com");
