@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void doLogin(String email, String password) {
+    private void doLogin(String email, final String password) {
         mProgressBarHandler.show();
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
@@ -220,7 +220,8 @@ public class LoginActivity extends AppCompatActivity {
                                 result.getResult().getData().getFullName(),
                                 result.getResult().getData().getUserId(),
                                 result.getResult().getToken(),
-                                ""
+                                "",
+                                password
                         );
                         DataHelper.token = result.getResult().getToken();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);

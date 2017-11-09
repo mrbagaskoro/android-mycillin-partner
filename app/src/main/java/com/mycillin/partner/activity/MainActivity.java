@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(getApplicationContext());
         DataHelper.token = sessionManager.getUserToken();
-        Snackbar.make(getWindow().getDecorView().getRootView(), DataHelper.token, Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(getWindow().getDecorView().getRootView(), DataHelper.token, Snackbar.LENGTH_LONG).show();
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             public void run() {

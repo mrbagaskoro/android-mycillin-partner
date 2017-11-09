@@ -16,6 +16,7 @@ public class SessionManager {
     private static final String KEY_USER_ID = "USER_ID";
     private static final String KEY_TOKEN = "TOKEN";
     private static final String KEY_USER_PIC_URL = "USER_PIC_URL";
+    private static final String KEY_USER_PASS = "USER_PASS";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -28,13 +29,14 @@ public class SessionManager {
         editor = sharedPreferences.edit();
     }
 
-    public void createLoginSession(String email, String fullName, String userId, String token, String url) {
+    public void createLoginSession(String email, String fullName, String userId, String token, String url, String pass) {
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_FULLNAME, fullName);
         editor.putString(KEY_USER_ID, userId);
         editor.putString(KEY_TOKEN, token);
         editor.putString(KEY_USER_PIC_URL, url);
+        editor.putString(KEY_USER_PASS, pass);
 
         editor.commit();
     }
@@ -83,5 +85,9 @@ public class SessionManager {
 
     public String getUserPicUrl() {
         return sharedPreferences.getString(KEY_USER_PIC_URL, null);
+    }
+
+    public String getUserPass() {
+        return sharedPreferences.getString(KEY_USER_PASS, null);
     }
 }

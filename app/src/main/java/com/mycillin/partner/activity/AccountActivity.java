@@ -100,7 +100,8 @@ public class AccountActivity extends AppCompatActivity {
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChangePasswordDialog();
+                Intent intent = new Intent(AccountActivity.this, UpdatePassActivity.class);
+                startActivity(intent);
             }
         });
         termsAndPrivacyPolicy.setOnClickListener(new View.OnClickListener() {

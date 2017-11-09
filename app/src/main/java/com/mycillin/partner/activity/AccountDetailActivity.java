@@ -45,6 +45,7 @@ public class AccountDetailActivity extends AppCompatActivity {
                 professionalDetailExpandableLayout.toggle();
             }
         });
+        fillDoctorAvatar();
     }
 
 
