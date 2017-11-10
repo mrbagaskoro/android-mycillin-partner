@@ -133,20 +133,20 @@
                 android:text="@string/accountDetailActivity_genderDesc"/>
 
             <RadioGroup
-                android:id="@+id/accountActivity_rg_genderRg"
+                android:id="@+id/accountDetailActivity_rg_genderRg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal" >
 
                 <RadioButton
-                    android:id="@+id/accountActivity_rb_genderMaleRb"
+                    android:id="@+id/accountDetailActivity_rb_genderMaleRb"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:text="@string/accountDetailActivity_maleDesc"/>
 
                 <RadioButton
-                    android:id="@+id/accountActivity_rb_genderFemaleRb"
+                    android:id="@+id/accountDetailActivity_rb_genderFemaleRb"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -166,6 +166,7 @@
                     android:layout_height="wrap_content"
                     android:drawableEnd="@drawable/ic_action_calendar_month"
                     android:hint="@string/accountDetailActivity_DateOfBirthDesc"
+                    android:focusable="false"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
@@ -226,6 +227,7 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_arrow_down"
                         android:hint="@string/accountDetailActivity_professionCategoryDesc"
+                        android:focusable="false"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -242,6 +244,7 @@
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_arrow_down"
                         android:hint="@string/accountDetailActivity_areaOfExpertiseDesc"
+                        android:focusable="false"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
 

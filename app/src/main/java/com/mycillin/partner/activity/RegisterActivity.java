@@ -185,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (jsonObject.has("result")) {
                             boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                             if (status) {
-                                DialogHelper.showDialog(mHandler, RegisterActivity.this, "Info", "Register Successfully, Please Login", false);
+                                DialogHelper.showDialog(mHandler, RegisterActivity.this, "Info", "Register Successfully, Please Login", true);
                             } else {
                                 String message = jsonObject.getJSONObject("result").getString("message");
                                 DialogHelper.showDialog(mHandler, RegisterActivity.this, "Warning", message, false);

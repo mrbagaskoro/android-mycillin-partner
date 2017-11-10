@@ -117,7 +117,6 @@ public class LoginActivity extends AppCompatActivity {
     public void registerFunction() {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
-        finish();
     }
 
     @OnClick(R.id.loginActivity_tv_forgotPassword)
@@ -173,7 +172,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 String result = response.body().string();
-
                 Log.d("###", "onResponse: " + result);
                 try {
                     JSONObject jsonObject2 = new JSONObject(result);
@@ -182,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(result);
 
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
-                        if (status) {
+                        if (!status) {
                             String message = jsonObject.getJSONObject("result").getString("message");
                             DialogHelper.showDialog(mHandler, LoginActivity.this, "Info", message, false);
                         } else {
@@ -195,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
                         DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning", message, false);
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning", "Please Try Again : 404", false);
                 }
             }
         });
