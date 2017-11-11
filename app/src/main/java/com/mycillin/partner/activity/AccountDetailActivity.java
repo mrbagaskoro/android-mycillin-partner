@@ -1,7 +1,13 @@
 package com.mycillin.partner.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,18 +25,44 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.github.aakira.expandablelayout.ExpandableLayout;
 import com.mycillin.partner.R;
+import com.mycillin.partner.list.SearchResultItem;
+import com.mycillin.partner.restful.PartnerAPI;
+import com.mycillin.partner.restful.RestClient;
+import com.mycillin.partner.restful.expertise.ModelRestExpertise;
+import com.mycillin.partner.restful.expertise.ModelRestExpertiseData;
+import com.mycillin.partner.restful.profession.ModelRestProfession;
+import com.mycillin.partner.restful.profession.ModelRestProfessionData;
+import com.mycillin.partner.util.Configs;
+import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.ProgressBarHandler;
+import com.mycillin.partner.util.SessionManager;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AccountDetailActivity extends AppCompatActivity {
 
@@ -39,12 +71,10 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.accountDetailActivity_toolbar)
     Toolbar toolbar;
-
     @BindView(R.id.accountDetailActivity_ll_professionalDetail)
     LinearLayout professionalDetailLayout;
     @BindView(R.id.accountDetailActivity_el_expandableLayout)
     ExpandableLayout professionalDetailExpandableLayout;
-
     @BindView(R.id.accountDetailActivity_et_email)
     EditText edtxEmail;
     @BindView(R.id.accountDetailActivity_et_fullName)
@@ -62,7 +92,7 @@ public class AccountDetailActivity extends AppCompatActivity {
     @BindView(R.id.accountDetailActivity_et_dob)
     EditText edtxDateOfBirth;
     @BindView(R.id.accountDetailActivity_et_professionCategory)
-    EditText edtxWorkCategory;
+    EditText edtxProfessionCategory;
     @BindView(R.id.accountDetailActivity_et_areaOfExpertise)
     EditText edtxExpertise;
     @BindView(R.id.accountDetailActivity_et_areaOfWork)
@@ -80,12 +110,23 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     private CircleImageView ivAvatar;
     private MenuItem menuFinish;
+    private PartnerAPI partnerAPI;
+    private Handler mHandler;
+    private ProgressBarHandler mProgressBarHandler;
+    private List<SearchResultItem> searchResultItem = new ArrayList<>();
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_detail);
         ButterKnife.bind(this);
+        partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
+        mHandler = new Handler(Looper.getMainLooper());
+        mProgressBarHandler = new ProgressBarHandler(this);
+        sessionManager = new SessionManager(getApplicationContext());
+        edtxEmail.setText(sessionManager.getUserEmail());
+        edtxFullName.setText(sessionManager.getUserFullName());
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -139,7 +180,6 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     private void fillDoctorAvatar() {
         ivAvatar = findViewById(R.id.accountDetailActivity_iv_userAvatar);
-
         //// TODO: 05/11/2017 FROM SERVICE
         Picasso.with(getApplicationContext())
                 .load("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg")
@@ -168,13 +208,13 @@ public class AccountDetailActivity extends AppCompatActivity {
 
         if (id == R.id.action_save) {
             new AlertDialog.Builder(AccountDetailActivity.this)
-                    .setTitle("Warning")
-                    .setMessage("Apakah Anda yakin untuk keluar?")
+                    .setTitle("Info")
+                    .setMessage("Are You Sure To Update Your Account Information ?")
                     .setIcon(R.mipmap.ic_launcher)
                     .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            doUpdateAccount();
                         }
                     })
                     .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
@@ -184,37 +224,234 @@ public class AccountDetailActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-
-
-            String mEmail = edtxEmail.getText().toString().trim();
-            String mFullName = edtxFullName.getText().toString().trim();
-            String mUserAddress = edtxAddress.getText().toString().trim();
-            String mPhoneNUmber = edtxPhone.getText().toString().trim();
-            int mGender = rgGender.getCheckedRadioButtonId();
-            RadioButton jenisKelamin = findViewById(mGender);
-            String mDOB = edtxDateOfBirth.getText().toString().trim();
-            String mProfessionCategory = edtxWorkCategory.getText().toString().trim();
-            String mAreaExpertise = edtxExpertise.getText().toString().trim();
-            String mWorkArea = edtxWorkArea.getText().toString().trim();
-            String mWorkYears = edtxYearPractice.getText().toString().trim();
-            String mPermitNUmber = edtxSIPP.getText().toString().trim();
-            String mWorkDesc = edtxProffesionDesc.getText().toString().trim();
-            String mPracticeAddress = edtxWorkAddress.getText().toString().trim();
-
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void doUpdateAccount() {
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        String mEmail = edtxEmail.getText().toString().trim();
+        String mFullName = edtxFullName.getText().toString().trim();
+        String mUserAddress = edtxAddress.getText().toString().trim();
+        String mPhoneNumber = edtxPhone.getText().toString().trim();
+        int mGender = rgGender.getCheckedRadioButtonId();
+        RadioButton jenisKelamin = findViewById(mGender);
+        String mDOB = edtxDateOfBirth.getText().toString().trim();
+        String mProfessionCategory = edtxProfessionCategory.getText().toString().trim();
+        String mAreaExpertise = edtxExpertise.getText().toString().trim();
+        String mWorkArea = edtxWorkArea.getText().toString().trim();
+        String mWorkYears = edtxYearPractice.getText().toString().trim();
+        String mPermitNUmber = edtxSIPP.getText().toString().trim();
+        String mWorkDesc = edtxProffesionDesc.getText().toString().trim();
+        String mPracticeAddress = edtxWorkAddress.getText().toString().trim();
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", sessionManager.getUserId());
+        params.put("full_name", mFullName);
+        params.put("gender", jenisKelamin);
+        params.put("address", mUserAddress);
+        params.put("mobile_number", mPhoneNumber);
+        params.put("dob", mDOB);
+        params.put("no_SIP", mPermitNUmber);
+        params.put("SIP_berakhir", "");
+        params.put("no_STR", "170");
+        params.put("STR_berakhir", "");
+        params.put("partner_type_id", mProfessionCategory);
+        params.put("spesialisasi_id", mAreaExpertise);
+        params.put("wilayah_kerja", mWorkArea);
+        params.put("profile_desc", mWorkDesc);
+        params.put("lama_professi", mWorkYears);
+        params.put("alamat_praktik", mPracticeAddress);
+        params.put("map_praktik", "");
+        params.put("nama_institusi", "");
+
+        JSONObject jsonObject = new JSONObject(params);
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "complete_account_partner/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Info", "Register Successfully, Please Login", true);
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", message, false);
+                            }
+                        } else {
+                            DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Try Again", false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", message, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     @OnClick(R.id.accountDetailActivity_et_professionCategory)
     public void onProfessionCategoryClicked() {
-        //todo do searchresultactivity
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        partnerAPI.getProfession().enqueue(new Callback<ModelRestProfession>() {
+            @Override
+            public void onResponse(@NonNull Call<ModelRestProfession> call, @NonNull Response<ModelRestProfession> response) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                searchResultItem.clear();
+                ModelRestProfession modelRestProfessions = response.body();
+                if (response.isSuccessful()) {
+                    assert modelRestProfessions != null;
+                    for (ModelRestProfessionData modelRestProfessionData : modelRestProfessions.getResult().getData()) {
+                        searchResultItem.add(new SearchResultItem("Code", modelRestProfessionData.getPartnerTypeId(), "Profession", modelRestProfessionData.getPartnerTypeDesc(),
+                                "", "", "", "", "", "", "", ""));
+                    }
+                    Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
+                    intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultItem);
+                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_PROFESSION);
+                    startActivityForResult(intent, REQUEST_CODE_GET_PROFESSION);
+                } else {
+                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestProfessions + "", false);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ModelRestProfession> call, @NonNull final Throwable t) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", "Connection problem " + t, false);
+                    }
+                });
+            }
+        });
     }
 
 
     @OnClick(R.id.accountDetailActivity_et_areaOfExpertise)
     public void onAreaOfExpertiseClicked() {
-        //todo do searchresultacvity
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        partnerAPI.getExpertise().enqueue(new Callback<ModelRestExpertise>() {
+            @Override
+            public void onResponse(@NonNull Call<ModelRestExpertise> call, @NonNull Response<ModelRestExpertise> response) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                searchResultItem.clear();
+                ModelRestExpertise modelRestExpertise = response.body();
+                if (response.isSuccessful()) {
+                    assert modelRestExpertise != null;
+                    for (ModelRestExpertiseData modelRestExpertise1 : modelRestExpertise.getResult().getData()) {
+                        searchResultItem.add(new SearchResultItem("Code", modelRestExpertise1.getSpesialisasiId(), "Area Of Expertise", modelRestExpertise1.getSpesialisasiDesc(),
+                                "", "", "", "", "", "", "", ""));
+                    }
+                    Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
+                    intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultItem);
+                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_EXPERTISE);
+                    startActivityForResult(intent, REQUEST_CODE_GET_EXPERTISE);
+                } else {
+                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestExpertise + "", false);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ModelRestExpertise> call, @NonNull final Throwable t) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", "Connection problem " + t, false);
+                    }
+                });
+            }
+        });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode != Activity.RESULT_CANCELED) {
+            String item1 = data.getStringExtra("ITEM_1");
+            String item2 = data.getStringExtra("ITEM_2");
+            switch (requestCode) {
+                case REQUEST_CODE_GET_PROFESSION:
+                    edtxProfessionCategory.setText(item1 + " - " + item2);
+                    break;
+                case REQUEST_CODE_GET_EXPERTISE:
+                    edtxExpertise.setText(item1 + " - " + item2);
+                    break;
+            }
+        }
     }
 }

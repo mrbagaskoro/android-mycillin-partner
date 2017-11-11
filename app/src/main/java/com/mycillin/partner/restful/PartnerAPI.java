@@ -6,12 +6,12 @@ import com.mycillin.partner.restful.profession.ModelRestProfession;
 import com.mycillin.partner.restful.register.ModelRestRegister;
 
 import java.util.HashMap;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface PartnerAPI {
@@ -26,10 +26,10 @@ public interface PartnerAPI {
                                        @Field("name") String name,
                                        @Field("ref_id") String referral);
 
-    @POST("list_partner_type/")
-    Call<List<ModelRestProfession>> getProfession();
+    @GET("list_partner_type/")
+    Call<ModelRestProfession> getProfession();
 
-    @POST("list_spesialisasi/")
-    Call<List<ModelRestExpertise>> getExpertise();
+    @GET("list_spesialisasi/")
+    Call<ModelRestExpertise> getExpertise();
 
 }
