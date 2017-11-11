@@ -58,6 +58,7 @@
         <activity android:name=".activity.TermAndPrivacyPolicyActivity" />
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.UpdatePassActivity" />
+        <activity android:name=".activity.SearchResultActivity" />
     </application>
 
 </manifest>

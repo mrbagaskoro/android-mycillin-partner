@@ -1,14 +1,16 @@
 package com.mycillin.partner.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,6 +33,9 @@ import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountDetailActivity extends AppCompatActivity {
+
+    public static final int REQUEST_CODE_GET_PROFESSION = 1111;
+    public static final int REQUEST_CODE_GET_EXPERTISE = 1112;
 
     @BindView(R.id.accountDetailActivity_toolbar)
     Toolbar toolbar;
@@ -74,6 +79,7 @@ public class AccountDetailActivity extends AppCompatActivity {
     CheckBox cbIsAgree;
 
     private CircleImageView ivAvatar;
+    private MenuItem menuFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +96,17 @@ public class AccountDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 professionalDetailExpandableLayout.toggle();
+            }
+        });
+
+        cbIsAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    menuFinish.setVisible(true);
+                } else {
+                    menuFinish.setVisible(false);
+                }
             }
         });
 
@@ -134,9 +151,14 @@ public class AccountDetailActivity extends AppCompatActivity {
                 .into(ivAvatar);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);
+        menuFinish = menu.findItem(R.id.action_save);
+        menuFinish.setVisible(false);
+
+
         return true;
     }
 
@@ -145,9 +167,54 @@ public class AccountDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_save) {
+            new AlertDialog.Builder(AccountDetailActivity.this)
+                    .setTitle("Warning")
+                    .setMessage("Apakah Anda yakin untuk keluar?")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // CLOSE
+                        }
+                    })
+                    .show();
+
+
+            String mEmail = edtxEmail.getText().toString().trim();
+            String mFullName = edtxFullName.getText().toString().trim();
+            String mUserAddress = edtxAddress.getText().toString().trim();
+            String mPhoneNUmber = edtxPhone.getText().toString().trim();
+            int mGender = rgGender.getCheckedRadioButtonId();
+            RadioButton jenisKelamin = findViewById(mGender);
+            String mDOB = edtxDateOfBirth.getText().toString().trim();
+            String mProfessionCategory = edtxWorkCategory.getText().toString().trim();
+            String mAreaExpertise = edtxExpertise.getText().toString().trim();
+            String mWorkArea = edtxWorkArea.getText().toString().trim();
+            String mWorkYears = edtxYearPractice.getText().toString().trim();
+            String mPermitNUmber = edtxSIPP.getText().toString().trim();
+            String mWorkDesc = edtxProffesionDesc.getText().toString().trim();
+            String mPracticeAddress = edtxWorkAddress.getText().toString().trim();
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.accountDetailActivity_et_professionCategory)
+    public void onProfessionCategoryClicked() {
+        //todo do searchresultactivity
+    }
+
+
+    @OnClick(R.id.accountDetailActivity_et_areaOfExpertise)
+    public void onAreaOfExpertiseClicked() {
+        //todo do searchresultacvity
     }
 }

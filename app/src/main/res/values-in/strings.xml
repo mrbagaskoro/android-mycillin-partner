@@ -190,4 +190,6 @@
     <string name="accept_consultation">Accept consultation</string>
     <string name="accept_bpjs_payment">Accept BPJS Payment</string>
     <string name="task">Task</string>
+    <string name="new_password">New Password</string>
+    <string name="find">Find</string>
 </resources>

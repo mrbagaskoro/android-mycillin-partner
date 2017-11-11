@@ -186,6 +186,10 @@
     <string name="accept_consultation">Accept consultation</string>
     <string name="accept_bpjs_payment">Accept BPJS Payment</string>
     <string name="task">Task</string>
+    <string name="new_password">New Password</string>
+    <string name="find">Find</string>
+    <string name="result_list">%1$d Finded Entry</string>
+    <string name="clear">Clear</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>
