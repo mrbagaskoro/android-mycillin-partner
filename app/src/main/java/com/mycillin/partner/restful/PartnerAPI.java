@@ -1,5 +1,6 @@
 package com.mycillin.partner.restful;
 
+import com.mycillin.partner.restful.cancalReason.ModelRestCancelReason;
 import com.mycillin.partner.restful.expertise.ModelRestExpertise;
 import com.mycillin.partner.restful.login.ModelRestLogin;
 import com.mycillin.partner.restful.profession.ModelRestProfession;
@@ -32,4 +33,6 @@ public interface PartnerAPI {
     @GET("list_spesialisasi/")
     Call<ModelRestExpertise> getExpertise();
 
+    @GET("list_cancel_reason/")
+    Call<ModelRestCancelReason> getCancelReason();
 }
