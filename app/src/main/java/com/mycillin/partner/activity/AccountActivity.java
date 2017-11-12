@@ -1,11 +1,13 @@
 package com.mycillin.partner.activity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -192,10 +194,26 @@ public class AccountActivity extends AppCompatActivity {
 
     @OnClick(R.id.accountActivity_ll_signOut)
     public void signOutClicked() {
-        SessionManager sessionManager = new SessionManager(getApplicationContext());
-        sessionManager.logoutUser();
-        Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
-        startActivity(intent);
+        final SessionManager sessionManager = new SessionManager(getApplicationContext());
+        new AlertDialog.Builder(AccountActivity.this)
+                .setTitle("Register")
+                .setMessage("Are you sure to exit ?")
+                .setIcon(R.mipmap.ic_launcher)
+                .setPositiveButton("Sure", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sessionManager.logoutUser();
+                        Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
     }
 
     @OnCheckedChanged(R.id.accountActivity_tb_houseVisit)
@@ -373,5 +391,11 @@ public class AccountActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        tvDocterName.setText(sessionManager.getUserFullName());
     }
 }

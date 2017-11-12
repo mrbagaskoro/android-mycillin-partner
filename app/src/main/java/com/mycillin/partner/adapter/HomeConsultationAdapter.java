@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.fragment.HomeConsultationFragment;
 import com.mycillin.partner.list.HomeConsultationList;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultationAdapter.MyViewHolder> {
     private List<HomeConsultationList> HomeConsultationLists;
     private ArrayList<HomeConsultationList> arrayHomeConsultationLists;
+    private HomeConsultationFragment homeConsultationFragment;
 
-    public HomeConsultationAdapter(List<HomeConsultationList> HomeConsultationLists) {
+    public HomeConsultationAdapter(List<HomeConsultationList> HomeConsultationLists, HomeConsultationFragment homeConsultationFragment) {
         this.HomeConsultationLists = HomeConsultationLists;
         this.arrayHomeConsultationLists = new ArrayList<>();
+        this.homeConsultationFragment = homeConsultationFragment;
         this.arrayHomeConsultationLists.addAll(HomeConsultationLists);
     }
 
@@ -37,6 +43,15 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         HomeConsultationList resultList = HomeConsultationLists.get(position);
+        if (!resultList.getPatientPic().equals("")) {
+            Picasso.with(homeConsultationFragment.getContext())
+                    .load(resultList.getPatientPic())
+                    .resize(150, 150)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .centerCrop()
+                    .into(holder.patientPic);
+        }
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());

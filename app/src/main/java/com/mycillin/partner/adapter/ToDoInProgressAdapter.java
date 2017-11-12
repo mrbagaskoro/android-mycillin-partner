@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.fragment.ToDoInProgressFragment;
 import com.mycillin.partner.list.ToDoInProgressList;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAdapter.MyViewHolder> {
     private List<ToDoInProgressList> ToDoInProgressLists;
     private ArrayList<ToDoInProgressList> arrayToDoInProgressLists;
+    private ToDoInProgressFragment toDoInProgressFragment;
 
-    public ToDoInProgressAdapter(List<ToDoInProgressList> ToDoInProgressLists) {
+    public ToDoInProgressAdapter(List<ToDoInProgressList> ToDoInProgressLists, ToDoInProgressFragment toDoInProgressFragment) {
         this.ToDoInProgressLists = ToDoInProgressLists;
         this.arrayToDoInProgressLists = new ArrayList<>();
+        this.toDoInProgressFragment = new ToDoInProgressFragment();
         this.arrayToDoInProgressLists.addAll(ToDoInProgressLists);
     }
 
@@ -37,6 +43,15 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         ToDoInProgressList resultList = ToDoInProgressLists.get(position);
+        if (!resultList.getPatientPic().equals("")) {
+            Picasso.with(toDoInProgressFragment.getContext())
+                    .load(resultList.getPatientPic())
+                    .resize(150, 150)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .centerCrop()
+                    .into(holder.patientPic);
+        }
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());

@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.fragment.HomeVisitFragment;
 import com.mycillin.partner.list.HomeVisitList;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyViewHolder> {
     private List<HomeVisitList> HomeVisitLists;
     private ArrayList<HomeVisitList> arrayHomeVisitLists;
+    private HomeVisitFragment homeVisitFragment;
 
-    public HomeVisitAdapter(List<HomeVisitList> HomeVisitLists) {
+    public HomeVisitAdapter(List<HomeVisitList> HomeVisitLists, HomeVisitFragment homeVisitFragment) {
         this.HomeVisitLists = HomeVisitLists;
         this.arrayHomeVisitLists = new ArrayList<>();
+        this.homeVisitFragment = homeVisitFragment;
         this.arrayHomeVisitLists.addAll(HomeVisitLists);
     }
 
@@ -37,6 +43,15 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         HomeVisitList resultList = HomeVisitLists.get(position);
+        if (!resultList.getPatientPic().equals("")) {
+            Picasso.with(homeVisitFragment.getContext())
+                    .load(resultList.getPatientPic())
+                    .resize(150, 150)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .centerCrop()
+                    .into(holder.patientPic);
+        }
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());

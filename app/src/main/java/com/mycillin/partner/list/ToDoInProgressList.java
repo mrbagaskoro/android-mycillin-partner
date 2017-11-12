@@ -1,9 +1,5 @@
 package com.mycillin.partner.list;
 
-/**
- * Created by mrbagaskoro on 07-Oct-17.
- */
-
 public class ToDoInProgressList {
     private String patientPic;
     private String patientName;

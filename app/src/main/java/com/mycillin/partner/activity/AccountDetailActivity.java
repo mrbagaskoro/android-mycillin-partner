@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -127,6 +129,7 @@ public class AccountDetailActivity extends AppCompatActivity {
         sessionManager = new SessionManager(getApplicationContext());
         edtxEmail.setText(sessionManager.getUserEmail());
         edtxFullName.setText(sessionManager.getUserFullName());
+        edtxYearPractice.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -233,13 +236,11 @@ public class AccountDetailActivity extends AppCompatActivity {
     private void doUpdateAccount() {
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
+        final RadioButton rbSelectedAddressType = findViewById(rgGender.getCheckedRadioButtonId());
         String mEmail = edtxEmail.getText().toString().trim();
-        String mFullName = edtxFullName.getText().toString().trim();
+        final String mFullName = edtxFullName.getText().toString().trim();
         String mUserAddress = edtxAddress.getText().toString().trim();
         String mPhoneNumber = edtxPhone.getText().toString().trim();
-        int mGender = rgGender.getCheckedRadioButtonId();
-        RadioButton jenisKelamin = findViewById(mGender);
         String mDOB = edtxDateOfBirth.getText().toString().trim();
         String mProfessionCategory = edtxProfessionCategory.getText().toString().trim();
         String mAreaExpertise = edtxExpertise.getText().toString().trim();
@@ -248,7 +249,18 @@ public class AccountDetailActivity extends AppCompatActivity {
         String mPermitNUmber = edtxSIPP.getText().toString().trim();
         String mWorkDesc = edtxProffesionDesc.getText().toString().trim();
         String mPracticeAddress = edtxWorkAddress.getText().toString().trim();
-
+        final String gender = rbSelectedAddressType.getText().toString();
+        String jenisKelamin = "";
+        switch (gender) {
+            case "Male":
+            case "Female":
+                jenisKelamin = "L";
+                break;
+            case "FEMALE":
+            case "Wanita":
+                jenisKelamin = "P";
+                break;
+        }
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -271,12 +283,15 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("spesialisasi_id", mAreaExpertise);
         params.put("wilayah_kerja", mWorkArea);
         params.put("profile_desc", mWorkDesc);
-        params.put("lama_professi", mWorkYears);
+        params.put("lama_professi", mWorkYears.equals("") ? "0" : Integer.parseInt(mWorkYears));
         params.put("alamat_praktik", mPracticeAddress);
         params.put("map_praktik", "");
         params.put("nama_institusi", "");
 
         JSONObject jsonObject = new JSONObject(params);
+
+        Log.d("###", "doUpdateAccount: " + jsonObject);
+
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
@@ -313,7 +328,8 @@ public class AccountDetailActivity extends AppCompatActivity {
                         if (jsonObject.has("result")) {
                             boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                             if (status) {
-                                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Info", "Register Successfully, Please Login", true);
+                                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Info", "Account Updated", true);
+                                sessionManager.setKeyCustomerName(mFullName);
                             } else {
                                 String message = jsonObject.getJSONObject("result").getString("message");
                                 DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", message, false);

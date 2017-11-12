@@ -90,4 +90,9 @@ public class SessionManager {
     public String getUserPass() {
         return sharedPreferences.getString(KEY_USER_PASS, null);
     }
+
+    public void setKeyCustomerName(String fullName) {
+        editor.putString(KEY_FULLNAME, fullName);
+        editor.commit();
+    }
 }
