@@ -19,8 +19,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.restful.PartnerAPI;
 import com.mycillin.partner.restful.RestClient;
-import com.mycillin.partner.restful.cancalReason.ModelRestCancelReason;
-import com.mycillin.partner.restful.cancalReason.ModelRestCancelReasonData;
+import com.mycillin.partner.restful.cancelReason.ModelRestCancelReason;
+import com.mycillin.partner.restful.cancelReason.ModelRestCancelReasonData;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.ProgressBarHandler;
 

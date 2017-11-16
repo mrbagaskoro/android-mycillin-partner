@@ -1,4 +1,4 @@
-package com.mycillin.partner.restful.cancalReason;
+package com.mycillin.partner.restful.cancelReason;
 
 
 import com.google.gson.annotations.Expose;

@@ -1,13 +1,17 @@
 package com.mycillin.partner.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +30,7 @@ import android.widget.RadioGroup;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.github.aakira.expandablelayout.ExpandableLayout;
+import com.mvc.imagepicker.ImagePicker;
 import com.mycillin.partner.R;
 import com.mycillin.partner.list.SearchResultItem;
 import com.mycillin.partner.restful.PartnerAPI;
@@ -159,7 +164,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.accountDetailActivity_iv_userAvatar)
     public void onAvatarClicked() {
-        //todo Upload
+        ImagePicker.pickImage(AccountDetailActivity.this, "Select Image From :");
     }
 
     @OnClick(R.id.accountDetailActivity_et_dob)
@@ -200,8 +205,6 @@ public class AccountDetailActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.save_menu, menu);
         menuFinish = menu.findItem(R.id.action_save);
         menuFinish.setVisible(false);
-
-
         return true;
     }
 
@@ -456,7 +459,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (resultCode != Activity.RESULT_CANCELED) {
             String item1 = data.getStringExtra("ITEM_1");
             String item2 = data.getStringExtra("ITEM_2");
@@ -466,6 +469,17 @@ public class AccountDetailActivity extends AppCompatActivity {
                     break;
                 case REQUEST_CODE_GET_EXPERTISE:
                     edtxExpertise.setText(item1 + " - " + item2);
+                    break;
+                case 234:
+                    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                        Bitmap bmp = ImagePicker.getImageFromResult(getApplicationContext(), requestCode, resultCode, data);
+                        //todoUpload
+                        if (bmp != null) {
+                            ivAvatar.setImageBitmap(bmp);
+                        }
+                    } else {
+                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Warning", false);
+                    }
                     break;
             }
         }
