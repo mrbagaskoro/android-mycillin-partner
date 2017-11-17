@@ -4,16 +4,14 @@ import android.app.Application;
 
 import com.facebook.stetho.Stetho;
 
-/**
- * Created by 16003041 on 04/10/2017.
- */
+import timber.log.Timber;
 
 public class BaseApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Timber.plant(new Timber.DebugTree());
         Stetho.initializeWithDefaults(this);
     }
 }

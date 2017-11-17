@@ -6,9 +6,9 @@ import android.support.v4.app.Fragment;
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.mycillin.partner.R;
-import com.mycillin.partner.fragment.IntroOneFragment;
-import com.mycillin.partner.fragment.IntroThreeFragment;
-import com.mycillin.partner.fragment.IntroTwoFragment;
+import com.mycillin.partner.fragment.intro.IntroOneFragment;
+import com.mycillin.partner.fragment.intro.IntroThreeFragment;
+import com.mycillin.partner.fragment.intro.IntroTwoFragment;
 import com.mycillin.partner.util.ApplicationPreferencesManager;
 
 public class IntroActivity extends AppIntro {

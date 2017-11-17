@@ -190,6 +190,8 @@
     <string name="find">Find</string>
     <string name="result_list">%1$d Finded Entry</string>
     <string name="clear">Clear</string>
+    <string name="itemConcat">%1$s - %2$s</string>
+    <string name="default_notification_channel_id" translatable="false">default_channel_notification</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

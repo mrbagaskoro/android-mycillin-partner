@@ -10,13 +10,10 @@ import android.support.v7.widget.Toolbar;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
-import com.mycillin.partner.fragment.CompleteCheckUpResultFragment;
-import com.mycillin.partner.fragment.CompleteDiagnoseFragment;
-import com.mycillin.partner.fragment.CompleteMedicalActionsFragment;
-import com.mycillin.partner.fragment.CompletePrescriptionsFragment;
-import com.mycillin.partner.fragment.HomeConsultationFragment;
-import com.mycillin.partner.fragment.HomeReservationFragment;
-import com.mycillin.partner.fragment.HomeVisitFragment;
+import com.mycillin.partner.fragment.home.completion.CompleteCheckUpResultFragment;
+import com.mycillin.partner.fragment.home.completion.CompleteDiagnoseFragment;
+import com.mycillin.partner.fragment.home.completion.CompleteMedicalActionsFragment;
+import com.mycillin.partner.fragment.home.completion.CompletePrescriptionsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

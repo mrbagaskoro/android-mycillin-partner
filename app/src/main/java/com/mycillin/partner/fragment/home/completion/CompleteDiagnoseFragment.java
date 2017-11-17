@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.home.completion;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

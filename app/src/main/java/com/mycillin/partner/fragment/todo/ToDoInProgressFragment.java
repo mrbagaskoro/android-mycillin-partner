@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.todo;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +43,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class ToDoInProgressFragment extends Fragment {
 
@@ -117,7 +118,7 @@ public class ToDoInProgressFragment extends Fragment {
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Log.d("####", "saveAddress: OBJEK " + jsonObject);
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -153,11 +154,11 @@ public class ToDoInProgressFragment extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("###", "onResponse: " + jsonObject);
+                        Timber.tag("###").d("onResponse: %s", jsonObject);
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Log.d("###", "onResponse2: " + data);
+                            Timber.tag("###").d("onResponse2: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
                                 final String userID = data.getJSONObject(i).optString("user_id").trim();
@@ -170,7 +171,7 @@ public class ToDoInProgressFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        Log.d("###", "onResponseror: " + e);
+                        Timber.tag("###").d("onResponseror: %s", e);
                     }
                 }
             }
@@ -219,11 +220,11 @@ public class ToDoInProgressFragment extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("###", "onResponse: " + jsonObject);
+                        Timber.tag("###").d("onResponse: %s", jsonObject);
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Log.d("###", "onResponse2: " + data);
+                            Timber.tag("###").d("onResponse2: %s", data);
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
                                 mHandler.post(new Runnable() {
@@ -265,7 +266,7 @@ public class ToDoInProgressFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        Log.d("###", "onResponseror: " + e);
+                        Timber.tag("###").d("onResponseror: %s", e);
                     }
                 }
             }

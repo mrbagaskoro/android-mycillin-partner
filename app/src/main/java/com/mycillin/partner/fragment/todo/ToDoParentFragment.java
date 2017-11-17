@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.todo;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -18,14 +18,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ToDoFragment extends Fragment {
+public class ToDoParentFragment extends Fragment {
 
     @BindView(R.id.todoFragment_tabs)
     TabLayout tabLayout;
     @BindView(R.id.todoFragment_viewpager)
     ViewPager viewPager;
 
-   public ToDoFragment() {
+   public ToDoParentFragment() {
         // Required empty public constructor
     }
 

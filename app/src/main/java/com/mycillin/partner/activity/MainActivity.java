@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.mycillin.partner.R;
 import com.mycillin.partner.fragment.AboutFragment;
 import com.mycillin.partner.fragment.EWalletFragment;
-import com.mycillin.partner.fragment.HomeFragment;
-import com.mycillin.partner.fragment.ToDoFragment;
+import com.mycillin.partner.fragment.home.HomeParentFragment;
+import com.mycillin.partner.fragment.todo.ToDoParentFragment;
 import com.mycillin.partner.util.BottomNavigationViewHelper;
 import com.mycillin.partner.util.DataHelper;
 import com.mycillin.partner.util.SessionManager;
@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.nav_home:
-                    tx.replace(R.id.mainActivity_fl_framecontainer, new HomeFragment());
+                    tx.replace(R.id.mainActivity_fl_framecontainer, new HomeParentFragment());
                     tx.commit();
                     getSupportActionBar().setTitle(R.string.app_name);
 
                     return true;
                 case R.id.nav_todo:
-                    tx.replace(R.id.mainActivity_fl_framecontainer, new ToDoFragment());
+                    tx.replace(R.id.mainActivity_fl_framecontainer, new ToDoParentFragment());
                     tx.commit();
                     getSupportActionBar().setTitle(R.string.nav_todo);
 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         // -------------------------------------------------------------------------------------- //
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.mainActivity_fl_framecontainer, new HomeFragment());
+        tx.replace(R.id.mainActivity_fl_framecontainer, new HomeParentFragment());
         tx.commit();
         getSupportActionBar().setTitle(R.string.app_name);
     }

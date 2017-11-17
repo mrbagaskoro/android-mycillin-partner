@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.home.completion;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 
 import com.mycillin.partner.R;
 
-public class CompleteMedicalActionsFragment extends Fragment {
+public class CompleteCheckUpResultFragment extends Fragment {
 
-    public CompleteMedicalActionsFragment() {
+    public CompleteCheckUpResultFragment() {
         // Required empty public constructor
     }
 
@@ -22,7 +22,7 @@ public class CompleteMedicalActionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_complete_medical_actions, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_complete_check_up_result, container, false);
         return rootView;
     }
 }

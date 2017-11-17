@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.activity.HomeReservationDetailActivity;
-import com.mycillin.partner.adapter.HomeReservationAdapter;
-import com.mycillin.partner.list.HomeReservationList;
+import com.mycillin.partner.activity.HomeVisitDetailActivity;
+import com.mycillin.partner.adapter.HomeVisitAdapter;
+import com.mycillin.partner.list.HomeVisitList;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.ProgressBarHandler;
@@ -44,18 +44,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class HomeReservationFragment extends Fragment {
+public class HomeVisitFragment extends Fragment {
 
-    @BindView(R.id.homeReservationFragment_rv_recyclerView)
-    RecyclerView homeReservationRecyclerView;
+    @BindView(R.id.homeVisitFragment_rv_recyclerView)
+    RecyclerView homeVisitRecyclerView;
 
-    private List<HomeReservationList> homeReservationLists = new ArrayList<>();
-    private HomeReservationAdapter homeReservationAdapter;
+    private List<HomeVisitList> homeVisitLists = new ArrayList<>();
+    private HomeVisitAdapter homeVisitAdapter;
     private SessionManager sessionManager;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
 
-    public HomeReservationFragment() {
+    public HomeVisitFragment() {
         // Required empty public constructor
     }
 
@@ -67,36 +67,39 @@ public class HomeReservationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home_reservation, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home_visit, container, false);
         ButterKnife.bind(this, rootView);
         sessionManager = new SessionManager(getActivity());
         mProgressBarHandler = new ProgressBarHandler(getActivity());
         mHandler = new Handler(Looper.getMainLooper());
-        homeReservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        homeReservationRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        homeReservationLists.clear();
-        getHomeReservationList();
+        homeVisitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        homeVisitRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        homeVisitLists.clear();
+
+        getVisitData();
+
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getReservationData();
+        getHomeVisitList();
     }
 
-    public void getHomeReservationList() {
-        homeReservationRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), homeReservationRecyclerView, new RecyclerTouchListener.ClickListener() {
+    public void getHomeVisitList() {
+        homeVisitRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), homeVisitRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                HomeReservationList list = homeReservationLists.get(position);
+                HomeVisitList list = homeVisitLists.get(position);
 
-                Intent intent = new Intent(getContext(), HomeReservationDetailActivity.class);
-                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
-                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
-                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
-                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
-                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
+                Intent intent = new Intent(getContext(), HomeVisitDetailActivity.class);
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
                 startActivity(intent);
             }
 
@@ -107,7 +110,7 @@ public class HomeReservationFragment extends Fragment {
         }));
     }
 
-    public void getReservationData() {
+    public void getVisitData() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -118,7 +121,7 @@ public class HomeReservationFragment extends Fragment {
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
         data.put("booking_status_id", "");
-        data.put("service_type_id", "01");
+        data.put("service_type_id", "00");
         data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
@@ -262,10 +265,10 @@ public class HomeReservationFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeReservationLists.add(new HomeReservationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
-                                        homeReservationAdapter = new HomeReservationAdapter(homeReservationLists, HomeReservationFragment.this);
-                                        homeReservationRecyclerView.setAdapter(homeReservationAdapter);
-                                        homeReservationAdapter.notifyDataSetChanged();
+                                        homeVisitLists.add(new HomeVisitList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
+                                        homeVisitAdapter = new HomeVisitAdapter(homeVisitLists, HomeVisitFragment.this);
+                                        homeVisitRecyclerView.setAdapter(homeVisitAdapter);
+                                        homeVisitAdapter.notifyDataSetChanged();
                                     }
                                 });
                             }
@@ -277,4 +280,5 @@ public class HomeReservationFragment extends Fragment {
             }
         });
     }
+
 }

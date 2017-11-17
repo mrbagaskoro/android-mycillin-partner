@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.intro;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,12 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class IntroTwoFragment extends Fragment {
+public class IntroThreeFragment extends Fragment {
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
     private int layoutResId;
 
-    public static IntroTwoFragment newInstance(int layoutResId) {
-        IntroTwoFragment sampleSlide = new IntroTwoFragment();
+    public static IntroThreeFragment newInstance(int layoutResId) {
+        IntroThreeFragment sampleSlide = new IntroThreeFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARG_LAYOUT_RES_ID, layoutResId);

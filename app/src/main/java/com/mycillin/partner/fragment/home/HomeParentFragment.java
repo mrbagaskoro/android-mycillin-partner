@@ -1,4 +1,4 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.home;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -18,14 +18,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeFragment extends Fragment {
+public class HomeParentFragment extends Fragment {
 
     @BindView(R.id.homeFragment_tabs)
     TabLayout tabLayout;
     @BindView(R.id.homeFragment_viewpager)
     ViewPager viewPager;
 
-    public HomeFragment() {
+    public HomeParentFragment() {
         // Required empty public constructor
     }
 

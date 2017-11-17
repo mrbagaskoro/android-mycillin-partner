@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgColor"
-    tools:context="com.mycillin.partner.fragment.HomeReservationFragment">
+    tools:context="com.mycillin.partner.fragment.home.HomeReservationFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/homeReservationFragment_rv_recyclerView"

@@ -70,6 +70,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class AccountDetailActivity extends AppCompatActivity {
 
@@ -238,7 +239,6 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     private void doUpdateAccount() {
 
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         final RadioButton rbSelectedAddressType = findViewById(rgGender.getCheckedRadioButtonId());
         String mEmail = edtxEmail.getText().toString().trim();
         final String mFullName = edtxFullName.getText().toString().trim();
@@ -264,6 +264,8 @@ public class AccountDetailActivity extends AppCompatActivity {
                 jenisKelamin = "P";
                 break;
         }
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -293,7 +295,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject(params);
 
-        Log.d("###", "doUpdateAccount: " + jsonObject);
+        Timber.tag("###").d("doUpdateAccount: %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
@@ -460,15 +462,19 @@ public class AccountDetailActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        String item1 = "";
+        String item2 = "";
         if (resultCode != Activity.RESULT_CANCELED) {
-            String item1 = data.getStringExtra("ITEM_1");
-            String item2 = data.getStringExtra("ITEM_2");
+            if (requestCode != 234) {
+                item1 = data.getStringExtra("ITEM_1");
+                item2 = data.getStringExtra("ITEM_2");
+            }
             switch (requestCode) {
                 case REQUEST_CODE_GET_PROFESSION:
-                    edtxProfessionCategory.setText(item1 + " - " + item2);
+                    edtxProfessionCategory.setText(getString(R.string.itemConcat, item1, item2));
                     break;
                 case REQUEST_CODE_GET_EXPERTISE:
-                    edtxExpertise.setText(item1 + " - " + item2);
+                    edtxExpertise.setText(getString(R.string.itemConcat, item1, item2));
                     break;
                 case 234:
                     if (permissionCheck == PackageManager.PERMISSION_GRANTED) {

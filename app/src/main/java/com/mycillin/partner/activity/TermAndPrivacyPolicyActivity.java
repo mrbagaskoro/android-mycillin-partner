@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.fragment.PrivacyPolicyFragment;
-import com.mycillin.partner.fragment.TermsAndConditionsFragment;
-import com.mycillin.partner.fragment.TermsOfUseFragment;
+import com.mycillin.partner.fragment.terms.PrivacyPolicyFragment;
+import com.mycillin.partner.fragment.terms.TermsAndConditionsFragment;
+import com.mycillin.partner.fragment.terms.TermsOfUseFragment;
 
 import java.util.ArrayList;
 import java.util.List;

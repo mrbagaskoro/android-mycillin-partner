@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.fragment.HomeReservationFragment;
+import com.mycillin.partner.fragment.home.HomeReservationFragment;
 import com.mycillin.partner.list.HomeReservationList;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;

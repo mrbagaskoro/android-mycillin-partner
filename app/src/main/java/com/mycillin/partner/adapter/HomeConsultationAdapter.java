@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.fragment.HomeConsultationFragment;
+import com.mycillin.partner.fragment.home.HomeConsultationFragment;
 import com.mycillin.partner.list.HomeConsultationList;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;

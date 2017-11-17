@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.fragment.ToDoCompletedFragment;
+import com.mycillin.partner.fragment.todo.ToDoCompletedFragment;
 import com.mycillin.partner.list.ToDoCompletedList;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;

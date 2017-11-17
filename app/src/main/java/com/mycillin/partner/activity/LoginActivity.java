@@ -14,7 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mycillin.partner.R;
+import com.mycillin.partner.firebase.FirebaseManager;
 import com.mycillin.partner.restful.PartnerAPI;
 import com.mycillin.partner.restful.RestClient;
 import com.mycillin.partner.restful.login.ModelRestLogin;
@@ -41,6 +43,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -92,12 +95,10 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBarHandler = new ProgressBarHandler(this);
     }
 
-
     @OnClick(R.id.loginActivity_bt_showHaveAccBtn)
     public void haveAccountClick() {
         toLoginView();
     }
-
 
     @OnClick(R.id.loginActivity_bt_loginBtn)
     public void loginFunction() {
@@ -172,10 +173,10 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 String result = response.body().string();
-                Log.d("###", "onResponse: " + result);
+                Timber.tag("###").d("onResponse: %s", result);
                 try {
                     JSONObject jsonObject2 = new JSONObject(result);
-                    Log.d("###", "onResponse: " + jsonObject2);
+                    Timber.tag("###").d("onResponse: %s", jsonObject2);
                     if (response.isSuccessful()) {
                         JSONObject jsonObject = new JSONObject(result);
 
@@ -213,18 +214,7 @@ public class LoginActivity extends AppCompatActivity {
                 assert result != null;
                 if (response.isSuccessful()) {
                     if (!result.getResult().getMessage().contains("invalid login")) {
-                        session.createLoginSession(
-                                result.getResult().getData().getEmail(),
-                                result.getResult().getData().getFullName(),
-                                result.getResult().getData().getUserId(),
-                                result.getResult().getToken(),
-                                "",
-                                password
-                        );
-                        DataHelper.token = result.getResult().getToken();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        sendTokenFirebase(result, password);
                     }
                 } else {
                     mProgressBarHandler.hide();
@@ -236,6 +226,101 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<ModelRestLogin> call, @NonNull Throwable t) {
                 mProgressBarHandler.hide();
                 DialogHelper.showDialog(mHandler, LoginActivity.this, "Error", "Connection Problem", false);
+            }
+        });
+    }
+
+    private void sendTokenFirebase(final ModelRestLogin resultLogin, final String password) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        FirebaseManager firebaseManager = new FirebaseManager(getApplicationContext());
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", resultLogin.getResult().getData().getUserId());
+        params.put("token", firebaseManager.getFirebaseToken());
+
+        JSONObject jsonObject = new JSONObject(params);
+
+        Timber.tag("###").d("Firebase: %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "complete_account_partner/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", resultLogin.getResult().getToken())
+                .build();
+
+        Timber.tag("###").d("sendTokenFirebase: %s", resultLogin.getResult().getToken());
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                session.createLoginSession(
+                                        resultLogin.getResult().getData().getEmail(),
+                                        resultLogin.getResult().getData().getFullName(),
+                                        resultLogin.getResult().getData().getUserId(),
+                                        resultLogin.getResult().getToken(),
+                                        "",
+                                        password
+                                );
+                                DataHelper.token = resultLogin.getResult().getToken();
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning Firbase", message, false);
+                            }
+                        } else {
+                            DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning Firbase", "Please Try Again", false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning Firbase", message, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }

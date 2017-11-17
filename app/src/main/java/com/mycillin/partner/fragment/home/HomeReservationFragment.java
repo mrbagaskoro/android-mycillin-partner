@@ -1,5 +1,6 @@
-package com.mycillin.partner.fragment;
+package com.mycillin.partner.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,8 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.adapter.HomeConsultationAdapter;
-import com.mycillin.partner.list.HomeConsultationList;
+import com.mycillin.partner.activity.HomeReservationDetailActivity;
+import com.mycillin.partner.adapter.HomeReservationAdapter;
+import com.mycillin.partner.list.HomeReservationList;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.ProgressBarHandler;
@@ -42,18 +44,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class HomeConsultationFragment extends Fragment {
+public class HomeReservationFragment extends Fragment {
 
-    @BindView(R.id.homeConsultationFragment_rv_recyclerView)
-    RecyclerView homeConsultationRecyclerView;
+    @BindView(R.id.homeReservationFragment_rv_recyclerView)
+    RecyclerView homeReservationRecyclerView;
 
-    private List<HomeConsultationList> homeConsultationLists = new ArrayList<>();
-    private HomeConsultationAdapter homeConsultationAdapter;
+    private List<HomeReservationList> homeReservationLists = new ArrayList<>();
+    private HomeReservationAdapter homeReservationAdapter;
     private SessionManager sessionManager;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
 
-    public HomeConsultationFragment() {
+    public HomeReservationFragment() {
         // Required empty public constructor
     }
 
@@ -65,38 +67,37 @@ public class HomeConsultationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home_consultation, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home_reservation, container, false);
         ButterKnife.bind(this, rootView);
         sessionManager = new SessionManager(getActivity());
         mProgressBarHandler = new ProgressBarHandler(getActivity());
         mHandler = new Handler(Looper.getMainLooper());
-        homeConsultationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        homeConsultationRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        homeConsultationLists.clear();
-        getHomeConsultationList();
-
+        homeReservationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        homeReservationRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        homeReservationLists.clear();
+        getHomeReservationList();
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getConsultationData();
+        getReservationData();
     }
 
-    public void getHomeConsultationList() {
-        homeConsultationRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), homeConsultationRecyclerView, new RecyclerTouchListener.ClickListener() {
+    public void getHomeReservationList() {
+        homeReservationRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), homeReservationRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                HomeConsultationList list = homeConsultationLists.get(position);
+                HomeReservationList list = homeReservationLists.get(position);
 
-                /*Intent intent = new Intent(getContext(), HomeConsultationDetailActivity.class);
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
-                startActivity(intent);*/
+                Intent intent = new Intent(getContext(), HomeReservationDetailActivity.class);
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
+                startActivity(intent);
             }
 
             @Override
@@ -106,7 +107,7 @@ public class HomeConsultationFragment extends Fragment {
         }));
     }
 
-    public void getConsultationData() {
+    public void getReservationData() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -117,7 +118,7 @@ public class HomeConsultationFragment extends Fragment {
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
         data.put("booking_status_id", "");
-        data.put("service_type_id", "02");
+        data.put("service_type_id", "01");
         data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
@@ -261,11 +262,10 @@ public class HomeConsultationFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeConsultationLists.add(new HomeConsultationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
-
-                                        homeConsultationAdapter = new HomeConsultationAdapter(homeConsultationLists, HomeConsultationFragment.this);
-                                        homeConsultationRecyclerView.setAdapter(homeConsultationAdapter);
-                                        homeConsultationAdapter.notifyDataSetChanged();
+                                        homeReservationLists.add(new HomeReservationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
+                                        homeReservationAdapter = new HomeReservationAdapter(homeReservationLists, HomeReservationFragment.this);
+                                        homeReservationRecyclerView.setAdapter(homeReservationAdapter);
+                                        homeReservationAdapter.notifyDataSetChanged();
                                     }
                                 });
                             }
@@ -277,5 +277,4 @@ public class HomeConsultationFragment extends Fragment {
             }
         });
     }
-
 }
