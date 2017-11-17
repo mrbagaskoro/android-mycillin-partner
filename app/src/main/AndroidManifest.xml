@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".util.BaseApplication"
+        android:name=".application.BaseApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
@@ -21,20 +21,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name=".modul.home.HomeActivity" />
+        <activity android:name=".modul.intro.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.PermissionCheckActivity" />
-        <activity android:name=".activity.IntroActivity" />
-        <activity android:name=".activity.AccountActivity" />
-        <activity android:name=".activity.AccountDetailActivity" />
-        <activity android:name=".activity.HomeVisitDetailActivity" />
+        <activity android:name=".modul.account.LoginActivity" />
+        <activity android:name=".modul.intro.PermissionCheckActivity" />
+        <activity android:name=".modul.intro.IntroActivity" />
+        <activity android:name=".modul.accountProfile.AccountActivity" />
+        <activity android:name=".modul.accountProfile.AccountDetailActivity" />
+        <activity android:name=".modul.home.visit.HomeVisitDetailActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -48,17 +48,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".activity.HomeReservationDetailActivity" />
-        <activity android:name=".activity.ToDoInProgressDetailActivity" />
-        <activity android:name=".activity.RequesterProfileActivity" />
-        <activity android:name=".activity.MedicalRecordActivity" />
-        <activity android:name=".activity.MedicalRecordDetailActivity" />
-        <activity android:name=".activity.CompleteRequestActivity" />
-        <activity android:name=".activity.ChatActivity" />
-        <activity android:name=".activity.TermAndPrivacyPolicyActivity" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.UpdatePassActivity" />
-        <activity android:name=".activity.SearchResultActivity" />
+        <activity android:name=".modul.home.reservation.HomeReservationDetailActivity" />
+        <activity android:name=".modul.todo.ToDoInProgressDetailActivity" />
+        <activity android:name=".modul.todo.completion.requesterProfile.RequesterProfileActivity" />
+        <activity android:name=".modul.todo.completion.medicalRecord.MedicalRecordActivity" />
+        <activity android:name=".modul.todo.completion.medicalRecord.MedicalRecordDetailActivity" />
+        <activity android:name=".modul.accountProfile.CompleteRequestActivity" />
+        <activity android:name=".modul.chat.ChatActivity" />
+        <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity" />
+        <activity android:name=".modul.account.RegisterActivity" />
+        <activity android:name=".modul.accountProfile.UpdatePassActivity" />
+        <activity android:name=".modul.searchResult.SearchResultActivity" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -71,7 +71,7 @@
             android:value="@string/default_notification_channel_id" />
 
         <service
-            android:name=".firebase.FireBaseMessagingServices"
+            android:name=".modul.firebase.FireBaseMessagingServices"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -79,7 +79,7 @@
         </service>
 
         <service
-            android:name=".firebase.FireBaseIDServices"
+            android:name=".modul.firebase.FireBaseIDServices"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mycillin.partner.fragment.terms.PrivacyPolicyFragment">
+    tools:context="com.mycillin.partner.modul.accountProfile.termsCondition.PrivacyPolicyFragment">
 
     <WebView
         android:id="@+id/privacyPolicyFragment_wv_webView"

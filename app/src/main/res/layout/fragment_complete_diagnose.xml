@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mycillin.partner.fragment.home.completion.CompleteDiagnoseFragment" >
+    tools:context=".modul.todo.completion.CompleteDiagnoseFragment" >
 
     <LinearLayout
         android:id="@+id/completeDiagnoseFragment_ll_headerContainer"

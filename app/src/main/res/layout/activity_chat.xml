@@ -8,7 +8,7 @@
     android:paddingBottom="0dp"
 
     android:paddingTop="16dp"
-    tools:context="com.mycillin.partner.activity.ChatActivity">
+    tools:context="com.mycillin.partner.modul.chat.ChatActivity">
 
     <ScrollView
         android:id="@+id/chat_scrollView"

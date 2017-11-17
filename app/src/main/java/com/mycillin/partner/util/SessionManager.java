@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.mycillin.partner.activity.LoginActivity;
-import com.mycillin.partner.activity.MainActivity;
+import com.mycillin.partner.modul.account.LoginActivity;
+import com.mycillin.partner.modul.home.HomeActivity;
 
 public class SessionManager {
     private static final String KEY_PREF_NAME = "MYCILLIN_SESSION_MANAGER";
@@ -48,7 +48,7 @@ public class SessionManager {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } else {
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(context, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
