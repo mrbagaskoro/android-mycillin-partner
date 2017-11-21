@@ -54,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
+    private Handler handler;
 
     @BindView(R.id.accountActivity_sb_availability)
     SwitchButton sbAvaliability;
@@ -112,13 +113,7 @@ public class HomeActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(this);
         DataHelper.token = sessionManager.getUserToken();
-        //Snackbar.make(getWindow().getDecorView().getRootView(), DataHelper.token, Snackbar.LENGTH_LONG).show();
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                Snackbar.make(getWindow().getDecorView().getRootView(), "SELAMAT DATANG " + sessionManager.getUserFullName(), Snackbar.LENGTH_SHORT).show();
-            }
-        }, 2000); // 2000 milliseconds delay
+        handler = new Handler(Looper.getMainLooper());
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(navigation);

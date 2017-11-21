@@ -47,6 +47,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -489,5 +490,68 @@ public class AccountDetailActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    private void detailPartner() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_id", sessionManager.getUserId());
+
+        JSONObject jsonObject = new JSONObject(data);
+
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "detail_partner/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull final okhttp3.Response response) throws IOException {
+                final String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                Timber.tag("###").d("onResponseyyyyy: %s", jsonObject);
+                                boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                                if (status) {
+                                    JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
+                                    final JSONObject data = result.getJSONObject(0);
+                                    final String availability = data.optString("available_id");
+                                    final String reservIsOn = data.optString("reservasi_id");
+                                    final String visitIsOn = data.optString("visit_id");
+                                    final String consulIsOn = data.optString("consul_id");
+                                    final String bpjsIsOn = data.optString("BPJS_RCV_status");
+                                    //todo
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 }

@@ -4,25 +4,25 @@
     <item
         android:id="@+id/nav_home"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_menu_mycillin"
         android:title="@string/nav_home"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/nav_todo"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_terms_privacy"
         android:title="@string/task"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/nav_wallet"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_menu_ewallet"
         android:title="@string/nav_e_wallet"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/nav_about"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_action_info"
         android:title="@string/nav_about_mycillin"
         app:showAsAction="ifRoom" />
 </menu>

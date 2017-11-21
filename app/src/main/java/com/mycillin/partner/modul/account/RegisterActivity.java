@@ -151,6 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .add("email", email)
                 .add("password", password)
                 .add("name", name)
+                .add("mobile_no", phoneNumber)
                 .add("ref_id", "")
                 .build();
         Request request = new Request.Builder()
