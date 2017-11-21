@@ -1,6 +1,5 @@
 package com.mycillin.partner.modul.accountProfile;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,15 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
+import com.kyleduo.switchbutton.SwitchButton;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.account.LoginActivity;
 import com.mycillin.partner.modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity;
@@ -30,6 +25,8 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -48,6 +45,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class AccountActivity extends AppCompatActivity {
 
@@ -55,6 +53,8 @@ public class AccountActivity extends AppCompatActivity {
     private final String EXTRA_STATUS_RESERVASI = "reservasi_id";
     private final String EXTRA_STATUS_CONSULTATION = "consul_id";
     private final String EXTRA_STATUS_BPJS = "BPJS_RCV_status";
+    public static final String EXTRA_STATUS_ON = "0";
+
     @BindView(R.id.accountActivity_ll_manageAccount)
     LinearLayout manageAccount;
     @BindView(R.id.accountActivity_ll_changePassword)
@@ -67,14 +67,15 @@ public class AccountActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.accountActivity_tv_userName)
     TextView tvDocterName;
-    @BindView(R.id.accountActivity_tb_houseVisit)
-    ToggleButton tbHouseVisit;
-    @BindView(R.id.accountActivity_tb_reservation)
-    ToggleButton tbreservation;
-    @BindView(R.id.accountActivity_tb_consultation)
-    ToggleButton tbConsultation;
-    @BindView(R.id.accountActivity_tb_bpjs)
-    ToggleButton tbBpjs;
+    @BindView(R.id.accountActivity_sb_houseVisit)
+    SwitchButton sbHouseVisit;
+    @BindView(R.id.accountActivity_sb_reservation)
+    SwitchButton sbReservation;
+    @BindView(R.id.accountActivity_sb_consultation)
+    SwitchButton sbConsultation;
+    @BindView(R.id.accountActivity_sb_bpjs)
+    SwitchButton sbBpjs;
+
     private SessionManager sessionManager;
     private CircleImageView ivAvatar;
     private Handler mHandler;
@@ -115,12 +116,13 @@ public class AccountActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        detailPartner();
     }
 
     private void fillDoctorAvatar() {
         ivAvatar = findViewById(R.id.accountActivity_iv_userAvatar);
 
-//// TODO: 05/11/2017 FROM SERVICE
+        //// TODO: 05/11/2017 FROM SERVICE
         Picasso.with(getApplicationContext())
                 .load("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg")
                /* .transform(new RoundedTransformation(80, 0))*/
@@ -131,14 +133,14 @@ public class AccountActivity extends AppCompatActivity {
                 .into(ivAvatar);
     }
 
-    public void showChangePasswordDialog() {
-        /*final DialogPlus dialogPlus = DialogPlus.newDialog(AccountActivity.this)
+    /*public void showChangePasswordDialog() {
+        final DialogPlus dialogPlus = DialogPlus.newDialog(AccountActivity.this)
                 .setContentHolder(new ViewHolder(R.layout.dialog_change_password_layout))
                 .setGravity(Gravity.CENTER)
                 .create();
         dialogPlus.show();
 
-        View dialogPlusView = dialogPlus.getHolderView();*/
+        View dialogPlusView = dialogPlus.getHolderView();
 
         final Dialog dialog = new Dialog(AccountActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -189,10 +191,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void doChangePassword(String oldPassWord, String newPassWord) {
-
-
-    }
-
+    }*/
 
     @OnClick(R.id.accountActivity_ll_signOut)
     public void signOutClicked() {
@@ -218,31 +217,31 @@ public class AccountActivity extends AppCompatActivity {
                 .show();
     }
 
-    @OnCheckedChanged(R.id.accountActivity_tb_houseVisit)
+    @OnCheckedChanged(R.id.accountActivity_sb_houseVisit)
     public void doHomeVisit() {
-        boolean isActive = tbHouseVisit.isChecked();
+        boolean isActive = sbHouseVisit.isChecked();
         String value = isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_HOUSE_VISIT);
     }
 
-    @OnCheckedChanged(R.id.accountActivity_tb_consultation)
+    @OnCheckedChanged(R.id.accountActivity_sb_consultation)
     public void doConsultation() {
-        boolean isActive = tbConsultation.isChecked();
+        boolean isActive = sbConsultation.isChecked();
         String value = isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_CONSULTATION);
 
     }
 
-    @OnCheckedChanged(R.id.accountActivity_tb_reservation)
+    @OnCheckedChanged(R.id.accountActivity_sb_reservation)
     public void doReservation() {
-        boolean isActive = tbreservation.isChecked();
+        boolean isActive = sbReservation.isChecked();
         String value = isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_RESERVASI);
     }
 
-    @OnCheckedChanged(R.id.accountActivity_tb_bpjs)
+    @OnCheckedChanged(R.id.accountActivity_sb_bpjs)
     public void doBpjs() {
-        boolean isActive = tbBpjs.isChecked();
+        boolean isActive = sbBpjs.isChecked();
         String value = isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_BPJS);
     }
@@ -263,7 +262,7 @@ public class AccountActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Log.d("####", "saveAddress: OBJEK " + jsonObject);
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -276,7 +275,7 @@ public class AccountActivity extends AppCompatActivity {
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -285,36 +284,35 @@ public class AccountActivity extends AppCompatActivity {
                         switch (status) {
                             case EXTRA_STATUS_HOUSE_VISIT:
                                 if (value.equals("0")) {
-                                    tbHouseVisit.setChecked(false);
+                                    sbHouseVisit.setChecked(false);
                                 } else {
-                                    tbHouseVisit.setChecked(true);
+                                    sbHouseVisit.setChecked(true);
                                 }
                                 break;
                             case EXTRA_STATUS_RESERVASI:
                                 if (value.equals("0")) {
-                                    tbreservation.setChecked(false);
+                                    sbReservation.setChecked(false);
                                 } else {
-                                    tbreservation.setChecked(true);
+                                    sbReservation.setChecked(true);
                                 }
                                 break;
                             case EXTRA_STATUS_CONSULTATION:
                                 if (value.equals("0")) {
-                                    tbConsultation.setChecked(false);
+                                    sbConsultation.setChecked(false);
                                 } else {
-                                    tbConsultation.setChecked(true);
+                                    sbConsultation.setChecked(true);
                                 }
                                 break;
                             case EXTRA_STATUS_BPJS:
                                 if (value.equals("0")) {
-                                    tbBpjs.setChecked(false);
+                                    sbBpjs.setChecked(false);
                                 } else {
-                                    tbBpjs.setChecked(true);
+                                    sbBpjs.setChecked(true);
                                 }
                                 break;
                         }
                     }
                 });
-                DialogHelper.showDialog(mHandler, AccountActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, false);
             }
 
             @Override
@@ -324,35 +322,34 @@ public class AccountActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         mProgressBarHandler.hide();
-                        DialogHelper.showDialog(mHandler, AccountActivity.this, "Info", EXTRA_STATUS_HOUSE_VISIT + " Updated", false);
                         if (response.isSuccessful()) {
                             switch (status) {
                                 case EXTRA_STATUS_HOUSE_VISIT:
                                     if (value.equals("0")) {
-                                        tbHouseVisit.setChecked(true);
+                                        sbHouseVisit.setChecked(true);
                                     } else {
-                                        tbHouseVisit.setChecked(false);
+                                        sbHouseVisit.setChecked(false);
                                     }
                                     break;
                                 case EXTRA_STATUS_RESERVASI:
                                     if (value.equals("0")) {
-                                        tbreservation.setChecked(true);
+                                        sbReservation.setChecked(true);
                                     } else {
-                                        tbreservation.setChecked(false);
+                                        sbReservation.setChecked(false);
                                     }
                                     break;
                                 case EXTRA_STATUS_CONSULTATION:
                                     if (value.equals("0")) {
-                                        tbConsultation.setChecked(true);
+                                        sbConsultation.setChecked(true);
                                     } else {
-                                        tbConsultation.setChecked(false);
+                                        sbConsultation.setChecked(false);
                                     }
                                     break;
                                 case EXTRA_STATUS_BPJS:
                                     if (value.equals("0")) {
-                                        tbBpjs.setChecked(true);
+                                        sbBpjs.setChecked(true);
                                     } else {
-                                        tbBpjs.setChecked(false);
+                                        sbBpjs.setChecked(false);
                                     }
                                     break;
                             }
@@ -360,34 +357,124 @@ public class AccountActivity extends AppCompatActivity {
                             switch (status) {
                                 case EXTRA_STATUS_HOUSE_VISIT:
                                     if (value.equals("0")) {
-                                        tbHouseVisit.setChecked(false);
+                                        sbHouseVisit.setChecked(false);
                                     } else {
-                                        tbHouseVisit.setChecked(true);
+                                        sbHouseVisit.setChecked(true);
                                     }
                                     break;
                                 case EXTRA_STATUS_RESERVASI:
                                     if (value.equals("0")) {
-                                        tbreservation.setChecked(false);
+                                        sbReservation.setChecked(false);
                                     } else {
-                                        tbreservation.setChecked(true);
+                                        sbReservation.setChecked(true);
                                     }
                                     break;
                                 case EXTRA_STATUS_CONSULTATION:
                                     if (value.equals("0")) {
-                                        tbConsultation.setChecked(false);
+                                        sbConsultation.setChecked(false);
                                     } else {
-                                        tbConsultation.setChecked(true);
+                                        sbConsultation.setChecked(true);
                                     }
                                     break;
                                 case EXTRA_STATUS_BPJS:
                                     if (value.equals("0")) {
-                                        tbBpjs.setChecked(false);
+                                        sbBpjs.setChecked(false);
                                     } else {
-                                        tbBpjs.setChecked(true);
+                                        sbBpjs.setChecked(true);
                                     }
                                     break;
                             }
-                            DialogHelper.showDialog(mHandler, AccountActivity.this, "Warning", "Please Try Again", false);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void detailPartner() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_id", sessionManager.getUserId());
+
+        JSONObject jsonObject = new JSONObject(data);
+
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "detail_partner/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                DialogHelper.showDialog(mHandler, AccountActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
+                final String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                Timber.tag("###").d("onResponseyyyyy: %s", jsonObject);
+                                boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                                if (status) {
+                                    JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
+                                    final JSONObject data = result.getJSONObject(0);
+                                    final String availability = data.optString("available_id");
+                                    final String reservIsOn = data.optString("reservasi_id");
+                                    final String visitIsOn = data.optString("visit_id");
+                                    final String consulIsOn = data.optString("consul_id");
+                                    final String bpjsIsOn = data.optString("BPJS_RCV_status");
+
+                                    switch (reservIsOn) {
+                                        case EXTRA_STATUS_ON:
+                                            sbReservation.setChecked(true);
+                                            break;
+                                        default:
+                                            sbReservation.setChecked(false);
+                                    }
+                                    switch (visitIsOn) {
+                                        case EXTRA_STATUS_ON:
+                                            sbHouseVisit.setChecked(true);
+                                            break;
+                                        default:
+                                            sbHouseVisit.setChecked(false);
+                                    }
+                                    switch (consulIsOn) {
+                                        case EXTRA_STATUS_ON:
+                                            sbConsultation.setChecked(true);
+                                            break;
+                                        default:
+                                            sbConsultation.setChecked(false);
+                                    }
+                                    switch (bpjsIsOn) {
+                                        case EXTRA_STATUS_ON:
+                                            sbBpjs.setChecked(true);
+                                            break;
+                                        default:
+                                            sbBpjs.setChecked(false);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });

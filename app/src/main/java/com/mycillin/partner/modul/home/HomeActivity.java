@@ -14,18 +14,49 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.kyleduo.switchbutton.SwitchButton;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.about.AboutFragment;
 import com.mycillin.partner.modul.accountProfile.AccountActivity;
 import com.mycillin.partner.modul.ewallet.EWalletFragment;
 import com.mycillin.partner.modul.todo.ToDoParentFragment;
 import com.mycillin.partner.util.BottomNavigationViewHelper;
+import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DataHelper;
+import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.SessionManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import timber.log.Timber;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private final String EXTRA_STATUS_AVAILABILITY = "available_id";
+
     private SessionManager sessionManager;
+    private Handler mHandler;
+    private ProgressBarHandler mProgressBarHandler;
+
+    @BindView(R.id.accountActivity_sb_availability)
+    SwitchButton sbAvaliability;
 
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -77,6 +108,9 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(getApplicationContext());
+        ButterKnife.bind(this);
+        mHandler = new Handler(Looper.getMainLooper());
+        mProgressBarHandler = new ProgressBarHandler(this);
         DataHelper.token = sessionManager.getUserToken();
         //Snackbar.make(getWindow().getDecorView().getRootView(), DataHelper.token, Snackbar.LENGTH_LONG).show();
         Handler handler = new Handler(Looper.getMainLooper());
@@ -95,6 +129,14 @@ public class HomeActivity extends AppCompatActivity {
         tx.replace(R.id.mainActivity_fl_framecontainer, new HomeParentFragment());
         tx.commit();
         getSupportActionBar().setTitle(R.string.app_name);
+        detailPartner();
+    }
+
+    @OnCheckedChanged(R.id.accountActivity_sb_availability)
+    public void changeStatusAvail() {
+        boolean isActive = sbAvaliability.isChecked();
+        String value = isActive ? "0" : "1";
+        doToggleUpdate(value, EXTRA_STATUS_AVAILABILITY);
     }
 
     @Override
@@ -141,5 +183,153 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doToggleUpdate(final String value, final String status) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_id", sessionManager.getUserId());
+        data.put("status", status);
+        data.put("value", value);
+
+        JSONObject jsonObject = new JSONObject(data);
+
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "toggle_status_partner/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+
+                        switch (status) {
+                            case EXTRA_STATUS_AVAILABILITY:
+                                if (value.equals("0")) {
+                                    sbAvaliability.setChecked(false);
+                                } else {
+                                    sbAvaliability.setChecked(true);
+                                }
+                                break;
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
+                final String x = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        if (response.isSuccessful()) {
+                            switch (status) {
+                                case EXTRA_STATUS_AVAILABILITY:
+                                    if (value.equals("0")) {
+                                        sbAvaliability.setChecked(true);
+                                    } else {
+                                        sbAvaliability.setChecked(false);
+                                    }
+                                    break;
+                            }
+                        } else {
+                            switch (status) {
+                                case EXTRA_STATUS_AVAILABILITY:
+                                    if (value.equals("0")) {
+                                        sbAvaliability.setChecked(false);
+                                    } else {
+                                        sbAvaliability.setChecked(true);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void detailPartner() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_id", sessionManager.getUserId());
+
+        JSONObject jsonObject = new JSONObject(data);
+
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "detail_partner/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
+                final String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                Timber.tag("###").d("onResponseyyyyy: %s", jsonObject);
+                                boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                                if (status) {
+                                    JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
+                                    final JSONObject data = result.getJSONObject(0);
+                                    final String availability = data.optString("available_id");
+
+                                    switch (availability) {
+                                        case AccountActivity.EXTRA_STATUS_ON:
+                                            sbAvaliability.setChecked(true);
+                                            break;
+                                        default:
+                                            sbAvaliability.setChecked(false);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 }
