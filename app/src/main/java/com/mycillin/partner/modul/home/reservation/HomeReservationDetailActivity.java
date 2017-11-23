@@ -1,12 +1,16 @@
 package com.mycillin.partner.modul.home.reservation;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -99,7 +103,10 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.homeReservationDetailActivity_fab_callFAB)
     public void onClickCall() {
-        Intent intent = new Intent(HomeReservationDetailActivity.this, ChatActivity.class);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "085777255225"));
         startActivity(intent);
     }
 
@@ -159,7 +166,6 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
 
     private void cancelReasonDialog(ArrayList<String> cancelReasonList) {

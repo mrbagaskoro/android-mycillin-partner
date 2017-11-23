@@ -1,14 +1,22 @@
 package com.mycillin.partner.modul.home.visit;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -95,7 +103,10 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.homeVisitDetailActivity_fab_callFAB)
     public void onClickCall() {
-        Intent intent = new Intent(HomeVisitDetailActivity.this, ChatActivity.class);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "085777255225"));
         startActivity(intent);
     }
 
@@ -107,6 +118,10 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.homeVisitDetailActivity_fab_cancelFAB)
     public void onClickCancel() {
+        cancelReason();
+    }
+
+    public void cancelReason() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -122,13 +137,19 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
                         mProgressBarHandler.hide();
                     }
                 });
+                Log.d("###", "onResponse: Cancel 2");
                 ModelRestCancelReason modelRestCancelReason = response.body();
                 if (response.isSuccessful()) {
+                    Log.d("###", "onResponse: Cancel 3");
                     assert modelRestCancelReason != null;
                     for (ModelRestCancelReasonData modelRestCancelReasonData : modelRestCancelReason.getResult().getData()) {
+                        Log.d("###", "onResponse: Cancel 4");
                         cancelReasonList.add(modelRestCancelReasonData.getCancelReasonDesc());
                     }
+                    Log.d("###", "onResponse: TES " + cancelReasonList);
+                    cancelReasonDialog(cancelReasonList);
                 } else {
+                    Log.d("###", "onResponse: Cancel 5");
                     DialogHelper.showDialog(mHandler, HomeVisitDetailActivity.this, "Error", modelRestCancelReason + "", false);
                 }
             }
@@ -144,5 +165,33 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void cancelReasonDialog(ArrayList<String> cancelReasonList) {
+        final String[] batal = new String[1];
+        final String[] items = cancelReasonList.toArray(new String[cancelReasonList.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeVisitDetailActivity.this);
+        builder.setTitle("Alasan pembatalan survey");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                batal[0] = items[item];
+            }
+        });
+        builder.setPositiveButton("Ya",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(HomeVisitDetailActivity.this, "Berhasil " + batal[0], Toast.LENGTH_SHORT).show();
+                    }
+                });
+        builder.setNegativeButton("Tidak",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(HomeVisitDetailActivity.this, "Batal", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
