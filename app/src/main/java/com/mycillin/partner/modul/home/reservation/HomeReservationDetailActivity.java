@@ -1,15 +1,18 @@
 package com.mycillin.partner.modul.home.reservation;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,12 +22,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
-import com.mycillin.partner.util.PartnerAPI;
-import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReasonData;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.ProgressBarHandler;
+import com.mycillin.partner.util.RestClient;
 
 import java.util.ArrayList;
 
@@ -57,7 +60,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
-    private ArrayList<String> cancelReasonList;
+    private ArrayList<String> cancelReasonList = new ArrayList<>();
 
     public static String KEY_FLAG_PATIENT_NAME = "KEY_FLAG_PATIENT_NAME";
     public static String KEY_FLAG_PATIENT_TYPE = "KEY_FLAG_PATIENT_TYPE";
@@ -108,8 +111,11 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.homeReservationDetailActivity_fab_cancelFAB)
     public void oncClickCancel() {
-        cancelReasonList = new ArrayList<>();
-        final String[] batal = new String[1];
+        Log.d("###", "onResponse: Cancel 1");
+        cancelReason();
+    }
+
+    public void cancelReason() {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -125,23 +131,19 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
                         mProgressBarHandler.hide();
                     }
                 });
+                Log.d("###", "onResponse: Cancel 2");
                 ModelRestCancelReason modelRestCancelReason = response.body();
                 if (response.isSuccessful()) {
+                    Log.d("###", "onResponse: Cancel 3");
                     assert modelRestCancelReason != null;
                     for (ModelRestCancelReasonData modelRestCancelReasonData : modelRestCancelReason.getResult().getData()) {
+                        Log.d("###", "onResponse: Cancel 4");
                         cancelReasonList.add(modelRestCancelReasonData.getCancelReasonDesc());
-                        Log.d("###", "onResponse: " + cancelReasonList);
-                        /*AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                        builder.setTitle("Alasan pembatalan survey");
-                        builder.setIcon(R.mipmap.ic_launcher);
-                        builder.setSingleChoiceItems(cancelReasonList, -1, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                batal[0] = cancelReasonList.toString();
-                                //Toast.makeText(getContext(), items[item], Toast.LENGTH_SHORT).show();
-                            }
-                        });*/
                     }
+                    Log.d("###", "onResponse: TES " + cancelReasonList);
+                    cancelReasonDialog(cancelReasonList);
                 } else {
+                    Log.d("###", "onResponse: Cancel 5");
                     DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Error", modelRestCancelReason + "", false);
                 }
             }
@@ -157,5 +159,34 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
                 });
             }
         });
+
+    }
+
+    private void cancelReasonDialog(ArrayList<String> cancelReasonList) {
+        final String[] batal = new String[1];
+        final String[] items = cancelReasonList.toArray(new String[cancelReasonList.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeReservationDetailActivity.this);
+        builder.setTitle("Alasan pembatalan survey");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                batal[0] = items[item];
+            }
+        });
+        builder.setPositiveButton("Ya",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(HomeReservationDetailActivity.this, "Berhasil " + batal[0], Toast.LENGTH_SHORT).show();
+                    }
+                });
+        builder.setNegativeButton("Tidak",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(HomeReservationDetailActivity.this, "Batal", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

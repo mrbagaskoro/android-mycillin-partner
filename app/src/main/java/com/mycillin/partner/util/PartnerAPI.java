@@ -33,6 +33,6 @@ public interface PartnerAPI {
     @GET("list_spesialisasi/")
     Call<ModelRestExpertise> getExpertise();
 
-    @GET("list_cancel_reason/")
+    @GET("list_cancel_reason_partner/")
     Call<ModelRestCancelReason> getCancelReason();
 }
