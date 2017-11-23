@@ -419,6 +419,12 @@ public class AccountActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
                 DialogHelper.showDialog(mHandler, AccountActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
             }
 
@@ -437,7 +443,6 @@ public class AccountActivity extends AppCompatActivity {
                                 if (status) {
                                     JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
                                     final JSONObject data = result.getJSONObject(0);
-                                    final String availability = data.optString("available_id");
                                     final String reservIsOn = data.optString("reservasi_id");
                                     final String visitIsOn = data.optString("visit_id");
                                     final String consulIsOn = data.optString("consul_id");

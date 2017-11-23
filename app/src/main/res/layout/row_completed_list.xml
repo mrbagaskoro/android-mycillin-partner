@@ -109,6 +109,17 @@
                     android:textColor="@color/secondaryText"
                     android:text="@string/rowVisitList_bookTime" />
 
+                <TextView
+                    android:id="@+id/rowCompletedList_tv_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:gravity="bottom|end"
+                    android:textColor="@color/secondaryText"
+                    android:visibility="gone"
+                    android:text="@string/rowVisitList_bookTime" />
+
             </LinearLayout>
 
         </LinearLayout>

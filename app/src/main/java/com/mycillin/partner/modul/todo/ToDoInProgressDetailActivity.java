@@ -40,6 +40,10 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     Button callButton;
     @BindView(R.id.toDoInProgressDetailActivity_bt_completeBtn)
     Button completeButton;
+    @BindView(R.id.toDoInProgressDetailActivity_tv_bookLocation)
+    TextView bookLocation;
+
+
 
     private GoogleMap gMap;
 
@@ -48,6 +52,7 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
     public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
+    public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,7 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
+        bookLocation.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_LOCATION));
 
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override

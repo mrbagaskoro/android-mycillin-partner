@@ -192,7 +192,7 @@
     <string name="clear">Clear</string>
     <string name="itemConcat">%1$s - %2$s</string>
     <string name="default_notification_channel_id" translatable="false">default_channel_notification</string>
-    <string name="available">Available</string>
+    <string name="available">availability</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

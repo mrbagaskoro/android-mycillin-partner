@@ -520,6 +520,12 @@ public class AccountDetailActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
                 DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
             }
 
@@ -538,12 +544,42 @@ public class AccountDetailActivity extends AppCompatActivity {
                                 if (status) {
                                     JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
                                     final JSONObject data = result.getJSONObject(0);
-                                    final String availability = data.optString("available_id");
-                                    final String reservIsOn = data.optString("reservasi_id");
-                                    final String visitIsOn = data.optString("visit_id");
-                                    final String consulIsOn = data.optString("consul_id");
-                                    final String bpjsIsOn = data.optString("BPJS_RCV_status");
-                                    //todo
+                                    final String email = data.optString("email");
+                                    final String fullName = data.optString("full_name");
+                                    final String address = data.optString("address");
+                                    final String mobileNo = data.optString("mobile_no");
+                                    final String gender = data.optString("gender");
+                                    final String dob = data.optString("dob"); //1999-01-01
+                                    final String partnerType = data.optString("partner_type_id");
+                                    final String spesialisasiID = data.optString("spesialisasi_id");
+                                    final String wilayahKerja = data.optString("wilayah_kerja");
+                                    final String yearProfession = data.optString("lama_professi");
+                                    final String noSip = data.optString("no_SIP");
+                                    final String profileDesc = data.optString("profile_desc");
+                                    final String addressPractice = data.optString("alamat_praktik");
+
+                                    edtxEmail.setText(email.replace("null",""));
+                                    edtxFullName.setText(fullName.replace("null",""));
+                                    edtxAddress.setText(address.replace("null",""));
+                                    edtxPhone.setText(mobileNo.replace("null",""));
+
+                                    switch (gender) {
+                                        case "L":
+                                            rbMale.setChecked(true);
+                                            break;
+                                        case "P":
+                                            rbFemale.setChecked(true);
+                                            break;
+                                    }
+
+                                    edtxDateOfBirth.setText(dob.replace("null",""));
+                                    edtxProfessionCategory.setText(partnerType.replace("null",""));
+                                    edtxExpertise.setText(spesialisasiID.replace("null",""));
+                                    edtxWorkArea.setText(wilayahKerja.replace("null",""));
+                                    edtxYearPractice.setText(yearProfession.replace("null",""));
+                                    edtxSIPP.setText(noSip.replace("null",""));
+                                    edtxProffesionDesc.setText(profileDesc.replace("null",""));
+                                    edtxWorkAddress.setText(addressPractice.replace("null",""));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

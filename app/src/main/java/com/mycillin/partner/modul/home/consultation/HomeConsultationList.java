@@ -1,22 +1,20 @@
 package com.mycillin.partner.modul.home.consultation;
 
-/**
- * Created by mrbagaskoro on 07-Oct-17.
- */
-
 public class HomeConsultationList {
     private String patientPic;
     private String patientName;
     private String bookType;
     private String bookDate;
     private String bookTime;
+    private String address;
 
-    public HomeConsultationList(String patientPic, String patientName, String bookType, String bookDate, String bookTime){
+    public HomeConsultationList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address) {
         this.patientPic = patientPic;
         this.patientName = patientName;
         this.bookType = bookType;
         this.bookDate = bookDate;
         this.bookTime = bookTime;
+        this.address = address;
     }
 
     public String getPatientPic() {
@@ -57,5 +55,13 @@ public class HomeConsultationList {
 
     public void setBookTime(String bookTime) {
         this.bookTime = bookTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

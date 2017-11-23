@@ -16,10 +16,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by mrbagaskoro on 06-Oct-17.
- */
-
 public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyViewHolder> {
     private List<HomeVisitList> HomeVisitLists;
     private ArrayList<HomeVisitList> arrayHomeVisitLists;
@@ -54,6 +50,7 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());
         holder.bookTime.setText(resultList.getBookTime());
+        holder.address.setText(resultList.getAddress());
     }
 
     @Override
@@ -66,6 +63,7 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
         private TextView bookType;
         private TextView bookDate;
         private TextView bookTime;
+        private TextView address;
         private CircleImageView patientPic;
 
 
@@ -76,6 +74,7 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
             bookDate = itemView.findViewById(R.id.rowVisitList_tv_bookDate);
             bookTime = itemView.findViewById(R.id.rowVisitList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowVisitList_iv_patientAvatar);
+            address = itemView.findViewById(R.id.rowVisitList_tv_address);
         }
     }
 }

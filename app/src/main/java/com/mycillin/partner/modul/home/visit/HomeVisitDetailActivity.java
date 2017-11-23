@@ -59,6 +59,10 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     TextView bookDate;
     @BindView(R.id.homeVisitDetailActivity_tv_bookType)
     TextView bookType;
+    @BindView(R.id.homeVisitDetailActivity_tv_bookLocation)
+    TextView bookLocation;
+
+
 
     private GoogleMap gMap;
     private PartnerAPI partnerAPI;
@@ -71,6 +75,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
     public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
+    public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +104,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
+        bookLocation.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_LOCATION));
     }
 
     @OnClick(R.id.homeVisitDetailActivity_fab_callFAB)

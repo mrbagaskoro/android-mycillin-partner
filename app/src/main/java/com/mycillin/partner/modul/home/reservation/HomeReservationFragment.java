@@ -94,6 +94,7 @@ public class HomeReservationFragment extends Fragment {
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_LOCATION, list.getAddress());
                 startActivity(intent);
             }
 
@@ -229,6 +230,7 @@ public class HomeReservationFragment extends Fragment {
                             Log.d("###", "onResponse2: " + data);
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
+                                final String address = data.getJSONObject(i).optString("address").trim();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -259,7 +261,7 @@ public class HomeReservationFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeReservationLists.add(new HomeReservationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
+                                        homeReservationLists.add(new HomeReservationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
                                         homeReservationAdapter = new HomeReservationAdapter(homeReservationLists, HomeReservationFragment.this);
                                         homeReservationRecyclerView.setAdapter(homeReservationAdapter);
                                         homeReservationAdapter.notifyDataSetChanged();

@@ -229,6 +229,7 @@ public class HomeConsultationFragment extends Fragment {
                             Log.d("###", "onResponse2: " + data);
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
+                                final String address = data.getJSONObject(i).optString("address").trim();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -259,8 +260,7 @@ public class HomeConsultationFragment extends Fragment {
                                                 serviceType = "Unknown";
                                                 break;
                                         }
-                                        homeConsultationLists.add(new HomeConsultationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
-
+                                        homeConsultationLists.add(new HomeConsultationList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
                                         homeConsultationAdapter = new HomeConsultationAdapter(homeConsultationLists, HomeConsultationFragment.this);
                                         homeConsultationRecyclerView.setAdapter(homeConsultationAdapter);
                                         homeConsultationAdapter.notifyDataSetChanged();

@@ -203,6 +203,8 @@ public class ToDoCompletedFragment extends Fragment {
 
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
+                                final String address = data.getJSONObject(i).optString("address").trim();
+
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -233,7 +235,7 @@ public class ToDoCompletedFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoCompletedLists.add(new ToDoCompletedList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
+                                        toDoCompletedLists.add(new ToDoCompletedList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
                                         toDoCompletedAdapter = new ToDoCompletedAdapter(toDoCompletedLists, ToDoCompletedFragment.this);
                                         toDoCompletedRecyclerView.setAdapter(toDoCompletedAdapter);
                                         toDoCompletedAdapter.notifyDataSetChanged();

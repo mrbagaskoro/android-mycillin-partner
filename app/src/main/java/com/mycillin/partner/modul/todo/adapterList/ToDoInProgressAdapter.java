@@ -51,6 +51,7 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());
         holder.bookTime.setText(resultList.getBookTime());
+        holder.address.setText(resultList.getAddress());
     }
 
     @Override
@@ -63,6 +64,7 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         private TextView bookType;
         private TextView bookDate;
         private TextView bookTime;
+        private TextView address;
         private CircleImageView patientPic;
 
 
@@ -73,6 +75,7 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
             bookDate = itemView.findViewById(R.id.rowInProgressList_tv_bookDate);
             bookTime = itemView.findViewById(R.id.rowInProgressList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowInProgressList_iv_patientAvatar);
+            address = itemView.findViewById(R.id.rowInProgressList_tv_address);
         }
     }
 }

@@ -6,13 +6,15 @@ public class ToDoInProgressList {
     private String bookType;
     private String bookDate;
     private String bookTime;
+    private String address;
 
-    public ToDoInProgressList(String patientPic, String patientName, String bookType, String bookDate, String bookTime){
+    public ToDoInProgressList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address) {
         this.patientPic = patientPic;
         this.patientName = patientName;
         this.bookType = bookType;
         this.bookDate = bookDate;
         this.bookTime = bookTime;
+        this.address = address;
     }
 
     public String getPatientPic() {
@@ -53,5 +55,13 @@ public class ToDoInProgressList {
 
     public void setBookTime(String bookTime) {
         this.bookTime = bookTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -54,6 +54,7 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());
         holder.bookTime.setText(resultList.getBookTime());
+        holder.address.setText(resultList.getAddress());
     }
 
     @Override
@@ -67,6 +68,7 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
         private TextView bookDate;
         private TextView bookTime;
         private CircleImageView patientPic;
+        private TextView address;
 
 
         public MyViewHolder(View itemView) {
@@ -76,6 +78,7 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
             bookDate = itemView.findViewById(R.id.rowConsultationList_tv_bookDate);
             bookTime = itemView.findViewById(R.id.rowConsultationList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowConsultationList_iv_patientAvatar);
+            address = itemView.findViewById(R.id.rowConsultationList_tv_address);
         }
     }
 }

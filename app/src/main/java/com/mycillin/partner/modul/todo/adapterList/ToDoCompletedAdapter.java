@@ -17,10 +17,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by mrbagaskoro on 07-Oct-17.
- */
-
 public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdapter.MyViewHolder> {
     private List<ToDoCompletedList> ToDoCompletedLists;
     private ArrayList<ToDoCompletedList> arrayToDoCompletedLists;
@@ -56,6 +52,8 @@ public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdap
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(resultList.getBookDate());
         holder.bookTime.setText(resultList.getBookTime());
+        holder.bookTime.setText(resultList.getBookTime());
+        holder.address.setText(resultList.getAddress());
     }
 
     @Override
@@ -68,6 +66,7 @@ public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdap
         private TextView bookType;
         private TextView bookDate;
         private TextView bookTime;
+        private TextView address;
         private CircleImageView patientPic;
 
 
@@ -78,6 +77,7 @@ public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdap
             bookDate = itemView.findViewById(R.id.rowCompletedList_tv_bookDate);
             bookTime = itemView.findViewById(R.id.rowCompletedList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowCompletedList_iv_patientAvatar);
+            address = itemView.findViewById(R.id.rowCompletedList_tv_address);
         }
     }
 }

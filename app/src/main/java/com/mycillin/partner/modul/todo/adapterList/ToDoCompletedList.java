@@ -1,23 +1,12 @@
 package com.mycillin.partner.modul.todo.adapterList;
 
-/**
- * Created by mrbagaskoro on 07-Oct-17.
- */
-
 public class ToDoCompletedList {
     private String patientPic;
     private String patientName;
     private String bookType;
     private String bookDate;
     private String bookTime;
-
-    public ToDoCompletedList(String patientPic, String patientName, String bookType, String bookDate, String bookTime){
-        this.patientPic = patientPic;
-        this.patientName = patientName;
-        this.bookType = bookType;
-        this.bookDate = bookDate;
-        this.bookTime = bookTime;
-    }
+    private String address;
 
     public String getPatientPic() {
         return patientPic;
@@ -57,5 +46,22 @@ public class ToDoCompletedList {
 
     public void setBookTime(String bookTime) {
         this.bookTime = bookTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public ToDoCompletedList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address) {
+        this.patientPic = patientPic;
+        this.patientName = patientName;
+        this.bookType = bookType;
+        this.bookDate = bookDate;
+        this.bookTime = bookTime;
+        this.address = address;
     }
 }

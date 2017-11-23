@@ -91,6 +91,7 @@ public class ToDoInProgressFragment extends Fragment {
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_LOCATION, list.getAddress());
                 startActivity(intent);
             }
 
@@ -225,6 +226,7 @@ public class ToDoInProgressFragment extends Fragment {
                             Timber.tag("###").d("onResponse2: %s", data);
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
+                                final String address = data.getJSONObject(i).optString("address").trim();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -255,7 +257,7 @@ public class ToDoInProgressFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoInProgressLists.add(new ToDoInProgressList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
+                                        toDoInProgressLists.add(new ToDoInProgressList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
                                         toDoInProgressAdapter = new ToDoInProgressAdapter(toDoInProgressLists, ToDoInProgressFragment.this);
                                         toDoInProgressRecyclerView.setAdapter(toDoInProgressAdapter);
                                         toDoInProgressAdapter.notifyDataSetChanged();

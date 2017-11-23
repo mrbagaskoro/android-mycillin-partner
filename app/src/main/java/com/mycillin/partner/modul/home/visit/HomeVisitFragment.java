@@ -97,6 +97,7 @@ public class HomeVisitFragment extends Fragment {
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_LOCATION, list.getAddress());
                 startActivity(intent);
             }
 
@@ -232,6 +233,7 @@ public class HomeVisitFragment extends Fragment {
                             Log.d("###", "onResponse2: " + data);
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
+                                final String address = data.getJSONObject(i).optString("address").trim();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -262,7 +264,7 @@ public class HomeVisitFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeVisitLists.add(new HomeVisitList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB"));
+                                        homeVisitLists.add(new HomeVisitList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
                                         homeVisitAdapter = new HomeVisitAdapter(homeVisitLists, HomeVisitFragment.this);
                                         homeVisitRecyclerView.setAdapter(homeVisitAdapter);
                                         homeVisitAdapter.notifyDataSetChanged();

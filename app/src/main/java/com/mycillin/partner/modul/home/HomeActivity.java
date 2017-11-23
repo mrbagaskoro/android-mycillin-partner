@@ -290,6 +290,12 @@ public class HomeActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
                 DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
             }
 
