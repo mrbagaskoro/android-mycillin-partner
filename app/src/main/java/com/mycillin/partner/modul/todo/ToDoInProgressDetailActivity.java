@@ -1,6 +1,7 @@
 package com.mycillin.partner.modul.todo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +36,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     TextView bookDate;
     @BindView(R.id.toDoInProgressDetailActivity_tv_bookType)
     TextView bookType;
+    @BindView(R.id.toDoInProgressDetailActivity_bt_callBtn)
+    Button callButton;
     @BindView(R.id.toDoInProgressDetailActivity_bt_completeBtn)
     Button completeButton;
 
@@ -75,6 +78,14 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ToDoInProgressDetailActivity.this, CompleteRequestActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "085777255225"));
                 startActivity(intent);
             }
         });
