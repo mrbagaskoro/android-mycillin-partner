@@ -102,6 +102,7 @@ public class ToDoInProgressFragment extends Fragment {
     }
 
     public void getTodoData() {
+        toDoInProgressLists.clear();
         mHandler.post(new Runnable() {
             @Override
             public void run() {

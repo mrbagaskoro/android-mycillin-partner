@@ -109,6 +109,7 @@ public class HomeVisitFragment extends Fragment {
     }
 
     public void getVisitData() {
+        homeVisitLists.clear();
         mHandler.post(new Runnable() {
             @Override
             public void run() {

@@ -41,7 +41,7 @@ public class MedicalRecordAdapter extends RecyclerView.Adapter<MedicalRecordAdap
         holder.year.setText(resultList.getYear());
         holder.doctorName.setText(resultList.getDoctorName());
 
-        holder.detailBtn.setOnClickListener(new View.OnClickListener() {
+        /*holder.detailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String date = resultList.getDay() + " " + resultList.getMonth() + " " + resultList.getYear();
@@ -51,7 +51,7 @@ public class MedicalRecordAdapter extends RecyclerView.Adapter<MedicalRecordAdap
                 intent.putExtra(MedicalRecordDetailActivity.INTENT_KEY_DOCTOR, resultList.getDoctorName());
                 activity.startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MedicalRecordAdapter extends RecyclerView.Adapter<MedicalRecordAdap
             month = itemView.findViewById(R.id.rowMedicalRecordList_tv_month);
             year = itemView.findViewById(R.id.rowMedicalRecordList_tv_year);
             doctorName = itemView.findViewById(R.id.rowMedicalRecordList_tv_doctorName);
-            detailBtn = itemView.findViewById(R.id.rowMedicalRecordList_ib_detailBtn);
+            //detailBtn = itemView.findViewById(R.id.rowMedicalRecordList_ib_detailBtn);
         }
     }
 }

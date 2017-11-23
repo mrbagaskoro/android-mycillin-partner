@@ -106,6 +106,7 @@ public class HomeReservationFragment extends Fragment {
     }
 
     public void getReservationData() {
+        homeReservationLists.clear();
         mHandler.post(new Runnable() {
             @Override
             public void run() {

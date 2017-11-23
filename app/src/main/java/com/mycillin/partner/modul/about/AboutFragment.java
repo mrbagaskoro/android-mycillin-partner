@@ -68,7 +68,7 @@ public class AboutFragment extends Fragment {
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/mycillin.mycillin.9"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100022037055834"));
                 intent.setPackage("com.facebook.katana");
                 try {
                     startActivity(intent);
