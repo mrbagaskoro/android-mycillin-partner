@@ -30,14 +30,12 @@
         <com.kyleduo.switchbutton.SwitchButton
             android:id="@+id/accountActivity_sb_availability"
             android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="25dp"
             android:layout_weight="1"
             android:gravity="end"
             app:kswBackColor="@color/white"
             app:kswTextExtra="2dp"
-            app:kswTextOff="OFF"
-            app:kswTextOn="ACTIVE"
-            app:kswThumbColor="#FFC107"
+            app:kswThumbColor="#008419"
             app:kswTintColor="@color/darkRed" />
     </LinearLayout>
 

@@ -150,17 +150,7 @@ public class AccountDetailActivity extends AppCompatActivity {
             }
         });
 
-        cbIsAgree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    menuFinish.setVisible(true);
-                } else {
-                    menuFinish.setVisible(false);
-                }
-            }
-        });
-
+        detailPartner();
         fillDoctorAvatar();
     }
 
@@ -206,32 +196,36 @@ public class AccountDetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);
         menuFinish = menu.findItem(R.id.action_save);
-        menuFinish.setVisible(false);
+        menuFinish.setVisible(true);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        final RadioButton rbSelectedAddressType = findViewById(rgGender.getCheckedRadioButtonId());
         if (id == R.id.action_save) {
-            new AlertDialog.Builder(AccountDetailActivity.this)
-                    .setTitle("Info")
-                    .setMessage("Are You Sure To Update Your Account Information ?")
-                    .setIcon(R.mipmap.ic_launcher)
-                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            doUpdateAccount();
-                        }
-                    })
-                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // CLOSE
-                        }
-                    })
-                    .show();
+            if (rbSelectedAddressType.getText().toString().equals("")) {
+                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Connection Problem, Please Try Again Later.", false);
+            } else {
+                new AlertDialog.Builder(AccountDetailActivity.this)
+                        .setTitle("Info")
+                        .setMessage("Are You Sure To Update Your Account Information ?")
+                        .setIcon(R.mipmap.ic_launcher)
+                        .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                doUpdateAccount();
+                            }
+                        })
+                        .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // CLOSE
+                            }
+                        })
+                        .show();
+            }
             return true;
         }
 
@@ -558,10 +552,10 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     final String profileDesc = data.optString("profile_desc");
                                     final String addressPractice = data.optString("alamat_praktik");
 
-                                    edtxEmail.setText(email.replace("null",""));
-                                    edtxFullName.setText(fullName.replace("null",""));
-                                    edtxAddress.setText(address.replace("null",""));
-                                    edtxPhone.setText(mobileNo.replace("null",""));
+                                    edtxEmail.setText(email.replace("null", ""));
+                                    edtxFullName.setText(fullName.replace("null", ""));
+                                    edtxAddress.setText(address.replace("null", ""));
+                                    edtxPhone.setText(mobileNo.replace("null", ""));
 
                                     switch (gender) {
                                         case "L":
@@ -572,14 +566,14 @@ public class AccountDetailActivity extends AppCompatActivity {
                                             break;
                                     }
 
-                                    edtxDateOfBirth.setText(dob.replace("null",""));
-                                    edtxProfessionCategory.setText(partnerType.replace("null",""));
-                                    edtxExpertise.setText(spesialisasiID.replace("null",""));
-                                    edtxWorkArea.setText(wilayahKerja.replace("null",""));
-                                    edtxYearPractice.setText(yearProfession.replace("null",""));
-                                    edtxSIPP.setText(noSip.replace("null",""));
-                                    edtxProffesionDesc.setText(profileDesc.replace("null",""));
-                                    edtxWorkAddress.setText(addressPractice.replace("null",""));
+                                    edtxDateOfBirth.setText(dob.replace("null", ""));
+                                    edtxProfessionCategory.setText(partnerType.replace("null", ""));
+                                    edtxExpertise.setText(spesialisasiID.replace("null", ""));
+                                    edtxWorkArea.setText(wilayahKerja.replace("null", ""));
+                                    edtxYearPractice.setText(yearProfession.replace("null", ""));
+                                    edtxSIPP.setText(noSip.replace("null", ""));
+                                    edtxProffesionDesc.setText(profileDesc.replace("null", ""));
+                                    edtxWorkAddress.setText(addressPractice.replace("null", ""));
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
