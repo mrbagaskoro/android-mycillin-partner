@@ -1,6 +1,10 @@
 package com.mycillin.partner.modul.account;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.home.HomeActivity;
 import com.mycillin.partner.modul.firebase.FirebaseManager;
@@ -92,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(this);
+        checkGpsPermission();
     }
 
     @OnClick(R.id.loginActivity_bt_showHaveAccBtn)
@@ -109,7 +117,15 @@ public class LoginActivity extends AppCompatActivity {
         } else if (password.isEmpty()) {
             edtxPassword.setError(getString(R.string.pass_error));
         } else {
-            doLogin(email, password);
+            LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+            assert locationManager != null;
+            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            if (!isGPSEnabled && !isNetworkEnabled) {
+                DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning", "Aktifkan GPS", true);
+            } else {
+                doLogin(email, password);
+            }
         }
     }
 
@@ -383,6 +399,24 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    private void checkGpsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PermissionListener dialogPermissionListener =
+                    DialogOnDeniedPermissionListener.Builder
+                            .withContext(getApplicationContext())
+                            .withTitle("GPS permission")
+                            .withMessage("GPS permission is needed")
+                            .withButtonText(android.R.string.ok)
+                            .withIcon(R.mipmap.ic_launcher)
+                            .build();
+
+            Dexter.withActivity(LoginActivity.this)
+                    .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    .withListener(dialogPermissionListener)
+                    .check();
         }
     }
 }

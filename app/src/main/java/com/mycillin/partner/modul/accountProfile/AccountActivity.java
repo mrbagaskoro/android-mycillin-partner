@@ -443,10 +443,10 @@ public class AccountActivity extends AppCompatActivity {
                                 if (status) {
                                     JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
                                     final JSONObject data = result.getJSONObject(0);
-                                    final String reservIsOn = data.optString("reservasi_id");
-                                    final String visitIsOn = data.optString("visit_id");
-                                    final String consulIsOn = data.optString("consul_id");
-                                    final String bpjsIsOn = data.optString("BPJS_RCV_status");
+                                    final String reservIsOn = data.optString("status_reservasi");
+                                    final String visitIsOn = data.optString("status_visit");
+                                    final String consulIsOn = data.optString("status_consul");
+                                    final String bpjsIsOn = data.optString("status_BPJS");
 
                                     switch (reservIsOn) {
                                         case EXTRA_STATUS_ON:

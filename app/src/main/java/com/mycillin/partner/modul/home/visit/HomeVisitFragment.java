@@ -40,6 +40,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class HomeVisitFragment extends Fragment {
 
@@ -125,7 +126,7 @@ public class HomeVisitFragment extends Fragment {
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Log.d("####", "saveAddress: OBJEK " + jsonObject);
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 

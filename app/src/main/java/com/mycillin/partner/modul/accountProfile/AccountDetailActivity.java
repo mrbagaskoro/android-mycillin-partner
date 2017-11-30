@@ -16,11 +16,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -31,17 +30,17 @@ import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.github.aakira.expandablelayout.ExpandableLayout;
 import com.mvc.imagepicker.ImagePicker;
 import com.mycillin.partner.R;
-import com.mycillin.partner.modul.searchResult.SearchResultActivity;
-import com.mycillin.partner.modul.searchResult.adapterList.SearchResultList;
-import com.mycillin.partner.util.PartnerAPI;
-import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertiseData;
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfessionData;
+import com.mycillin.partner.modul.searchResult.SearchResultActivity;
+import com.mycillin.partner.modul.searchResult.adapterList.SearchResultList;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.ProgressBarHandler;
+import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.util.SessionManager;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -52,9 +51,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -114,16 +115,15 @@ public class AccountDetailActivity extends AppCompatActivity {
     EditText edtxProffesionDesc;
     @BindView(R.id.accountDetailActivity_et_practiceAddress)
     EditText edtxWorkAddress;
-    @BindView(R.id.accountDetailActivity_cb_isAgree)
-    CheckBox cbIsAgree;
 
     private CircleImageView ivAvatar;
     private MenuItem menuFinish;
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
-    private List<SearchResultList> searchResultList = new ArrayList<>();
     private SessionManager sessionManager;
+
+    private List<SearchResultList> searchResultList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +134,6 @@ public class AccountDetailActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(this);
         sessionManager = new SessionManager(getApplicationContext());
-        edtxEmail.setText(sessionManager.getUserEmail());
-        edtxFullName.setText(sessionManager.getUserFullName());
         edtxYearPractice.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         setSupportActionBar(toolbar);
@@ -171,7 +169,7 @@ public class AccountDetailActivity extends AppCompatActivity {
                     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
                         Calendar selectedEndDate = Calendar.getInstance();
                         selectedEndDate.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
                         edtxDateOfBirth.setText(dateFormatter.format(selectedEndDate.getTime()));
                     }
                 })
@@ -205,8 +203,8 @@ public class AccountDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
         final RadioButton rbSelectedAddressType = findViewById(rgGender.getCheckedRadioButtonId());
         if (id == R.id.action_save) {
-            if (rbSelectedAddressType.getText().toString().equals("")) {
-                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Connection Problem, Please Try Again Later.", false);
+            if (rbSelectedAddressType == null) {
+                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Choose Your Gender.", false);
             } else {
                 new AlertDialog.Builder(AccountDetailActivity.this)
                         .setTitle("Info")
@@ -251,14 +249,28 @@ public class AccountDetailActivity extends AppCompatActivity {
         String jenisKelamin = "";
         switch (gender) {
             case "Male":
-            case "Female":
+            case "Pria":
                 jenisKelamin = "L";
                 break;
-            case "FEMALE":
+            case "Female":
             case "Wanita":
                 jenisKelamin = "P";
                 break;
         }
+
+        SimpleDateFormat dateParse = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        Date tgldob_ = null;
+        try {
+            if (!mDOB.isEmpty()) {
+                tgldob_ = dateParse.parse(mDOB);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        final String finalDateDob = tgldob_ != null ? dateFormatter.format(tgldob_) : "";
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         mHandler.post(new Runnable() {
@@ -274,7 +286,7 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("gender", jenisKelamin);
         params.put("address", mUserAddress);
         params.put("mobile_number", mPhoneNumber);
-        params.put("dob", mDOB);
+        params.put("dob", finalDateDob);
         params.put("no_SIP", mPermitNUmber);
         params.put("SIP_berakhir", "");
         params.put("no_STR", "170");
@@ -316,6 +328,7 @@ public class AccountDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 String result = response.body().string();
+                Timber.tag("###").d("onResponse: " + result);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -323,7 +336,9 @@ public class AccountDetailActivity extends AppCompatActivity {
                     }
                 });
                 if (response.isSuccessful()) {
-                    try {
+                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Info", "Account Updated", true);
+                    sessionManager.setKeyCustomerName(mFullName);
+                    /*try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.has("result")) {
                             boolean status = jsonObject.getJSONObject("result").getBoolean("status");
@@ -339,7 +354,7 @@ public class AccountDetailActivity extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 } else {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
@@ -500,7 +515,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+        Timber.tag("####").d("Detail Partner %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -533,7 +548,7 @@ public class AccountDetailActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
-                                Timber.tag("###").d("onResponseyyyyy: %s", jsonObject);
+                                Timber.tag("####").d("Detail Partner %s", jsonObject);
                                 boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                                 if (status) {
                                     JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
@@ -543,14 +558,26 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     final String address = data.optString("address");
                                     final String mobileNo = data.optString("mobile_no");
                                     final String gender = data.optString("gender");
-                                    final String dob = data.optString("dob"); //1999-01-01
-                                    final String partnerType = data.optString("partner_type_id");
-                                    final String spesialisasiID = data.optString("spesialisasi_id");
+                                    final String dob = data.optString("dob").replace("null", ""); //1999-01-01
+                                    final String partnerTypeId = data.optString("partner_type_id");
+                                    final String partnerTypeDesc = data.optString("partner_type_desc");
+                                    final String spesialisasiId = data.optString("spesialisasi_id");
+                                    final String spesialisasiDesc = data.optString("spesialisasi_desc");
+
                                     final String wilayahKerja = data.optString("wilayah_kerja");
                                     final String yearProfession = data.optString("lama_professi");
                                     final String noSip = data.optString("no_SIP");
                                     final String profileDesc = data.optString("profile_desc");
                                     final String addressPractice = data.optString("alamat_praktik");
+
+                                    SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+                                    Date tgldob_ = null;
+                                    if (!dob.isEmpty()) {
+                                        tgldob_ = dateParse.parse(dob);
+                                    }
+
+                                    final String finalDateDob = tgldob_ != null ? dateFormatter.format(tgldob_) : "";
 
                                     edtxEmail.setText(email.replace("null", ""));
                                     edtxFullName.setText(fullName.replace("null", ""));
@@ -566,16 +593,16 @@ public class AccountDetailActivity extends AppCompatActivity {
                                             break;
                                     }
 
-                                    edtxDateOfBirth.setText(dob.replace("null", ""));
-                                    edtxProfessionCategory.setText(partnerType.replace("null", ""));
-                                    edtxExpertise.setText(spesialisasiID.replace("null", ""));
+                                    edtxDateOfBirth.setText(finalDateDob);
+                                    edtxProfessionCategory.setText(getString(R.string.itemConcat, partnerTypeId.replace("null", ""), partnerTypeDesc.replace("null", "")));
+                                    edtxExpertise.setText(getString(R.string.itemConcat, spesialisasiId.replace("null", ""), spesialisasiDesc.replace("null", "")));
                                     edtxWorkArea.setText(wilayahKerja.replace("null", ""));
                                     edtxYearPractice.setText(yearProfession.replace("null", ""));
                                     edtxSIPP.setText(noSip.replace("null", ""));
                                     edtxProffesionDesc.setText(profileDesc.replace("null", ""));
                                     edtxWorkAddress.setText(addressPractice.replace("null", ""));
                                 }
-                            } catch (JSONException e) {
+                            } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
                             }
                         }

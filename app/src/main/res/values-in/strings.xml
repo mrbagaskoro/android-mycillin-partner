@@ -47,7 +47,7 @@
     <string name="aboutFragment_playstore">Nilai kami di Play Store</string>
     <string name="aboutFragment_aboutDesc">MyCillin merupakan platform digital penghubung antara masyarakat yang membutuhkan layanan kesehatan terbaik, mudah, dan murah dengan para profesional dan institusi di bidang medis</string>
     <string name="eWalletFragment_currency">Rp</string>
-    <string name="eWalletFragment_amount">175.000</string>
+    <string name="eWalletFragment_amount">0</string>
     <string name="eWalletFragment_virtualAccNumberTitle">Nomor Akun Virtual</string>
     <string name="eWalletFragment_virtualAccNumber">1019270000001</string>
     <string name="rowEWalletHistoryList_amount">Rp 175.000</string>
