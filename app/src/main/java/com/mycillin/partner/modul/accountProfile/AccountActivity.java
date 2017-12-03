@@ -49,12 +49,11 @@ import timber.log.Timber;
 
 public class AccountActivity extends AppCompatActivity {
 
+    public static final String EXTRA_STATUS_ON = "0";
     private final String EXTRA_STATUS_HOUSE_VISIT = "visit_id";
     private final String EXTRA_STATUS_RESERVASI = "reservasi_id";
     private final String EXTRA_STATUS_CONSULTATION = "consul_id";
     private final String EXTRA_STATUS_BPJS = "BPJS_RCV_status";
-    public static final String EXTRA_STATUS_ON = "0";
-
     @BindView(R.id.accountActivity_ll_manageAccount)
     LinearLayout manageAccount;
     @BindView(R.id.accountActivity_ll_changePassword)
@@ -253,7 +252,7 @@ public class AccountActivity extends AppCompatActivity {
                 mProgressBarHandler.show();
             }
         });
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        MediaType JSON = MediaType.parse("application/accjson; charset=utf-8");
 
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());

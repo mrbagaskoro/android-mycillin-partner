@@ -191,8 +191,14 @@
     <string name="result_list">%1$d Finded Entry</string>
     <string name="clear">Clear</string>
     <string name="itemConcat">%1$s - %2$s</string>
+    <string name="itemConcat2">%1$s %2$s</string>
     <string name="default_notification_channel_id" translatable="false">default_channel_notification</string>
     <string name="available">Availability</string>
+    <string name="aboutFragment_chooseEmailMessage">Choose an Email client :</string>
+    <string name="sipp_expired">SIPP Expired</string>
+    <string name="str_number">STR Number:</string>
+    <string name="str_expired">STR Expired</string>
+    <string name="institution_name">Institution Name</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

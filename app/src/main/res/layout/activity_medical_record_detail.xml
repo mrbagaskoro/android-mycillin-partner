@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".modul.todo.completion.medicalRecord.MedicalRecordDetailActivity">
 
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/medicalRecordDetailActivity_toolbar"
         android:layout_width="match_parent"
@@ -21,11 +20,11 @@
 
     <LinearLayout
         android:id="@+id/medicalRecordDetailActivity_ll_headerContainer"
-        android:layout_below="@id/medicalRecordDetailActivity_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/medicalRecordDetailActivity_toolbar"
         android:background="@color/colorPrimary"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/medicalRecordDetailActivity_tv_date"
@@ -33,10 +32,10 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:gravity="center"
+            android:text="@string/medicalRecordDetailActivity_dateTitle"
             android:textColor="@color/primaryText"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:text="@string/medicalRecordDetailActivity_dateTitle" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/medicalRecordDetailActivity_tv_doctor"
@@ -44,22 +43,22 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:textColor="@color/primaryText"
-            android:text="@string/medicalRecordDetailActivity_doctorTitle" />
+            android:text="@string/medicalRecordDetailActivity_doctorTitle"
+            android:textColor="@color/primaryText" />
 
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/medicalRecordDetailActivity_sv_mainContainer"
-        android:layout_below="@id/medicalRecordDetailActivity_ll_headerContainer"
-        android:background="@color/bgColor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/medicalRecordDetailActivity_ll_headerContainer"
+        android:background="@color/bgColor">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/medicalRecordDetailActivity_ll_diagnoseContainer"
@@ -67,24 +66,24 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/frame_alt"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/medicalRecordDetailActivity_ll_diagnoseTitleContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground" >
+                    android:background="?attr/selectableItemBackground">
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:textSize="20sp"
                         android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
-                        android:text="@string/medicalRecordDetailActivity_diagnose" />
+                        android:paddingBottom="15dp"
+                        android:paddingEnd="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingTop="15dp"
+                        android:text="@string/medicalRecordDetailActivity_diagnose"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -104,7 +103,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="10dp"
-                        android:text="@string/medicalRecordDetailActivity_diagnoseDesc"/>
+                        android:text="@string/medicalRecordDetailActivity_diagnoseDesc" />
 
                 </LinearLayout>
 
@@ -116,24 +115,24 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/frame_alt"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/medicalRecordDetailActivity_ll_resultTitleContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground" >
+                    android:background="?attr/selectableItemBackground">
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:textSize="20sp"
                         android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
-                        android:text="@string/medicalRecordDetailActivity_result" />
+                        android:paddingBottom="15dp"
+                        android:paddingEnd="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingTop="15dp"
+                        android:text="@string/medicalRecordDetailActivity_result"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -151,17 +150,17 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/medicalRecordDetailActivity_tv_resultInfo1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
                             android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_resultInfo1"/>
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo1" />
 
                         <View
                             android:layout_width="1dip"
@@ -172,28 +171,28 @@
                             android:id="@+id/medicalRecordDetailActivity_tv_result1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
                             android:layout_weight="1"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_result1"
                             android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:text="@string/medicalRecordDetailActivity_result1"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/medicalRecordDetailActivity_tv_resultInfo2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
                             android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_resultInfo2"/>
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo2" />
 
                         <View
                             android:layout_width="1dip"
@@ -204,28 +203,28 @@
                             android:id="@+id/medicalRecordDetailActivity_tv_result2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
                             android:layout_weight="1"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_result2"
                             android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:text="@string/medicalRecordDetailActivity_result2"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/medicalRecordDetailActivity_tv_resultInfo3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
                             android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_resultInfo3"/>
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo3" />
 
                         <View
                             android:layout_width="1dip"
@@ -236,28 +235,28 @@
                             android:id="@+id/medicalRecordDetailActivity_tv_result3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
                             android:layout_weight="1"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_result3"
                             android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:text="@string/medicalRecordDetailActivity_result3"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/medicalRecordDetailActivity_tv_resultInfo4"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
                             android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_resultInfo4"/>
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo4" />
 
                         <View
                             android:layout_width="1dip"
@@ -268,28 +267,28 @@
                             android:id="@+id/medicalRecordDetailActivity_tv_result4"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
                             android:layout_weight="1"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_result4"
                             android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:text="@string/medicalRecordDetailActivity_result4"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/medicalRecordDetailActivity_tv_resultInfo5"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
                             android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_resultInfo5"/>
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo5" />
 
                         <View
                             android:layout_width="1dip"
@@ -300,28 +299,28 @@
                             android:id="@+id/medicalRecordDetailActivity_tv_result5"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
                             android:layout_weight="1"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_result5"
                             android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:text="@string/medicalRecordDetailActivity_result5"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/medicalRecordDetailActivity_tv_resultInfo6"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
                             android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_resultInfo6"/>
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_resultInfo6" />
 
                         <View
                             android:layout_width="1dip"
@@ -332,11 +331,11 @@
                             android:id="@+id/medicalRecordDetailActivity_tv_result6"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="10dp"
                             android:layout_weight="1"
+                            android:padding="10dp"
+                            android:text="@string/medicalRecordDetailActivity_result6"
                             android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:text="@string/medicalRecordDetailActivity_result6"/>
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -350,24 +349,24 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/frame_alt"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/medicalRecordDetailActivity_ll_actionTitleContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground" >
+                    android:background="?attr/selectableItemBackground">
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:textSize="20sp"
                         android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
-                        android:text="@string/medicalRecordDetailActivity_action" />
+                        android:paddingBottom="15dp"
+                        android:paddingEnd="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingTop="15dp"
+                        android:text="@string/medicalRecordDetailActivity_action"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -387,7 +386,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="10dp"
-                        android:text="@string/medicalRecordDetailActivity_actionDesc"/>
+                        android:text="@string/medicalRecordDetailActivity_actionDesc" />
 
                 </LinearLayout>
 
@@ -399,24 +398,24 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/frame_alt"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/medicalRecordDetailActivity_ll_prescriptionTitleContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackground" >
+                    android:background="?attr/selectableItemBackground">
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:textSize="20sp"
                         android:drawableEnd="@drawable/ic_arrow_drop_down_circle_black"
-                        android:text="@string/medicalRecordDetailActivity_prescription" />
+                        android:paddingBottom="15dp"
+                        android:paddingEnd="15dp"
+                        android:paddingStart="15dp"
+                        android:paddingTop="15dp"
+                        android:text="@string/medicalRecordDetailActivity_prescription"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
@@ -431,108 +430,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/medicalRecordDetailActivity_rv_prescription"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
+                        android:paddingTop="20dp">
 
-                        <TextView
-                            android:id="@+id/medicalRecordDetailActivity_tv_prescriptionInfo1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
-                            android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_prescriptionInfo1"/>
-
-                        <View
-                            android:layout_width="1dip"
-                            android:layout_height="match_parent"
-                            android:background="@color/bgColor" />
-
-                        <TextView
-                            android:id="@+id/medicalRecordDetailActivity_tv_prescription1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="10dp"
-                            android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_prescription1"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/medicalRecordDetailActivity_tv_prescriptionInfo2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
-                            android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_prescriptionInfo2"/>
-
-                        <View
-                            android:layout_width="1dip"
-                            android:layout_height="match_parent"
-                            android:background="@color/bgColor" />
-
-                        <TextView
-                            android:id="@+id/medicalRecordDetailActivity_tv_prescription2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="10dp"
-                            android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_prescription2"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/medicalRecordDetailActivity_tv_prescriptionInfo3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:gravity="end"
-                            android:textColor="@color/primaryText"
-                            android:textStyle="bold"
-                            android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_prescriptionInfo3"/>
-
-                        <View
-                            android:layout_width="1dip"
-                            android:layout_height="match_parent"
-                            android:background="@color/bgColor" />
-
-                        <TextView
-                            android:id="@+id/medicalRecordDetailActivity_tv_prescription3"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="10dp"
-                            android:layout_weight="1"
-                            android:text="@string/medicalRecordDetailActivity_prescription3"/>
-
-                    </LinearLayout>
-
+                    </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
-
 </RelativeLayout>

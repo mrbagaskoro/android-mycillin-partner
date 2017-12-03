@@ -56,12 +56,9 @@ public class AboutFragment extends Fragment {
         contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_EMAIL, "mycillin@gmail.com");
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                intent.putExtra(Intent.EXTRA_TEXT, "Please Fill This Body");
-                startActivity(Intent.createChooser(intent, "Send Email"));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto", "mycillin@gmail.com", null));
+                startActivity(Intent.createChooser(intent, getString(R.string.aboutFragment_chooseEmailMessage)));
             }
         });
 
@@ -108,10 +105,12 @@ public class AboutFragment extends Fragment {
         youtube.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/channel/UCkjlt7RUv_Qi1LPUyTr0o9w/"));
+                intent.setPackage("com.google.android.youtube");
                 try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:cSPfeTxl8Kw")));
+                    startActivity(intent);
                 } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://youtube.com/watch?v=cSPfeTxl8Kw")));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/channel/UCkjlt7RUv_Qi1LPUyTr0o9w/")));
                 }
             }
         });

@@ -7,14 +7,28 @@ public class ToDoInProgressList {
     private String bookDate;
     private String bookTime;
     private String address;
+    private String age;
+    private String height;
+    private String weight;
+    private String bloodType;
+    private String gender;
+    private String userID;
+    private String relID;
 
-    public ToDoInProgressList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address) {
+    public ToDoInProgressList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address, String age, String height, String weight, String bloodType, String gender, String userID, String relID) {
         this.patientPic = patientPic;
         this.patientName = patientName;
         this.bookType = bookType;
         this.bookDate = bookDate;
         this.bookTime = bookTime;
         this.address = address;
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+        this.bloodType = bloodType;
+        this.gender = gender;
+        this.userID = userID;
+        this.relID = relID;
     }
 
     public String getPatientPic() {
@@ -63,5 +77,61 @@ public class ToDoInProgressList {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getBloodType() {
+        return bloodType;
+    }
+
+    public void setBloodType(String bloodType) {
+        this.bloodType = bloodType;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getRelID() {
+        return relID;
+    }
+
+    public void setRelID(String relID) {
+        this.relID = relID;
     }
 }

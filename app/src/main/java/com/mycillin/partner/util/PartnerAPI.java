@@ -1,10 +1,10 @@
 package com.mycillin.partner.util;
 
-import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
-import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
 import com.mycillin.partner.modul.account.model.loginModel.ModelRestLogin;
-import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
 import com.mycillin.partner.modul.account.model.registerModel.ModelRestRegister;
+import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
+import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
+import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 
 import java.util.HashMap;
 
@@ -30,8 +30,8 @@ public interface PartnerAPI {
     @GET("list_partner_type/")
     Call<ModelRestProfession> getProfession();
 
-    @GET("list_spesialisasi/")
-    Call<ModelRestExpertise> getExpertise();
+    @POST("list_spesialisasi/")
+    Call<ModelRestExpertise> getExpertise(@Body HashMap<String, String> params);
 
     @GET("list_cancel_reason_partner/")
     Call<ModelRestCancelReason> getCancelReason();

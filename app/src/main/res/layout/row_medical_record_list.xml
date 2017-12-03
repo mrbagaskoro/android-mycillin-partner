@@ -11,43 +11,43 @@
         android:id="@+id/rowMedicalRecordList_ll_accountContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:background="@drawable/frame_alt"
             android:paddingBottom="10dp"
-            android:background="@drawable/frame_alt">
+            android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="3"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight="3" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/rowMedicalRecordList_tv_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/rowMedicalRecord_month"/>
+                    android:text="@string/rowMedicalRecord_month" />
 
                 <TextView
                     android:id="@+id/rowMedicalRecordList_tv_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rowMedicalRecord_day"
-                    android:textSize="30sp"/>
+                    android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/rowMedicalRecordList_tv_year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/rowMedicalRecord_year"/>
+                    android:text="@string/rowMedicalRecord_year" />
 
 
             </LinearLayout>
@@ -60,28 +60,124 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_alignParentTop="true"
                     android:text="@string/rowMedicalRecord_medicalPersonnelDesc" />
 
                 <TextView
                     android:id="@+id/rowMedicalRecordList_tv_doctorName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
-                    android:layout_alignParentBottom="true"
+                    android:text="@string/rowMedicalRecord_doctorNameDesc"
                     android:textSize="25sp"
-                    android:textStyle="bold"
-                    android:text="@string/rowMedicalRecord_doctorNameDesc" />
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_partnerId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_recordId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_userId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_serviceDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_bodyTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_bloodSugar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_bloodCholesterol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_diastol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_systol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_patient_condition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_diagnose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_prescriptionStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_prescriptionID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/rowMedicalRecordList_tv_prescriptionDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

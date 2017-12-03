@@ -288,13 +288,77 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/accountDetailActivity_permittDesc"
-                        android:inputType="number" />
+                        android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/accountDetailActivity_et_permittNumber"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_endOfSipp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_action_calendar_month"
+                        android:focusable="false"
+                        android:hint="@string/sipp_expired"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/accountDetailActivity_et_endOfSipp"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_StrNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/str_number"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/accountDetailActivity_et_StrNumber"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_endOfStr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_action_calendar_month"
+                        android:focusable="false"
+                        android:hint="@string/str_expired"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/accountDetailActivity_et_endOfStr"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_institutionName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/institution_name"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/accountDetailActivity_et_institutionName"
                     android:layout_marginBottom="@dimen/spacing_small"
                     android:layout_marginTop="@dimen/spacing_small">
 
@@ -316,10 +380,10 @@
                     android:background="@drawable/edittext_bg"
                     android:hint="@string/accountDetailActivity_professionDescriptionDesc"
                     android:inputType="textMultiLine"
-                    android:maxLength="250"
-                    android:maxLines="10"
-                    android:paddingBottom="75dp"
-                    android:paddingEnd="10dp"
+                    android:maxLength="400"
+                    android:maxLines="20"
+                    android:paddingBottom="60dp"
+                    android:paddingEnd="5dp"
                     android:paddingStart="10dp"
                     android:paddingTop="10dp" />
 

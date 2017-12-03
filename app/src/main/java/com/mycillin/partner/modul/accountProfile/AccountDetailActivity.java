@@ -15,8 +15,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,13 +111,20 @@ public class AccountDetailActivity extends AppCompatActivity {
     EditText edtxYearPractice;
     @BindView(R.id.accountDetailActivity_et_permittNumber)
     EditText edtxSIPP;
+    @BindView(R.id.accountDetailActivity_et_endOfSipp)
+    EditText edtxExpiredSIPP;
+    @BindView(R.id.accountDetailActivity_et_StrNumber)
+    EditText edtxSTR;
+    @BindView(R.id.accountDetailActivity_et_endOfStr)
+    EditText edtxExpiredSTR;
+    @BindView(R.id.accountDetailActivity_et_institutionName)
+    EditText edtxInstitutionName;
     @BindView(R.id.accountDetailActivity_et_professionDescription)
     EditText edtxProffesionDesc;
     @BindView(R.id.accountDetailActivity_et_practiceAddress)
     EditText edtxWorkAddress;
 
     private CircleImageView ivAvatar;
-    private MenuItem menuFinish;
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
@@ -147,9 +154,13 @@ public class AccountDetailActivity extends AppCompatActivity {
                 professionalDetailExpandableLayout.toggle();
             }
         });
+        edtxWorkArea.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        edtxAddress.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        edtxInstitutionName.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        edtxInstitutionName.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        edtxWorkAddress.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
         detailPartner();
-        fillDoctorAvatar();
     }
 
     @OnClick(R.id.accountDetailActivity_iv_userAvatar)
@@ -176,24 +187,62 @@ public class AccountDetailActivity extends AppCompatActivity {
                 .show(getSupportFragmentManager(), "Date Of Birth");
     }
 
-    private void fillDoctorAvatar() {
-        ivAvatar = findViewById(R.id.accountDetailActivity_iv_userAvatar);
-        //// TODO: 05/11/2017 FROM SERVICE
-        Picasso.with(getApplicationContext())
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg")
-               /* .transform(new RoundedTransformation(80, 0))*/
-                .resize(150, 150)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .centerCrop()
-                .into(ivAvatar);
+    @OnClick(R.id.accountDetailActivity_et_endOfSipp)
+    public void onExpiredSipClicked() {
+        MonthAdapter.CalendarDay minDate = new MonthAdapter.CalendarDay(System.currentTimeMillis() - 1000);
+        MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(2100, 0, 1);
+
+        new CalendarDatePickerDialogFragment()
+                .setDateRange(minDate, maxDate)
+                .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar selectedEndDate = Calendar.getInstance();
+                        selectedEndDate.set(year, monthOfYear, dayOfMonth);
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+                        edtxExpiredSIPP.setText(dateFormatter.format(selectedEndDate.getTime()));
+                    }
+                })
+                .show(getSupportFragmentManager(), "datePicker");
     }
 
+    @OnClick(R.id.accountDetailActivity_et_endOfStr)
+    public void onExpiredStrClicked() {
+        MonthAdapter.CalendarDay minDate = new MonthAdapter.CalendarDay(System.currentTimeMillis() - 1000);
+        MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(2100, 0, 1);
+
+        new CalendarDatePickerDialogFragment()
+                .setDateRange(minDate, maxDate)
+                .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar selectedEndDate = Calendar.getInstance();
+                        selectedEndDate.set(year, monthOfYear, dayOfMonth);
+                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+                        edtxExpiredSTR.setText(dateFormatter.format(selectedEndDate.getTime()));
+                    }
+                })
+                .show(getSupportFragmentManager(), "datePicker");
+    }
+
+    private void fillDoctorAvatar(String profilePhoto) {
+        ivAvatar = findViewById(R.id.accountDetailActivity_iv_userAvatar);
+        if (!profilePhoto.equals("null") && !profilePhoto.isEmpty()) {
+            Picasso.with(getApplicationContext())
+                    .load(profilePhoto)
+               /* .transform(new RoundedTransformation(80, 0))*/
+                    .resize(150, 150)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .centerCrop()
+                    .into(ivAvatar);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);
-        menuFinish = menu.findItem(R.id.action_save);
+        MenuItem menuFinish = menu.findItem(R.id.action_save);
         menuFinish.setVisible(true);
         return true;
     }
@@ -239,10 +288,15 @@ public class AccountDetailActivity extends AppCompatActivity {
         String mPhoneNumber = edtxPhone.getText().toString().trim();
         String mDOB = edtxDateOfBirth.getText().toString().trim();
         String mProfessionCategory = edtxProfessionCategory.getText().toString().trim();
-        String mAreaExpertise = edtxExpertise.getText().toString().trim();
+        String mAreaExpertise = edtxExpertise.getText().toString().trim().split(" - ")[0];
         String mWorkArea = edtxWorkArea.getText().toString().trim();
         String mWorkYears = edtxYearPractice.getText().toString().trim();
         String mPermitNUmber = edtxSIPP.getText().toString().trim();
+        String mSIPPExpired = edtxExpiredSIPP.getText().toString().trim();
+        String mSTRNo = edtxSTR.getText().toString().trim();
+        String mSTRExpired = edtxExpiredSTR.getText().toString().trim();
+        String mInstitution = edtxInstitutionName.getText().toString().trim();
+
         String mWorkDesc = edtxProffesionDesc.getText().toString().trim();
         String mPracticeAddress = edtxWorkAddress.getText().toString().trim();
         final String gender = rbSelectedAddressType.getText().toString();
@@ -262,15 +316,25 @@ public class AccountDetailActivity extends AppCompatActivity {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
         Date tgldob_ = null;
+        Date expiredSIPP_ = null;
+        Date expiredSTR_ = null;
         try {
             if (!mDOB.isEmpty()) {
                 tgldob_ = dateParse.parse(mDOB);
+            }
+            if (!mSIPPExpired.isEmpty()) {
+                expiredSIPP_ = dateParse.parse(mSIPPExpired);
+            }
+            if (!mSTRExpired.isEmpty()) {
+                expiredSTR_ = dateParse.parse(mSTRExpired);
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         final String finalDateDob = tgldob_ != null ? dateFormatter.format(tgldob_) : "";
+        final String finalExpiredSIPP = expiredSIPP_ != null ? dateFormatter.format(expiredSIPP_) : "";
+        final String finalExpiredSTR = expiredSTR_ != null ? dateFormatter.format(expiredSTR_) : "";
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         mHandler.post(new Runnable() {
@@ -288,9 +352,9 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("mobile_number", mPhoneNumber);
         params.put("dob", finalDateDob);
         params.put("no_SIP", mPermitNUmber);
-        params.put("SIP_berakhir", "");
-        params.put("no_STR", "170");
-        params.put("STR_berakhir", "");
+        params.put("SIP_berakhir", finalExpiredSIPP);
+        params.put("no_STR", mSTRNo);
+        params.put("STR_berakhir", finalExpiredSTR);
         params.put("partner_type_id", mProfessionCategory);
         params.put("spesialisasi_id", mAreaExpertise);
         params.put("wilayah_kerja", mWorkArea);
@@ -298,7 +362,7 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("lama_professi", mWorkYears.equals("") ? "0" : Integer.parseInt(mWorkYears));
         params.put("alamat_praktik", mPracticeAddress);
         params.put("map_praktik", "");
-        params.put("nama_institusi", "");
+        params.put("nama_institusi", mInstitution);
 
         JSONObject jsonObject = new JSONObject(params);
 
@@ -420,54 +484,60 @@ public class AccountDetailActivity extends AppCompatActivity {
         });
     }
 
-
     @OnClick(R.id.accountDetailActivity_et_areaOfExpertise)
     public void onAreaOfExpertiseClicked() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBarHandler.show();
-            }
-        });
-        partnerAPI.getExpertise().enqueue(new Callback<ModelRestExpertise>() {
-            @Override
-            public void onResponse(@NonNull Call<ModelRestExpertise> call, @NonNull Response<ModelRestExpertise> response) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBarHandler.hide();
-                    }
-                });
-                searchResultList.clear();
-                ModelRestExpertise modelRestExpertise = response.body();
-                if (response.isSuccessful()) {
-                    assert modelRestExpertise != null;
-                    for (ModelRestExpertiseData modelRestExpertise1 : modelRestExpertise.getResult().getData()) {
-                        searchResultList.add(new SearchResultList("Code", modelRestExpertise1.getSpesialisasiId(), "Area Of Expertise", modelRestExpertise1.getSpesialisasiDesc(),
-                                "", "", "", "", "", "", "", ""));
-                    }
-                    Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
-                    intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultList);
-                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_EXPERTISE);
-                    startActivityForResult(intent, REQUEST_CODE_GET_EXPERTISE);
-                } else {
-                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestExpertise + "", false);
+        String professionID = edtxProfessionCategory.getText().toString().trim();
+        if (professionID.isEmpty()) {
+            DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Choose Your Profession", false);
+        } else {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressBarHandler.show();
                 }
-            }
+            });
+            HashMap<String, String> params = new HashMap<>();
+            params.put("partner_type_id", professionID.split(" - ")[0]);
 
-            @Override
-            public void onFailure(@NonNull Call<ModelRestExpertise> call, @NonNull final Throwable t) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBarHandler.hide();
-                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", "Connection problem " + t, false);
+            partnerAPI.getExpertise(params).enqueue(new Callback<ModelRestExpertise>() {
+                @Override
+                public void onResponse(@NonNull Call<ModelRestExpertise> call, @NonNull Response<ModelRestExpertise> response) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressBarHandler.hide();
+                        }
+                    });
+                    searchResultList.clear();
+                    ModelRestExpertise modelRestExpertise = response.body();
+                    if (response.isSuccessful()) {
+                        assert modelRestExpertise != null;
+                        for (ModelRestExpertiseData modelRestExpertise1 : modelRestExpertise.getResult().getData()) {
+                            searchResultList.add(new SearchResultList("Code", modelRestExpertise1.getSpesialisasiId(), "Area Of Expertise", modelRestExpertise1.getSpesialisasiDesc(),
+                                    "", "", "", "", "", "", "", ""));
+                        }
+                        Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
+                        intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultList);
+                        intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_EXPERTISE);
+                        startActivityForResult(intent, REQUEST_CODE_GET_EXPERTISE);
+                    } else {
+                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestExpertise + "", false);
                     }
-                });
-            }
-        });
-    }
+                }
 
+                @Override
+                public void onFailure(@NonNull Call<ModelRestExpertise> call, @NonNull final Throwable t) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressBarHandler.hide();
+                            DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", "Connection problem " + t, false);
+                        }
+                    });
+                }
+            });
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -482,6 +552,7 @@ public class AccountDetailActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_CODE_GET_PROFESSION:
                     edtxProfessionCategory.setText(getString(R.string.itemConcat, item1, item2));
+                    edtxExpertise.setText("");
                     break;
                 case REQUEST_CODE_GET_EXPERTISE:
                     edtxExpertise.setText(getString(R.string.itemConcat, item1, item2));
@@ -567,17 +638,34 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     final String wilayahKerja = data.optString("wilayah_kerja");
                                     final String yearProfession = data.optString("lama_professi");
                                     final String noSip = data.optString("no_SIP");
+                                    final String sipExpiredDate = data.optString("SIP_berakhir");
+                                    final String noStr = data.optString("no_STR");
+                                    final String strExpiredDate = data.optString("STR_berakhir");
+                                    final String institutionName = data.optString("nama_institusi");
                                     final String profileDesc = data.optString("profile_desc");
                                     final String addressPractice = data.optString("alamat_praktik");
+                                    final String profilePhoto = data.optString("profile_photo");
+
+                                    fillDoctorAvatar(profilePhoto);
 
                                     SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                                     SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
                                     Date tgldob_ = null;
+                                    Date expiredSIPP_ = null;
+                                    Date expiredSTR_ = null;
                                     if (!dob.isEmpty()) {
                                         tgldob_ = dateParse.parse(dob);
                                     }
+                                    if (!sipExpiredDate.isEmpty()) {
+                                        expiredSIPP_ = dateParse.parse(sipExpiredDate);
+                                    }
+                                    if (!strExpiredDate.isEmpty()) {
+                                        expiredSTR_ = dateParse.parse(strExpiredDate);
+                                    }
 
                                     final String finalDateDob = tgldob_ != null ? dateFormatter.format(tgldob_) : "";
+                                    final String finalExpiredSIPP = expiredSIPP_ != null ? dateFormatter.format(expiredSIPP_) : "";
+                                    final String finalExpiredSTR = expiredSTR_ != null ? dateFormatter.format(expiredSTR_) : "";
 
                                     edtxEmail.setText(email.replace("null", ""));
                                     edtxFullName.setText(fullName.replace("null", ""));
@@ -599,6 +687,10 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     edtxWorkArea.setText(wilayahKerja.replace("null", ""));
                                     edtxYearPractice.setText(yearProfession.replace("null", ""));
                                     edtxSIPP.setText(noSip.replace("null", ""));
+                                    edtxExpiredSIPP.setText(finalExpiredSIPP.replace("null", ""));
+                                    edtxSTR.setText(noStr.replace("null", ""));
+                                    edtxExpiredSTR.setText(finalExpiredSTR.replace("null", ""));
+                                    edtxInstitutionName.setText(institutionName.replace("null", ""));
                                     edtxProffesionDesc.setText(profileDesc.replace("null", ""));
                                     edtxWorkAddress.setText(addressPractice.replace("null", ""));
                                 }

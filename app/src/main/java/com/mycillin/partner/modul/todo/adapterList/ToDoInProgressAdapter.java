@@ -52,6 +52,13 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         holder.bookDate.setText(resultList.getBookDate());
         holder.bookTime.setText(resultList.getBookTime());
         holder.address.setText(resultList.getAddress());
+        holder.age.setText(resultList.getAge());
+        holder.height.setText(resultList.getHeight());
+        holder.weight.setText(resultList.getWeight());
+        holder.bloodype.setText(resultList.getBloodType());
+        holder.gender.setText(resultList.getGender());
+        holder.userID.setText(resultList.getUserID());
+        holder.relID.setText(resultList.getRelID());
     }
 
     @Override
@@ -59,16 +66,23 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         return ToDoInProgressLists.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
         private TextView bookTime;
         private TextView address;
+        private TextView age;
+        private TextView height;
+        private TextView weight;
+        private TextView bloodype;
+        private TextView gender;
+        private TextView userID;
+        private TextView relID;
         private CircleImageView patientPic;
 
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             patientName = itemView.findViewById(R.id.rowInProgressList_tv_patientName);
             bookType = itemView.findViewById(R.id.rowInProgressList_tv_bookType);
@@ -76,6 +90,13 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
             bookTime = itemView.findViewById(R.id.rowInProgressList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowInProgressList_iv_patientAvatar);
             address = itemView.findViewById(R.id.rowInProgressList_tv_address);
+            age = itemView.findViewById(R.id.rowInProgressList_tv_age);
+            height = itemView.findViewById(R.id.rowInProgressList_tv_height);
+            weight = itemView.findViewById(R.id.rowInProgressList_tv_weight);
+            bloodype = itemView.findViewById(R.id.rowInProgressList_tv_bloodTipe);
+            gender = itemView.findViewById(R.id.rowInProgressList_tv_gender);
+            userID = itemView.findViewById(R.id.rowInProgressList_tv_userID);
+            relID = itemView.findViewById(R.id.rowInProgressList_tv_relID);
         }
     }
 }

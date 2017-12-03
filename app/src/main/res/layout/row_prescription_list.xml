@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/rowPrescriptionList_tv_prescriptionInfo1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:text="@string/medicalRecordDetailActivity_prescriptionInfo1"
+        android:textColor="@color/primaryText"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="40dp"
+        android:background="@color/bgColor" />
+
+    <TextView
+        android:id="@+id/rowPrescriptionList_tv_prescription1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:text="@string/medicalRecordDetailActivity_prescription1" />
+
+</LinearLayout>

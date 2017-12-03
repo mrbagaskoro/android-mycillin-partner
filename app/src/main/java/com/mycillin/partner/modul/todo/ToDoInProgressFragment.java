@@ -27,9 +27,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -92,6 +95,13 @@ public class ToDoInProgressFragment extends Fragment {
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_LOCATION, list.getAddress());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_AGE, list.getAge());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_HEIGHT, list.getHeight());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_WEIGHT, list.getWeight());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_BLOOD_TYPE, list.getBloodType());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_GENDER, list.getGender());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_USER_ID, list.getUserID());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_REL_ID, list.getRelID());
                 startActivity(intent);
             }
 
@@ -171,14 +181,14 @@ public class ToDoInProgressFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        Timber.tag("###").d("onResponseror: %s", e);
+                        Timber.tag("###").d("onResponseror: %s", e.getMessage());
                     }
                 }
             }
         });
     }
 
-    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS) {
+    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -228,6 +238,22 @@ public class ToDoInProgressFragment extends Fragment {
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
                                 final String address = data.getJSONObject(i).optString("address").trim();
+                                final String gender = data.getJSONObject(i).optString("gender").trim();
+                                String dob = data.getJSONObject(i).optString("dob").trim();
+                                final String height = data.getJSONObject(i).optString("height").trim();
+                                final String weight = data.getJSONObject(i).optString("weight").trim();
+                                final String bloodType = data.getJSONObject(i).optString("blood_type").trim();
+
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy", Locale.US);
+                                String yearNow = dateFormatter.format(new Date());
+                                String yearDob = "0";
+
+                                if (!dob.equals("null") && !dob.isEmpty()) {
+                                    yearDob = dob.split("-")[0];
+                                }
+
+                                final int age_ = Integer.parseInt(yearNow) - Integer.parseInt(yearDob);
+
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -258,7 +284,7 @@ public class ToDoInProgressFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoInProgressLists.add(new ToDoInProgressList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
+                                        toDoInProgressLists.add(new ToDoInProgressList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID));
                                         toDoInProgressAdapter = new ToDoInProgressAdapter(toDoInProgressLists, ToDoInProgressFragment.this);
                                         toDoInProgressRecyclerView.setAdapter(toDoInProgressAdapter);
                                         toDoInProgressAdapter.notifyDataSetChanged();
@@ -267,11 +293,10 @@ public class ToDoInProgressFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        Timber.tag("###").d("onResponseror: %s", e);
+                        Timber.tag("###").d("onResponseror: %s", e.getMessage());
                     }
                 }
             }
         });
     }
-
 }
