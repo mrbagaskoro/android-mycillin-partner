@@ -1,19 +1,15 @@
-package com.mycillin.partner.modul.accountProfile;
+package com.mycillin.partner.modul.todo.completion;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
-import com.mycillin.partner.modul.todo.completion.CompleteCheckUpResultFragment;
-import com.mycillin.partner.modul.todo.completion.CompleteDiagnoseFragment;
-import com.mycillin.partner.modul.todo.completion.CompleteMedicalActionsFragment;
-import com.mycillin.partner.modul.todo.completion.CompletePrescriptionsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

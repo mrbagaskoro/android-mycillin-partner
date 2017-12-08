@@ -18,7 +18,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mycillin.partner.R;
-import com.mycillin.partner.modul.accountProfile.CompleteRequestActivity;
+import com.mycillin.partner.modul.todo.completion.CompleteRequestActivity;
 import com.mycillin.partner.modul.todo.completion.medicalRecord.MedicalRecordActivity;
 import com.mycillin.partner.modul.todo.completion.requesterProfile.RequesterProfileActivity;
 import com.mycillin.partner.util.DataHelper;

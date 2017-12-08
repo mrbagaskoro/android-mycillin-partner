@@ -53,7 +53,7 @@
         <activity android:name=".modul.todo.completion.requesterProfile.RequesterProfileActivity" />
         <activity android:name=".modul.todo.completion.medicalRecord.MedicalRecordActivity" />
         <activity android:name=".modul.todo.completion.medicalRecord.MedicalRecordDetailActivity" />
-        <activity android:name=".modul.accountProfile.CompleteRequestActivity" />
+        <activity android:name=".modul.todo.completion.CompleteRequestActivity" />
         <activity android:name=".modul.chat.ChatActivity" />
         <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity" />
         <activity android:name=".modul.account.RegisterActivity" />

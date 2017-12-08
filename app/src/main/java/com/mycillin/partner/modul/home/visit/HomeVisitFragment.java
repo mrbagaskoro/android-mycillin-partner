@@ -120,7 +120,7 @@ public class HomeVisitFragment extends Fragment {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
-        data.put("booking_status_id", "");
+        data.put("booking_status_id", "01");
         data.put("service_type_id", "00");
         data.put("booking_id", "");
 
