@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CompleteRequestActivity extends AppCompatActivity {
 
@@ -53,6 +55,10 @@ public class CompleteRequestActivity extends AppCompatActivity {
         adapter.addFragment(new CompleteMedicalActionsFragment(), "");
         adapter.addFragment(new CompletePrescriptionsFragment(), "");
         viewPager.setAdapter(adapter);
+
+
+        /*String systole = ((EditText) findViewById(R.id.accountDetailActivity_et_systole)).getText().toString();
+        Timber.tag("JINX").d("onresponCompleted: %s", systole);*/
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -65,6 +65,9 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
     private LocationManager locationManager;
     private Location lokasi;
 
+    private Double latitude;
+    private Double longitude;
+
     @BindView(R.id.accountActivity_sb_availability)
     SwitchButton sbAvaliability;
     @BindView(R.id.accountActivity_tv_status)
@@ -73,6 +76,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
     private boolean doubleBackToExitPressedOnce = false;
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
+    private boolean isActive = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -118,7 +122,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(getApplicationContext());
@@ -127,8 +131,9 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         mProgressBarHandler = new ProgressBarHandler(this);
         DataHelper.token = sessionManager.getUserToken();
         handler = new Handler(Looper.getMainLooper());
+        checkLocation();
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -138,67 +143,86 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         tx.commit();
         getSupportActionBar().setTitle(R.string.app_name);
         detailPartner();
-        checkLocation();
+        //checkLocation();
         boolean isActive = sbAvaliability.isChecked();
         if (isActive) {
             tvStatus.setText("Available");
         } else {
             tvStatus.setText("Off");
         }
+        getLocation();
+        sendLocationLoop();
+    }
+
+    private void sendLocationLoop() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendLongLatFunc();
+            }
+        }, 10000);
     }
 
     private void sendLongLatFunc() {
-        double latitude = 0.0;
-        double longitude = 0.0;
-        if (getLocation() != null) {
-            latitude = getLocation().getLatitude();
-            longitude = getLocation().getLongitude();
-            Timber.tag("getlatitude").d("%s", latitude);
-        }
+        if (isActive) {
+            latitude = 0.0;
+            longitude = 0.0;
 
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        OkHttpClient client = new OkHttpClient();
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("user_id", sessionManager.getUserId());
-        params.put("latitude", latitude);
-        params.put("longitude", longitude);
-
-        JSONObject jsonObject = new JSONObject(params);
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "partner_loc_autoupdate/")
-                .post(body)
-                .addHeader("content-type", "application/json; charset=utf-8")
-                .addHeader("Authorization", sessionManager.getUserToken())
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                final String msg = e.toString();
-                DialogHelper.showDialog(handler, HomeActivity.this, "Info", msg, false);
+            if (getLocation() != null) {
+                latitude = getLocation().getLatitude();
+                longitude = getLocation().getLongitude();
+                Timber.tag("JINX2").d("%s", latitude);
+                Timber.tag("JINX2").d("%s", longitude);
             }
 
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                @SuppressWarnings("ConstantConditions")
-                String result = response.body().string();
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            OkHttpClient client = new OkHttpClient();
 
-                if (response.code() == 200) {
-                    Timber.tag("result latlong").d(result);
-                    // TODO SOMETHING
+            Map<String, Object> params = new HashMap<>();
+            params.put("user_id", sessionManager.getUserId());
+            params.put("latitude", latitude);
+            params.put("longitude", longitude);
 
-                } else {
-                    Timber.tag("result latlong").d(result);
+            //Toast.makeText(this, "LATITUDE :" + latitude + " -- " + "LONGITUDE :" + longitude, Toast.LENGTH_SHORT).show();
+
+            JSONObject jsonObject = new JSONObject(params);
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url(Configs.URL_REST_CLIENT + "partner_loc_autoupdate/")
+                    .post(body)
+                    .addHeader("content-type", "application/json; charset=utf-8")
+                    .addHeader("Authorization", sessionManager.getUserToken())
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    final String msg = e.toString();
+                    Timber.tag("###").d("onFailure: %s", msg);
+                    sendLocationLoop();
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    @SuppressWarnings("ConstantConditions")
+                    String result = response.body().string();
+                    sendLocationLoop();
+                    Timber.tag("###").d("onResponseLatlong: %s", result);
+
+                    if (response.code() == 200) {
+                        Timber.tag("result latlong").d(result);
+                        // TODO SOMETHING
+                    } else {
+                        Timber.tag("result latlong").d(result);
+                    }
+                }
+            });
+        }
     }
 
     @OnCheckedChanged(R.id.accountActivity_sb_availability)
     public void changeStatusAvail() {
-        boolean isActive = sbAvaliability.isChecked();
+        isActive = sbAvaliability.isChecked();
         if (isActive) {
             tvStatus.setText("Available");
         } else {
@@ -270,7 +294,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+        Timber.tag("JINX").d("saveAddress: OBJEK %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -304,7 +328,8 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
-                final String x = response.body().string();
+               /* @SuppressWarnings("ConstantConditions")
+                final String x = response.body().string();*/
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -314,8 +339,10 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                                 case EXTRA_STATUS_AVAILABILITY:
                                     if (value.equals("0")) {
                                         sbAvaliability.setChecked(true);
+                                        isActive = true;
                                     } else {
                                         sbAvaliability.setChecked(false);
+                                        isActive = false;
                                     }
                                     break;
                             }
@@ -350,7 +377,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
+        Timber.tag("JINX").d("saveAddress: OBJEK %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -375,7 +402,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
-                final String result = response.body().string();
+                @SuppressWarnings("ConstantConditions") final String result = response.body().string();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -383,7 +410,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                         if (response.isSuccessful()) {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
-                                Timber.tag("###").d("onResponseyyyyy: %s", jsonObject);
+                                Timber.tag("JINX").d("onResponseyyyyy: %s", jsonObject);
                                 boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                                 if (status) {
                                     JSONArray result = jsonObject.getJSONObject("result").getJSONArray("data");
@@ -421,20 +448,26 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
     public Location getLocation() {
         int permissionCheck = ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+        Timber.tag("JINX3").d("%s", permissionCheck);
+        Timber.tag("JINX4").d("%s", isNetworkEnabled);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             if (isNetworkEnabled) {
-                //  locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
+                Timber.tag("JINX5").d("%s", locationManager);
                 if (locationManager != null) {
                     lokasi = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 }
+                Timber.tag("JINX6").d("%s", locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+                Timber.tag("JINX7").d("%s", isGPSEnabled);
             } else if (isGPSEnabled) {
                 if (lokasi == null) {
                     //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+                    Timber.tag("JINX8").d("%s", locationManager);
                     if (locationManager != null) {
                         lokasi = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     }
+                    Timber.tag("JINX9").d("%s", lokasi);
                 }
             }
         }
@@ -443,7 +476,10 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        sendLongLatFunc();
+        if (location != null) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+        }
     }
 
     @Override
@@ -460,4 +496,5 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
     public void onProviderDisabled(String provider) {
 
     }
+
 }

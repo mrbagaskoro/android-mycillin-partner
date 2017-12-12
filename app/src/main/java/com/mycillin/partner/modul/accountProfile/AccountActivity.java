@@ -76,7 +76,6 @@ public class AccountActivity extends AppCompatActivity {
     SwitchButton sbBpjs;
 
     private SessionManager sessionManager;
-    private CircleImageView ivAvatar;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
 
@@ -93,7 +92,6 @@ public class AccountActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(this);
 
-        fillDoctorAvatar();
         manageAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,79 +116,16 @@ public class AccountActivity extends AppCompatActivity {
         detailPartner();
     }
 
-    private void fillDoctorAvatar() {
-        ivAvatar = findViewById(R.id.accountActivity_iv_userAvatar);
-
-        //// TODO: 05/11/2017 FROM SERVICE
+    private void fillDoctorAvatar(String profilePhoto) {
+        CircleImageView ivAvatar = findViewById(R.id.accountActivity_iv_userAvatar);
         Picasso.with(getApplicationContext())
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg")
-               /* .transform(new RoundedTransformation(80, 0))*/
+                .load(profilePhoto)
                 .resize(150, 150)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .networkPolicy(NetworkPolicy.NO_CACHE)
                 .centerCrop()
                 .into(ivAvatar);
     }
-
-    /*public void showChangePasswordDialog() {
-        final DialogPlus dialogPlus = DialogPlus.newDialog(AccountActivity.this)
-                .setContentHolder(new ViewHolder(R.layout.dialog_change_password_layout))
-                .setGravity(Gravity.CENTER)
-                .create();
-        dialogPlus.show();
-
-        View dialogPlusView = dialogPlus.getHolderView();
-
-        final Dialog dialog = new Dialog(AccountActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_change_password_layout);
-
-        final EditText edtxOldPassword = dialog.findViewById(R.id.changePasswordDialog_et_oldPassword);
-        final EditText edtxNewPassword = dialog.findViewById(R.id.changePasswordDialog_et_newPassword);
-        final EditText edtxConfirmPassword = dialog.findViewById(R.id.changePasswordDialog_et_confirmNewPassword);
-        Button btnCancel = dialog.findViewById(R.id.accountActivity_bt_cancelBtn);
-        Button btnConfirm = dialog.findViewById(R.id.accountActivity_bt_applyBtn);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean isValid = true;
-                if (edtxOldPassword.getText().toString().trim().equals("")) {
-                    edtxOldPassword.setError(getString(R.string.loginActivity_passwordWarning));
-                    isValid = false;
-                }
-                if (edtxNewPassword.getText().toString().trim().equals("")) {
-                    edtxNewPassword.setError(getString(R.string.loginActivity_passwordWarning));
-                    isValid = false;
-                }
-                if (edtxConfirmPassword.getText().toString().trim().equals("")) {
-                    edtxConfirmPassword.setError(getString(R.string.loginActivity_passwordConfirmationWarning));
-                    isValid = false;
-                }
-                if (!edtxConfirmPassword.getText().toString().trim().equals(edtxNewPassword.getText().toString().trim())) {
-                    edtxConfirmPassword.setError(getString(R.string.loginActivity_passwordMatchWarning));
-                    isValid = false;
-                }
-
-                if (isValid) {
-                    doChangePassword(edtxOldPassword.getText().toString(), edtxNewPassword.getText().toString());
-                }
-            }
-        });
-        dialog.show();
-        Window window = dialog.getWindow();
-        assert window != null;
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-    }
-
-    private void doChangePassword(String oldPassWord, String newPassWord) {
-    }*/
 
     @OnClick(R.id.accountActivity_ll_signOut)
     public void signOutClicked() {
@@ -316,7 +251,6 @@ public class AccountActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
-                final String x = response.body().string();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -429,7 +363,7 @@ public class AccountActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull final Response response) throws IOException {
-                final String result = response.body().string();
+                @SuppressWarnings("ConstantConditions") final String result = response.body().string();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -446,6 +380,9 @@ public class AccountActivity extends AppCompatActivity {
                                     final String visitIsOn = data.optString("status_visit");
                                     final String consulIsOn = data.optString("status_consul");
                                     final String bpjsIsOn = data.optString("status_BPJS");
+                                    final String profilePhoto = data.optString("profile_photo");
+
+                                    fillDoctorAvatar(profilePhoto);
 
                                     switch (reservIsOn) {
                                         case EXTRA_STATUS_ON:

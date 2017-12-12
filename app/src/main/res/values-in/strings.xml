@@ -30,7 +30,7 @@
     <string name="nav_account">Akun</string>
     <string name="nav_medical_record">Rekam Medis</string>
     <string name="nav_setting">Pengaturan</string>
-    <string name="nav_about_mycillin">Tentang MyCillin</string>
+    <string name="nav_about_mycillin">Tentang</string>
     <string name="nav_e_wallet">E-Wallet</string>
     <string name="nav_invite_friend">Undang Friend</string>
     <string name="nav_todo">Task</string>

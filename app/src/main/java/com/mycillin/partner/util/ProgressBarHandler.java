@@ -9,10 +9,6 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-/**
- * Created by yonkycubase on 30/10/2017.
- */
-
 public class ProgressBarHandler {
     private ProgressBar progressBar;
     private Context context;

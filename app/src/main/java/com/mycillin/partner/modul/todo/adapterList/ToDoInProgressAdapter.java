@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.todo.ToDoInProgressFragment;
 import com.squareup.picasso.MemoryPolicy;
@@ -25,7 +28,7 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
     public ToDoInProgressAdapter(List<ToDoInProgressList> ToDoInProgressLists, ToDoInProgressFragment toDoInProgressFragment) {
         this.ToDoInProgressLists = ToDoInProgressLists;
         this.arrayToDoInProgressLists = new ArrayList<>();
-        this.toDoInProgressFragment = new ToDoInProgressFragment();
+        this.toDoInProgressFragment = toDoInProgressFragment;
         this.arrayToDoInProgressLists.addAll(ToDoInProgressLists);
     }
 
@@ -39,18 +42,21 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
     public void onBindViewHolder(MyViewHolder holder, int position) {
         ToDoInProgressList resultList = ToDoInProgressLists.get(position);
         if (!resultList.getPatientPic().equals("")) {
-            Picasso.with(toDoInProgressFragment.getContext())
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+
+            Glide.with(toDoInProgressFragment.getContext())
                     .load(resultList.getPatientPic())
-                    .resize(150, 150)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .centerCrop()
+                    .apply(requestOptions)
                     .into(holder.patientPic);
         }
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
-        holder.bookDate.setText(resultList.getBookDate());
-        holder.bookTime.setText(resultList.getBookTime());
+        holder.bookDate.setText(toDoInProgressFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
         holder.address.setText(resultList.getAddress());
         holder.age.setText(resultList.getAge());
         holder.height.setText(resultList.getHeight());
@@ -70,7 +76,6 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
-        private TextView bookTime;
         private TextView address;
         private TextView age;
         private TextView height;
@@ -87,7 +92,6 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
             patientName = itemView.findViewById(R.id.rowInProgressList_tv_patientName);
             bookType = itemView.findViewById(R.id.rowInProgressList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowInProgressList_tv_bookDate);
-            bookTime = itemView.findViewById(R.id.rowInProgressList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowInProgressList_iv_patientAvatar);
             address = itemView.findViewById(R.id.rowInProgressList_tv_address);
             age = itemView.findViewById(R.id.rowInProgressList_tv_age);

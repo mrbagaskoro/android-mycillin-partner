@@ -65,108 +65,161 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
-
-                <EditText
-                    android:id="@+id/accountDetailActivity_et_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/accountDetailActivity_emailDesc"
-                    android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
-
-                <EditText
-                    android:id="@+id/accountDetailActivity_et_fullName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/accountDetailActivity_fullNameDesc"
-                    android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
-
-                <EditText
-                    android:id="@+id/accountDetailActivity_et_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/accountDetailActivity_addressDesc"
-                    android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
-
-                <EditText
-                    android:id="@+id/accountDetailActivity_et_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/accountDetailActivity_phoneDesc"
-                    android:inputType="phone" />
-            </android.support.design.widget.TextInputLayout>
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/accountDetailActivity_ll_identityDetail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/accountDetailActivity_genderDesc"
-                android:textSize="20sp" />
-
-            <RadioGroup
-                android:id="@+id/accountDetailActivity_rg_genderRg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:background="@color/bgColor"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/accountDetailActivity_rb_genderMaleRb"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:text="@string/accountDetailActivity_maleDesc" />
-
-                <RadioButton
-                    android:id="@+id/accountDetailActivity_rb_genderFemaleRb"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/accountDetailActivity_femaleDesc" />
+                    android:paddingBottom="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="15dp"
+                    android:text="@string/accountDetailActivity_IdentityInformationDesc"
+                    android:textColor="@color/primaryText"
+                    android:textSize="20sp" />
 
-            </RadioGroup>
+                <ImageButton
+                    android:id="@+id/accountDetailActivity_ib_addInsurance_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_arrow_down" />
 
-            <android.support.design.widget.TextInputLayout
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="@color/gray" />
+
+            <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                android:id="@+id/accountDetailActivity_el_expandableLayout_identity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
+                android:orientation="vertical"
+                app:ael_duration="400"
+                app:ael_expanded="false"
+                app:ael_interpolator="fastOutSlowIn"
+                app:ael_orientation="vertical">
 
-                <EditText
-                    android:id="@+id/accountDetailActivity_et_dob"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/ic_action_calendar_month"
-                    android:focusable="false"
-                    android:hint="@string/accountDetailActivity_DateOfBirthDesc"
-                    android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/accountDetailActivity_emailDesc"
+                        android:inputType="textEmailAddress" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_fullName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/accountDetailActivity_fullNameDesc"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/accountDetailActivity_addressDesc"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/accountDetailActivity_phoneDesc"
+                        android:inputType="phone" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/accountDetailActivity_genderDesc"
+                    android:textSize="20sp" />
+
+                <RadioGroup
+                    android:id="@+id/accountDetailActivity_rg_genderRg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/accountDetailActivity_rb_genderMaleRb"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="@string/accountDetailActivity_maleDesc" />
+
+                    <RadioButton
+                        android:id="@+id/accountDetailActivity_rb_genderFemaleRb"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/accountDetailActivity_femaleDesc" />
+
+                </RadioGroup>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small">
+
+                    <EditText
+                        android:id="@+id/accountDetailActivity_et_dob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_action_calendar_month"
+                        android:focusable="false"
+                        android:hint="@string/accountDetailActivity_DateOfBirthDesc"
+                        android:inputType="text" />
+                </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/accountDetailActivity_et_practiceAddressxx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/accountDetailActivity_practiceAddressDesc"
+                    android:inputType="text"
+                    android:visibility="gone" />
+            </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 
             <LinearLayout
                 android:id="@+id/accountDetailActivity_ll_professionalDetail"
@@ -380,12 +433,15 @@
                     android:background="@drawable/edittext_bg"
                     android:hint="@string/accountDetailActivity_professionDescriptionDesc"
                     android:inputType="textMultiLine"
-                    android:maxLength="400"
+                    android:lines="8"
+                    android:maxLength="600"
                     android:maxLines="20"
+                    android:minLines="6"
                     android:paddingBottom="60dp"
                     android:paddingEnd="5dp"
                     android:paddingStart="10dp"
-                    android:paddingTop="10dp" />
+                    android:paddingTop="10dp"
+                    android:scrollbars="vertical" />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -408,7 +464,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <TextView

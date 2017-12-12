@@ -5,10 +5,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +40,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import timber.log.Timber;
+
+import static com.mycillin.partner.modul.home.visit.HomeVisitFragment.EXTRA_FLAG_FROM_NO_SWIPE;
+import static com.mycillin.partner.modul.home.visit.HomeVisitFragment.EXTRA_FLAG_FROM_SWIPE;
 
 public class ToDoCompletedFragment extends Fragment {
-
+    @BindView(R.id.htoDoCompletedFragment_sr_swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.toDoCompletedFragment_rv_recyclerView)
     RecyclerView toDoCompletedRecyclerView;
 
@@ -73,17 +78,30 @@ public class ToDoCompletedFragment extends Fragment {
         toDoCompletedRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         toDoCompletedLists.clear();
-        getCompletedData();
+        getCompletedData(EXTRA_FLAG_FROM_NO_SWIPE);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                toDoCompletedLists.clear();
+                getCompletedData(EXTRA_FLAG_FROM_SWIPE);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         return rootView;
     }
 
-    public void getCompletedData() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBarHandler.show();
-            }
-        });
+    public void getCompletedData(String flagFrom) {
+        switch (flagFrom) {
+            case EXTRA_FLAG_FROM_NO_SWIPE:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.show();
+                    }
+                });
+                break;
+        }
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
@@ -93,7 +111,7 @@ public class ToDoCompletedFragment extends Fragment {
 
         JSONObject jsonObject = new JSONObject(data);
 
-        Log.d("####", "saveAddress: OBJEK " + jsonObject);
+        Timber.tag("####").d("saveAddress: OBJEK %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -108,6 +126,7 @@ public class ToDoCompletedFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -119,6 +138,7 @@ public class ToDoCompletedFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -129,31 +149,32 @@ public class ToDoCompletedFragment extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("###", "onResponse: " + jsonObject);
+                        Timber.tag("###").d("onResponse: %s", jsonObject);
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Log.d("###", "onResponse2: " + data);
+                            Timber.tag("###").d("onResponse2: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
-                                final String userID = data.getJSONObject(i).optString("user_id").trim();
+                                final String userID = data.getJSONObject(i).optString("patient_id").trim();
                                 String relationID = data.getJSONObject(i).optString("relation_id").trim();
                                 final String serviceType = data.getJSONObject(i).optString("service_type_id").trim();
-                                final String timeBooking = data.getJSONObject(i).optString("created_date").trim();
+                                final String timeBooking = data.getJSONObject(i).optString("order_date").trim();
+                                final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS);
+                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
                             }
                         }
                     } catch (JSONException e) {
-                        Log.d("###", "onResponseror: " + e);
+                        Timber.tag("###").d("onResponseror: %s", e.getMessage());
                     }
                 }
             }
         });
     }
 
-    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS) {
+    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -195,11 +216,11 @@ public class ToDoCompletedFragment extends Fragment {
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("###", "onResponse: " + jsonObject);
+                        Timber.tag("###").d("onResponse: %s", jsonObject);
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Log.d("###", "onResponse2: " + data);
+                            Timber.tag("###").d("onResponse2: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
@@ -235,7 +256,7 @@ public class ToDoCompletedFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoCompletedLists.add(new ToDoCompletedList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
+                                        toDoCompletedLists.add(new ToDoCompletedList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address));
                                         toDoCompletedAdapter = new ToDoCompletedAdapter(toDoCompletedLists, ToDoCompletedFragment.this);
                                         toDoCompletedRecyclerView.setAdapter(toDoCompletedAdapter);
                                         toDoCompletedAdapter.notifyDataSetChanged();
@@ -244,7 +265,7 @@ public class ToDoCompletedFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        Log.d("###", "onResponseror: " + e);
+                        Timber.tag("###").d("onResponseror: %s", e.getMessage());
                     }
                 }
             }

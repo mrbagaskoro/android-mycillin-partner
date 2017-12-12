@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/accountActivity_toolbar"
-        android:background="@color/gray"
+        android:background="@color/bgColor"
         android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -179,7 +179,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_manage_account" />
 
                 </LinearLayout>
 
@@ -223,7 +223,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_change_password" />
 
                 </LinearLayout>
 
@@ -267,7 +267,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_signout" />
 
                 </LinearLayout>
 
@@ -318,7 +318,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/ic_terms_privacy" />
 
                 </LinearLayout>
 

@@ -6,12 +6,15 @@
     android:background="@color/bgColor"
     tools:context="com.mycillin.partner.modul.home.visit.HomeVisitFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/homeVisitFragment_rv_recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/homeVisitFragment_sr_swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="20dp" >
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
-
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/homeVisitFragment_rv_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="20dp" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

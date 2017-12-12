@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.todo.ToDoCompletedFragment;
 import com.squareup.picasso.MemoryPolicy;
@@ -40,19 +43,21 @@ public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdap
         ToDoCompletedList resultList = ToDoCompletedLists.get(position);
 
         if (!resultList.getPatientPic().equals("")) {
-            Picasso.with(toDoCompletedFragment.getContext())
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+
+            Glide.with(toDoCompletedFragment.getContext())
                     .load(resultList.getPatientPic())
-                    .resize(150, 150)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .centerCrop()
+                    .apply(requestOptions)
                     .into(holder.patientPic);
         }
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
-        holder.bookDate.setText(resultList.getBookDate());
-        holder.bookTime.setText(resultList.getBookTime());
-        holder.bookTime.setText(resultList.getBookTime());
+        holder.bookDate.setText(toDoCompletedFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
         holder.address.setText(resultList.getAddress());
     }
 
@@ -65,7 +70,6 @@ public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdap
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
-        private TextView bookTime;
         private TextView address;
         private CircleImageView patientPic;
 
@@ -75,7 +79,6 @@ public class ToDoCompletedAdapter extends RecyclerView.Adapter<ToDoCompletedAdap
             patientName = itemView.findViewById(R.id.rowCompletedList_tv_patientName);
             bookType = itemView.findViewById(R.id.rowCompletedList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowCompletedList_tv_bookDate);
-            bookTime = itemView.findViewById(R.id.rowCompletedList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowCompletedList_iv_patientAvatar);
             address = itemView.findViewById(R.id.rowCompletedList_tv_address);
         }

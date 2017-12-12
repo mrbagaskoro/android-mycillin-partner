@@ -19,25 +19,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/frame_alt"
+            android:background="@drawable/frame"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
             android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:gravity="center|end"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/rowConsultationList_iv_patientAvatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
                     android:src="@mipmap/ic_launcher"
                     app:civ_border_color="@color/black"
                     app:civ_border_width="2dp" />
@@ -51,7 +51,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -70,23 +70,24 @@
                 <TextView
                     android:id="@+id/rowConsultationList_tv_bookType"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
-                    android:gravity="bottom|end"
-                    android:text="@string/rowReservationList_bookType"
-                    android:textColor="@color/secondaryText"
+                    android:paddingBottom="10dp"
+                    android:text="@string/rowVisitList_bookType"
+                    android:textColor="@color/primaryText"
                     android:textSize="15sp" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="end"
-                android:orientation="vertical"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp">
+                <TextView
+                    android:id="@+id/rowConsultationList_tv_payment_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/row_payment"
+                    android:textColor="@color/primaryText"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/rowConsultationList_tv_bookDate"
@@ -95,18 +96,10 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:paddingBottom="10dp"
-                    android:text="@string/rowEWalletHistoryList_date"
-                    android:textColor="@color/secondaryText" />
-
-                <TextView
-                    android:id="@+id/rowConsultationList_tv_bookTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="bottom|end"
-                    android:text="@string/rowVisitList_bookTime"
-                    android:textColor="@color/secondaryText" />
+                    android:text="@string/row_date"
+                    android:textColor="@color/primaryText"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/rowConsultationList_tv_address"
@@ -115,9 +108,9 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:gravity="bottom|end"
-                    android:visibility="gone"
                     android:text="@string/rowVisitList_bookTime"
-                    android:textColor="@color/secondaryText" />
+                    android:textColor="@color/secondaryText"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

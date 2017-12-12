@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -83,8 +84,16 @@ public class AccountDetailActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.accountDetailActivity_ll_professionalDetail)
     LinearLayout professionalDetailLayout;
+    @BindView(R.id.accountDetailActivity_ll_identityDetail)
+    LinearLayout identityDetailLayout;
     @BindView(R.id.accountDetailActivity_el_expandableLayout)
     ExpandableLayout professionalDetailExpandableLayout;
+    @BindView(R.id.accountDetailActivity_el_expandableLayout_identity)
+    ExpandableLayout professionalDetailExpandableLayoutIdentity;
+    @BindView(R.id.accountDetailActivity_ib_addInsurance_data)
+    ImageButton ibExpandableLayoutIdentity;
+    @BindView(R.id.accountDetailActivity_ib_addInsurance)
+    ImageButton ibExpandableLayoutProfession;
     @BindView(R.id.accountDetailActivity_et_email)
     EditText edtxEmail;
     @BindView(R.id.accountDetailActivity_et_fullName)
@@ -154,6 +163,28 @@ public class AccountDetailActivity extends AppCompatActivity {
                 professionalDetailExpandableLayout.toggle();
             }
         });
+
+        ibExpandableLayoutProfession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                professionalDetailExpandableLayout.toggle();
+            }
+        });
+
+        identityDetailLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                professionalDetailExpandableLayoutIdentity.toggle();
+            }
+        });
+
+        ibExpandableLayoutIdentity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                professionalDetailExpandableLayoutIdentity.toggle();
+            }
+        });
+
         edtxWorkArea.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         edtxAddress.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         edtxInstitutionName.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
@@ -165,7 +196,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.accountDetailActivity_iv_userAvatar)
     public void onAvatarClicked() {
-        ImagePicker.pickImage(AccountDetailActivity.this, "Select Image From :");
+        //ImagePicker.pickImage(AccountDetailActivity.this, "Select Image From :");
     }
 
     @OnClick(R.id.accountDetailActivity_et_dob)
@@ -282,7 +313,7 @@ public class AccountDetailActivity extends AppCompatActivity {
     private void doUpdateAccount() {
 
         final RadioButton rbSelectedAddressType = findViewById(rgGender.getCheckedRadioButtonId());
-        String mEmail = edtxEmail.getText().toString().trim();
+        //String mEmail = edtxEmail.getText().toString().trim();
         final String mFullName = edtxFullName.getText().toString().trim();
         String mUserAddress = edtxAddress.getText().toString().trim();
         String mPhoneNumber = edtxPhone.getText().toString().trim();
@@ -386,13 +417,13 @@ public class AccountDetailActivity extends AppCompatActivity {
                         mProgressBarHandler.hide();
                     }
                 });
-                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, false);
+                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, true);
             }
 
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
-                String result = response.body().string();
-                Timber.tag("###").d("onResponse: " + result);
+                @SuppressWarnings("ConstantConditions") String result = response.body().string();
+                Timber.tag("###").d("onResponse: %s", result);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -606,12 +637,12 @@ public class AccountDetailActivity extends AppCompatActivity {
                         mProgressBarHandler.hide();
                     }
                 });
-                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
+                DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Warning", "Please Try Again : " + e.getMessage(), true);
             }
 
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull final okhttp3.Response response) throws IOException {
-                final String result = response.body().string();
+                @SuppressWarnings("ConstantConditions") final String result = response.body().string();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {

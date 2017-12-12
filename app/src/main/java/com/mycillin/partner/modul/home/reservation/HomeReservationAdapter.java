@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -38,18 +41,21 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
     public void onBindViewHolder(MyViewHolder holder, int position) {
         HomeReservationList resultList = HomeReservationLists.get(position);
         if (!resultList.getPatientPic().equals("")) {
-            Picasso.with(homeReservationFragment.getContext())
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+
+            Glide.with(homeReservationFragment.getContext())
                     .load(resultList.getPatientPic())
-                    .resize(150, 150)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .centerCrop()
+                    .apply(requestOptions)
                     .into(holder.patientPic);
         }
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
-        holder.bookDate.setText(resultList.getBookDate());
-        holder.bookTime.setText(resultList.getBookTime());
+        holder.bookDate.setText(homeReservationFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
         holder.address.setText(resultList.getAddress());
     }
 
@@ -62,7 +68,6 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
-        private TextView bookTime;
         private CircleImageView patientPic;
         private TextView address;
 
@@ -72,7 +77,6 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
             patientName = itemView.findViewById(R.id.rowReservationList_tv_patientName);
             bookType = itemView.findViewById(R.id.rowReservationList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowReservationList_tv_bookDate);
-            bookTime = itemView.findViewById(R.id.rowReservationList_tv_bookTime);
             patientPic = itemView.findViewById(R.id.rowReservationList_iv_patientAvatar);
             address = itemView.findViewById(R.id.rowReservationList_tv_address);
         }

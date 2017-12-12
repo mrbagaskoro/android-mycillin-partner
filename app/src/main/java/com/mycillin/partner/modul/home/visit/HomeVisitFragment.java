@@ -6,10 +6,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +43,13 @@ import okhttp3.Response;
 import timber.log.Timber;
 
 public class HomeVisitFragment extends Fragment {
-
+    @BindView(R.id.homeVisitFragment_sr_swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.homeVisitFragment_rv_recyclerView)
     RecyclerView homeVisitRecyclerView;
+
+    public static final String EXTRA_FLAG_FROM_SWIPE = "SWIPE";
+    public static final String EXTRA_FLAG_FROM_NO_SWIPE = "NO_SWIPE";
 
     private List<HomeVisitList> homeVisitLists = new ArrayList<>();
     private HomeVisitAdapter homeVisitAdapter;
@@ -75,8 +79,15 @@ public class HomeVisitFragment extends Fragment {
 
         homeVisitLists.clear();
 
-        getVisitData();
-
+        getVisitData(EXTRA_FLAG_FROM_NO_SWIPE);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                homeVisitLists.clear();
+                getVisitData(EXTRA_FLAG_FROM_SWIPE);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         return rootView;
     }
 
@@ -109,14 +120,19 @@ public class HomeVisitFragment extends Fragment {
         }));
     }
 
-    public void getVisitData() {
+    public void getVisitData(String flagFrom) {
         homeVisitLists.clear();
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBarHandler.show();
-            }
-        });
+        switch (flagFrom) {
+            case EXTRA_FLAG_FROM_NO_SWIPE:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.show();
+                    }
+                });
+                break;
+        }
+
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
@@ -141,6 +157,7 @@ public class HomeVisitFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -152,41 +169,44 @@ public class HomeVisitFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mProgressBarHandler.hide();
                     }
                 });
-                final String result = response.body().string();
+                @SuppressWarnings("ConstantConditions")  final String result = response.body().string();
+                Timber.tag("###").d("onResponses: %s", result);
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("###", "onResponse: " + jsonObject);
+                        Timber.tag("###").d("onResponse: %s", jsonObject);
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Log.d("###", "onResponse2: " + data);
+                            Timber.tag("###").d("onResponse2: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
-                                final String userID = data.getJSONObject(i).optString("user_id").trim();
+                                final String userID = data.getJSONObject(i).optString("patient_id").trim();
                                 String relationID = data.getJSONObject(i).optString("relation_id").trim();
                                 final String serviceType = data.getJSONObject(i).optString("service_type_id").trim();
-                                final String timeBooking = data.getJSONObject(i).optString("created_date").trim();
+                                final String timeBooking = data.getJSONObject(i).optString("order_date").trim();
+                                final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS);
+                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
                             }
                         }
                     } catch (JSONException e) {
-                        Log.d("###", "onResponseror: " + e);
+                        Timber.tag("###").d("onResponseror: %s", e.getMessage());
                     }
                 }
             }
         });
     }
 
-    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS) {
+    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -224,15 +244,15 @@ public class HomeVisitFragment extends Fragment {
                         mProgressBarHandler.hide();
                     }
                 });
-                final String result = response.body().string();
+                @SuppressWarnings("ConstantConditions")  final String result = response.body().string();
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("###", "onResponse: " + jsonObject);
+                        Timber.tag("###").d("onResponsed: %s", jsonObject);
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Log.d("###", "onResponse2: " + data);
+                            Timber.tag("###").d("onResponse2d: %s", data);
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
                                 final String address = data.getJSONObject(i).optString("address").trim();
@@ -266,7 +286,7 @@ public class HomeVisitFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeVisitLists.add(new HomeVisitList("https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Bill_Gates_in_WEF%2C_2007.jpg/220px-Bill_Gates_in_WEF%2C_2007.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB",address));
+                                        homeVisitLists.add(new HomeVisitList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address));
                                         homeVisitAdapter = new HomeVisitAdapter(homeVisitLists, HomeVisitFragment.this);
                                         homeVisitRecyclerView.setAdapter(homeVisitAdapter);
                                         homeVisitAdapter.notifyDataSetChanged();
@@ -275,7 +295,7 @@ public class HomeVisitFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        Log.d("###", "onResponseror: " + e);
+                        Timber.tag("###").d("onResponseror: %s", e.getMessage());
                     }
                 }
             }

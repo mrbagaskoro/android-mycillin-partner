@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,8 +47,12 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import timber.log.Timber;
 
-public class ToDoInProgressFragment extends Fragment {
+import static com.mycillin.partner.modul.home.visit.HomeVisitFragment.EXTRA_FLAG_FROM_NO_SWIPE;
+import static com.mycillin.partner.modul.home.visit.HomeVisitFragment.EXTRA_FLAG_FROM_SWIPE;
 
+public class ToDoInProgressFragment extends Fragment {
+    @BindView(R.id.toDoInProgressFragment_sr_swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.toDoInProgressFragment_rv_recyclerView)
     RecyclerView toDoInProgressRecyclerView;
 
@@ -78,7 +83,15 @@ public class ToDoInProgressFragment extends Fragment {
         toDoInProgressRecyclerView.setItemAnimator(new DefaultItemAnimator());
         toDoInProgressLists.clear();
         getToDoInProgressList();
-        getTodoData();
+        getTodoData(EXTRA_FLAG_FROM_NO_SWIPE);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                toDoInProgressLists.clear();
+                getTodoData(EXTRA_FLAG_FROM_SWIPE);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         return rootView;
     }
 
@@ -111,14 +124,18 @@ public class ToDoInProgressFragment extends Fragment {
         }));
     }
 
-    public void getTodoData() {
+    public void getTodoData(String flagFrom) {
         toDoInProgressLists.clear();
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBarHandler.show();
-            }
-        });
+        switch (flagFrom) {
+            case EXTRA_FLAG_FROM_NO_SWIPE:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.show();
+                    }
+                });
+                break;
+        }
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
@@ -143,6 +160,7 @@ public class ToDoInProgressFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -154,6 +172,7 @@ public class ToDoInProgressFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -171,13 +190,14 @@ public class ToDoInProgressFragment extends Fragment {
                             Timber.tag("###").d("onResponse2: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
-                                final String userID = data.getJSONObject(i).optString("user_id").trim();
+                                final String userID = data.getJSONObject(i).optString("patient_id").trim();
                                 String relationID = data.getJSONObject(i).optString("relation_id").trim();
                                 final String serviceType = data.getJSONObject(i).optString("service_type_id").trim();
-                                final String timeBooking = data.getJSONObject(i).optString("created_date").trim();
+                                final String timeBooking = data.getJSONObject(i).optString("order_date").trim();
+                                final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS);
+                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
                             }
                         }
                     } catch (JSONException e) {
@@ -188,7 +208,7 @@ public class ToDoInProgressFragment extends Fragment {
         });
     }
 
-    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS) {
+    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -284,7 +304,7 @@ public class ToDoInProgressFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoInProgressLists.add(new ToDoInProgressList("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/John_Petrucci_-_01.jpg/240px-John_Petrucci_-_01.jpg", fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID));
+                                        toDoInProgressLists.add(new ToDoInProgressList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID));
                                         toDoInProgressAdapter = new ToDoInProgressAdapter(toDoInProgressLists, ToDoInProgressFragment.this);
                                         toDoInProgressRecyclerView.setAdapter(toDoInProgressAdapter);
                                         toDoInProgressAdapter.notifyDataSetChanged();
