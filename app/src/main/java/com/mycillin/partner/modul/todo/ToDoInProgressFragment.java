@@ -172,13 +172,13 @@ public class ToDoInProgressFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mProgressBarHandler.hide();
                     }
                 });
+                swipeRefreshLayout.setRefreshing(false);
                 final String result = response.body().string();
                 if (response.isSuccessful()) {
                     try {
