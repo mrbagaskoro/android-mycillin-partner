@@ -36,6 +36,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:477445133138:android:5e5493247ceb95a2",
+        "android_client_info": {
+          "package_name": "com.mycillin.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "477445133138-anaoj80h5j1hpktrqag8hi0l7h7k8r2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwGsvRDzGIOjE_V634t01NO4v0NMeW_Ww"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

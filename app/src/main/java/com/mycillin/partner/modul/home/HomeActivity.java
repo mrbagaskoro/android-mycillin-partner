@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,8 +25,11 @@ import android.widget.Toast;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.about.AboutFragment;
+import com.mycillin.partner.modul.account.LoginActivity;
+import com.mycillin.partner.modul.account.model.loginModel.ModelRestLogin;
 import com.mycillin.partner.modul.accountProfile.AccountActivity;
 import com.mycillin.partner.modul.ewallet.EWalletFragment;
+import com.mycillin.partner.modul.firebase.FirebaseManager;
 import com.mycillin.partner.modul.todo.ToDoParentFragment;
 import com.mycillin.partner.util.BottomNavigationViewHelper;
 import com.mycillin.partner.util.Configs;
@@ -152,8 +156,92 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         }
         getLocation();
         sendLocationLoop();
+        sendTokenFirebase();
     }
+    private void sendTokenFirebase() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        FirebaseManager firebaseManager = new FirebaseManager(getApplicationContext());
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", sessionManager.getUserId());
+        params.put("token", firebaseManager.getFirebaseToken());
 
+        JSONObject jsonObject = new JSONObject(params);
+
+        Timber.tag("###").d("Firebase: %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "token_fcm/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+
+        Timber.tag("###").d("sendTokenFirebase: %s", sessionManager.getUserToken());
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning Send Token Fbase", "Connection Problem, Please Try Again Later." + e, false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                String result = response.body().string();
+                Log.d("#8#8#", "onResponse: "+result);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                Log.d("#8#8#", "onResponse: SIP");
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning Firbase", message, false);
+                            }
+                        } else {
+                            DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning Firbase", "Please Try Again", false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning Firbase", message, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
     private void sendLocationLoop() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override

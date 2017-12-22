@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".application.BaseApplication"
@@ -21,7 +22,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".modul.home.HomeActivity" />
+        <activity android:name=".modul.home.HomeActivity">
+            <intent-filter>
+                <action android:name="HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".modul.intro.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,15 +60,25 @@
         <activity android:name=".modul.todo.completion.medicalRecord.MedicalRecordActivity" />
         <activity android:name=".modul.todo.completion.medicalRecord.MedicalRecordDetailActivity" />
         <activity android:name=".modul.todo.completion.CompleteRequestActivity" />
-        <activity android:name=".modul.chat.ChatActivity" />
-        <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity" />
+        <activity android:name=".modul.chat.ChatActivity">
+            <intent-filter>
+                <action android:name="REQUEST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity">
+            <intent-filter>
+                <action android:name="REQUEST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".modul.account.RegisterActivity" />
         <activity android:name=".modul.accountProfile.UpdatePassActivity" />
         <activity android:name=".modul.searchResult.SearchResultActivity" />
 
-        <meta-data
+        <!--<meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_notifications_black_24dp" />
+            android:resource="@drawable/ic_notifications_black_24dp" />-->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
