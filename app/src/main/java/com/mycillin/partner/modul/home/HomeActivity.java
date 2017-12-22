@@ -158,6 +158,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         sendLocationLoop();
         sendTokenFirebase();
     }
+
     private void sendTokenFirebase() {
         mHandler.post(new Runnable() {
             @Override
@@ -201,7 +202,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 String result = response.body().string();
-                Log.d("#8#8#", "onResponse: "+result);
+                Log.d("#8#8#", "onResponse: " + result);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -242,6 +243,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             }
         });
     }
+
     private void sendLocationLoop() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
