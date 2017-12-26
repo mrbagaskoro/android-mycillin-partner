@@ -7,7 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
@@ -17,7 +18,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class CompleteRequestActivity extends AppCompatActivity {
 
@@ -34,8 +34,10 @@ public class CompleteRequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_request);
         ButterKnife.bind(this);
-
-        toolbar.setTitle(R.string.completeRequestActivity_title);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.completeRequestActivity_title);
+        }
 
         setupViewPager(viewPager);
         stepperIndicator.setViewPager(viewPager, true);
@@ -59,6 +61,14 @@ public class CompleteRequestActivity extends AppCompatActivity {
 
         /*String systole = ((EditText) findViewById(R.id.accountDetailActivity_et_systole)).getText().toString();
         Timber.tag("JINX").d("onresponCompleted: %s", systole);*/
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.save_menu, menu);
+        MenuItem menuFinish = menu.findItem(R.id.action_save);
+        menuFinish.setVisible(true);
+        return true;
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

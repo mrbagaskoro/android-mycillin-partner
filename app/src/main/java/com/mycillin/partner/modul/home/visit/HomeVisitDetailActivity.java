@@ -9,21 +9,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
@@ -52,12 +47,16 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
     @BindView(R.id.homeVisitDetailActivity_toolbar)
     Toolbar toolbar;
-    @BindView(R.id.homeVisitDetailActivity_fab_callFAB)
-    FloatingActionButton callBtn;
-    @BindView(R.id.homeVisitDetailActivity_fab_cancelFAB)
-    FloatingActionButton cancelBtn;
-    @BindView(R.id.homeVisitDetailActivity_fab_startFAB)
-    FloatingActionButton startBtn;
+
+    @BindView(R.id.homeVisitDetailActivity_bt_chat)
+    Button chatBtn;
+    @BindView(R.id.homeVisitDetailActivity_bt_reject)
+    Button cancelBtn;
+    @BindView(R.id.homeVisitDetailActivity_bt_maps)
+    Button mapsBtn;
+    @BindView(R.id.homeVisitDetailActivity_bt_call)
+    Button callBtn;
+
     @BindView(R.id.homeVisitDetailActivity_tv_patientName)
     TextView patientName;
     @BindView(R.id.homeVisitDetailActivity_tv_bookDate)
@@ -84,25 +83,19 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
 
         toolbar.setTitle(R.string.homeVisitDetail_title);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.homeVisitDetailActivity_fr_mapFragment);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                gMap = googleMap;
-
-                LatLng bapindo = new LatLng(-6.224190, 106.80791);
-                gMap.addMarker(new MarkerOptions().position(bapindo).title("Plaza Bapindo"));
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bapindo, 15.0f));
-            }
-        });
-
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
         bookLocation.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_LOCATION));
     }
 
-    @OnClick(R.id.homeVisitDetailActivity_fab_callFAB)
+    @OnClick(R.id.homeVisitDetailActivity_bt_maps)
+    public void onMapsStart() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr=-6.224190,106.80791&daddr=-2.224190,102.80791"));
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.homeVisitDetailActivity_bt_call)
     public void onClickCall() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -111,13 +104,13 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.homeVisitDetailActivity_fab_startFAB)
+    @OnClick(R.id.homeVisitDetailActivity_bt_chat)
     public void onClickStart() {
         Intent intent = new Intent(HomeVisitDetailActivity.this, ChatActivity.class);
         startActivity(intent);
     }
 
-    @OnClick(R.id.homeVisitDetailActivity_fab_cancelFAB)
+    @OnClick(R.id.homeVisitDetailActivity_bt_reject)
     public void onClickCancel() {
         cancelReason();
     }

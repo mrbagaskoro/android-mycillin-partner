@@ -11,12 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.todo.completion.CompleteRequestActivity;
 import com.mycillin.partner.modul.todo.completion.medicalRecord.MedicalRecordActivity;
@@ -73,18 +68,6 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
 
         toolbar.setTitle(R.string.toDoInProgressDetail_title);
         setSupportActionBar(toolbar);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.toDoInProgressDetailActivity_fr_mapFragment);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                gMap = googleMap;
-
-                LatLng bapindo = new LatLng(-6.224190, 106.80791);
-                gMap.addMarker(new MarkerOptions().position(bapindo).title("Plaza Bapindo"));
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bapindo, 15.0f));
-            }
-        });
 
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getString(R.string.itemConcat2, getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE), getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME)));
