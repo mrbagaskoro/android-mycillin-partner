@@ -23,13 +23,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/accountDetailActivity_toolbar"
-        android:background="@color/bgColor"
+        android:background="?attr/colorPrimaryDark"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/accountDetailActivity_iv_userAvatar"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
@@ -37,26 +38,69 @@
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp" />
 
-        <TextView
-            android:id="@+id/accountDetailActivity_tv_infoDesc"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:text="@string/accountDetailActivity_infoDesc"
-            android:textColor="@color/primaryText"
-            android:textSize="15sp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/accountDetailActivity_tv_fullName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Dr. Eka"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/accountDetailActivity_tv_profession"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Dokter Umum"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/accountDetailActivity_tv_sip"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="1028/SIP/V/IDI/2013"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/accountDetailActivity_tv_str"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="STR : 1033/99/78"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/accountDetailActivity_ll_bodyContainer"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/accountDetailActivity_ll_headerContainer">
 
         <LinearLayout
@@ -120,6 +164,7 @@
                         android:id="@+id/accountDetailActivity_et_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:focusable="false"
                         android:hint="@string/accountDetailActivity_emailDesc"
                         android:inputType="textEmailAddress" />
                 </android.support.design.widget.TextInputLayout>
@@ -212,6 +257,7 @@
                         android:hint="@string/accountDetailActivity_DateOfBirthDesc"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
+
                 <EditText
                     android:id="@+id/accountDetailActivity_et_practiceAddressxx"
                     android:layout_width="match_parent"
@@ -285,7 +331,6 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_professionCategory"
                     android:layout_marginBottom="@dimen/spacing_small"
                     android:layout_marginTop="@dimen/spacing_small">
 
@@ -302,7 +347,6 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_areaOfExpertise"
                     android:layout_marginBottom="@dimen/spacing_small"
                     android:layout_marginTop="@dimen/spacing_small">
 
@@ -317,7 +361,6 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_areaOfWork"
                     android:layout_marginBottom="@dimen/spacing_small"
                     android:layout_marginTop="@dimen/spacing_small">
 
@@ -332,71 +375,6 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_yearsOfPractice"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small">
-
-                    <EditText
-                        android:id="@+id/accountDetailActivity_et_permittNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/accountDetailActivity_permittDesc"
-                        android:inputType="text" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_permittNumber"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small">
-
-                    <EditText
-                        android:id="@+id/accountDetailActivity_et_endOfSipp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_action_calendar_month"
-                        android:focusable="false"
-                        android:hint="@string/sipp_expired"
-                        android:inputType="text" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_endOfSipp"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small">
-
-                    <EditText
-                        android:id="@+id/accountDetailActivity_et_StrNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/str_number"
-                        android:inputType="text" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_StrNumber"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small">
-
-                    <EditText
-                        android:id="@+id/accountDetailActivity_et_endOfStr"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_action_calendar_month"
-                        android:focusable="false"
-                        android:hint="@string/str_expired"
-                        android:inputType="text" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_endOfStr"
                     android:layout_marginBottom="@dimen/spacing_small"
                     android:layout_marginTop="@dimen/spacing_small">
 
@@ -407,11 +385,78 @@
                         android:hint="@string/institution_name"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
+            </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+            <LinearLayout
+                android:id="@+id/accountDetailActivity_ll_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@color/bgColor"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="15dp"
+                    android:text="Clinic Location"
+                    android:textColor="@color/primaryText"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/accountDetailActivity_ib_addInsurance_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_arrow_down" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="@color/gray" />
+
+            <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                android:id="@+id/accountDetailActivity_el_expandableLayout_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:ael_duration="400"
+                app:ael_expanded="false"
+                app:ael_interpolator="fastOutSlowIn"
+                app:ael_orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/accountDetailActivity_rg_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/accountDetailActivity_rb_gps"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:text="Current Location (Gps Location)" />
+
+                    <RadioButton
+                        android:id="@+id/accountDetailActivity_rb_maps"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Location By Address" />
+
+                </RadioGroup>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_institutionName"
                     android:layout_marginBottom="@dimen/spacing_small"
                     android:layout_marginTop="@dimen/spacing_small">
 
@@ -419,21 +464,77 @@
                         android:id="@+id/accountDetailActivity_et_practiceAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_arrow_down"
+                        android:focusable="false"
                         android:hint="@string/accountDetailActivity_practiceAddressDesc"
                         android:inputType="text" />
                 </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/accountDetailActivity_bt_location"
+                    style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/button"
+                    android:text="Set Location" />
+
+            </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+            <LinearLayout
+                android:id="@+id/accountDetailActivity_ll_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@color/bgColor"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
+                    android:paddingTop="15dp"
+                    android:text="Professional Profile"
+                    android:textColor="@color/primaryText"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/accountDetailActivity_ib_addInsurance_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_arrow_down" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="@color/gray" />
+
+            <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                android:id="@+id/accountDetailActivity_el_expandableLayout_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:ael_duration="400"
+                app:ael_expanded="false"
+                app:ael_interpolator="fastOutSlowIn"
+                app:ael_orientation="vertical">
 
                 <EditText
                     android:id="@+id/accountDetailActivity_et_professionDescription"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_practiceAddress"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/edittext_bg"
                     android:hint="@string/accountDetailActivity_professionDescriptionDesc"
                     android:inputType="textMultiLine"
-                    android:lines="8"
                     android:maxLength="600"
                     android:maxLines="20"
                     android:minLines="6"
@@ -442,31 +543,14 @@
                     android:paddingStart="10dp"
                     android:paddingTop="10dp"
                     android:scrollbars="vertical" />
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/accountDetailActivity_et_professionDescription"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:layout_marginTop="@dimen/spacing_small">
-
-                    <EditText
-                        android:id="@+id/accountDetailActivity_et_practiceAddressx"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/accountDetailActivity_practiceAddressDesc"
-                        android:inputType="text"
-                        android:visibility="gone" />
-                </android.support.design.widget.TextInputLayout>
             </com.github.aakira.expandablelayout.ExpandableLinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
-
                 <TextView
                     android:id="@+id/accountDetailActivity_tv_isAgree"
                     android:layout_width="match_parent"

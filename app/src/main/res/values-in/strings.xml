@@ -73,7 +73,7 @@
     <string name="accountDetailActivity_title">Detail Akun</string>
     <string name="accountDetailActivity_emailDesc">E-Mail</string>
     <string name="accountDetailActivity_professionalInformationDesc">Informasi Profesional</string>
-    <string name="accountDetailActivity_yearsOfPracticeDesc">Lama Praktik</string>
+    <string name="accountDetailActivity_yearsOfPracticeDesc">Lama Kerja</string>
     <string name="accountDetailActivity_permittDesc">Nomor SIPP:</string>
     <string name="accountDetailActivity_professionDescriptionDesc">Deskripsi Pekerjaan</string>
     <string name="accountDetailActivity_practiceAddressDesc">Alamat Praktik</string>

@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.account.LoginActivity;
@@ -21,9 +24,6 @@ import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.SessionManager;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,13 +118,18 @@ public class AccountActivity extends AppCompatActivity {
 
     private void fillDoctorAvatar(String profilePhoto) {
         CircleImageView ivAvatar = findViewById(R.id.accountActivity_iv_userAvatar);
-        Picasso.with(getApplicationContext())
-                .load(profilePhoto)
-                .resize(150, 150)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .centerCrop()
-                .into(ivAvatar);
+        if (!profilePhoto.equals("null") && !profilePhoto.isEmpty()) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+            Glide.with(this)
+                    .load(profilePhoto)
+                    .apply(requestOptions)
+                    .into(ivAvatar);
+        }
     }
 
     @OnClick(R.id.accountActivity_ll_signOut)

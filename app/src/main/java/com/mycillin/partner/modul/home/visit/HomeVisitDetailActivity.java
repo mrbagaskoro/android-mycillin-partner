@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -12,7 +13,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
@@ -26,12 +26,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
-import com.mycillin.partner.util.PartnerAPI;
-import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReasonData;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.ProgressBarHandler;
+import com.mycillin.partner.util.RestClient;
 
 import java.util.ArrayList;
 
@@ -44,6 +44,12 @@ import retrofit2.Response;
 
 public class HomeVisitDetailActivity extends AppCompatActivity {
 
+    public static String KEY_FLAG_PATIENT_NAME = "KEY_FLAG_PATIENT_NAME";
+    public static String KEY_FLAG_PATIENT_TYPE = "KEY_FLAG_PATIENT_TYPE";
+    public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
+    public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
+    public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
+    public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
     @BindView(R.id.homeVisitDetailActivity_toolbar)
     Toolbar toolbar;
     @BindView(R.id.homeVisitDetailActivity_fab_callFAB)
@@ -52,7 +58,6 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     FloatingActionButton cancelBtn;
     @BindView(R.id.homeVisitDetailActivity_fab_startFAB)
     FloatingActionButton startBtn;
-
     @BindView(R.id.homeVisitDetailActivity_tv_patientName)
     TextView patientName;
     @BindView(R.id.homeVisitDetailActivity_tv_bookDate)
@@ -61,21 +66,11 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     TextView bookType;
     @BindView(R.id.homeVisitDetailActivity_tv_bookLocation)
     TextView bookLocation;
-
-
-
     private GoogleMap gMap;
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
     private ArrayList cancelReasonList = new ArrayList();
-
-    public static String KEY_FLAG_PATIENT_NAME = "KEY_FLAG_PATIENT_NAME";
-    public static String KEY_FLAG_PATIENT_TYPE = "KEY_FLAG_PATIENT_TYPE";
-    public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
-    public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
-    public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
-    public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

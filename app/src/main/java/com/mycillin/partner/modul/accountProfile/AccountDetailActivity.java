@@ -2,15 +2,21 @@ package com.mycillin.partner.modul.accountProfile;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,15 +26,25 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.github.aakira.expandablelayout.ExpandableLayout;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.mvc.imagepicker.ImagePicker;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
@@ -43,9 +59,6 @@ import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.util.SessionManager;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,6 +92,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_GET_PROFESSION = 1111;
     public static final int REQUEST_CODE_GET_EXPERTISE = 1112;
+    public final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 9001;
 
     @BindView(R.id.accountDetailActivity_toolbar)
     Toolbar toolbar;
@@ -86,14 +100,39 @@ public class AccountDetailActivity extends AppCompatActivity {
     LinearLayout professionalDetailLayout;
     @BindView(R.id.accountDetailActivity_ll_identityDetail)
     LinearLayout identityDetailLayout;
+    @BindView(R.id.accountDetailActivity_ll_location)
+    LinearLayout locationLayout;
+    @BindView(R.id.accountDetailActivity_ll_profile)
+    LinearLayout profileDetailLayout;
+
     @BindView(R.id.accountDetailActivity_el_expandableLayout)
     ExpandableLayout professionalDetailExpandableLayout;
     @BindView(R.id.accountDetailActivity_el_expandableLayout_identity)
     ExpandableLayout professionalDetailExpandableLayoutIdentity;
+    @BindView(R.id.accountDetailActivity_el_expandableLayout_location)
+    ExpandableLayout locationExpandableLayoutIdentity;
+    @BindView(R.id.accountDetailActivity_el_expandableLayout_desc)
+    ExpandableLayout descDetailExpandableLayoutIdentity;
+
+
     @BindView(R.id.accountDetailActivity_ib_addInsurance_data)
     ImageButton ibExpandableLayoutIdentity;
     @BindView(R.id.accountDetailActivity_ib_addInsurance)
     ImageButton ibExpandableLayoutProfession;
+    @BindView(R.id.accountDetailActivity_ib_addInsurance_location)
+    ImageButton ibExpandableLayoutLocation;
+    @BindView(R.id.accountDetailActivity_ib_addInsurance_desc)
+    ImageButton ibExpandableLayoutDesc;
+
+    @BindView(R.id.accountDetailActivity_tv_fullName)
+    TextView tvFullName;
+    @BindView(R.id.accountDetailActivity_tv_profession)
+    TextView tvProfession;
+    @BindView(R.id.accountDetailActivity_tv_sip)
+    TextView tvSip;
+    @BindView(R.id.accountDetailActivity_tv_str)
+    TextView tvStr;
+
     @BindView(R.id.accountDetailActivity_et_email)
     EditText edtxEmail;
     @BindView(R.id.accountDetailActivity_et_fullName)
@@ -118,14 +157,6 @@ public class AccountDetailActivity extends AppCompatActivity {
     EditText edtxWorkArea;
     @BindView(R.id.accountDetailActivity_et_yearsOfPractice)
     EditText edtxYearPractice;
-    @BindView(R.id.accountDetailActivity_et_permittNumber)
-    EditText edtxSIPP;
-    @BindView(R.id.accountDetailActivity_et_endOfSipp)
-    EditText edtxExpiredSIPP;
-    @BindView(R.id.accountDetailActivity_et_StrNumber)
-    EditText edtxSTR;
-    @BindView(R.id.accountDetailActivity_et_endOfStr)
-    EditText edtxExpiredSTR;
     @BindView(R.id.accountDetailActivity_et_institutionName)
     EditText edtxInstitutionName;
     @BindView(R.id.accountDetailActivity_et_professionDescription)
@@ -133,11 +164,23 @@ public class AccountDetailActivity extends AppCompatActivity {
     @BindView(R.id.accountDetailActivity_et_practiceAddress)
     EditText edtxWorkAddress;
 
+    @BindView(R.id.accountDetailActivity_rg_location)
+    RadioGroup rgLocation;
+    @BindView(R.id.accountDetailActivity_bt_location)
+    Button btnSetLocation;
+
+
     private CircleImageView ivAvatar;
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
     private SessionManager sessionManager;
+
+    private double selectedCurrentLatitude = 0.0;
+    private double selectedCurrentLongitude = 0.0;
+    private double selectedSearchedLatitude;
+    private double selectedSearchedLongitude;
+    private boolean isMapsLocation = false;
 
     private List<SearchResultList> searchResultList = new ArrayList<>();
 
@@ -185,13 +228,128 @@ public class AccountDetailActivity extends AppCompatActivity {
             }
         });
 
+        locationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                locationExpandableLayoutIdentity.toggle();
+            }
+        });
+
+        ibExpandableLayoutLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                locationExpandableLayoutIdentity.toggle();
+            }
+        });
+
+        profileDetailLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                descDetailExpandableLayoutIdentity.toggle();
+            }
+        });
+
+        ibExpandableLayoutDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                descDetailExpandableLayoutIdentity.toggle();
+            }
+        });
+
         edtxWorkArea.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         edtxAddress.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         edtxInstitutionName.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         edtxInstitutionName.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         edtxWorkAddress.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
+        rgLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                RadioButton checkedRadioButton;
+
+                if (i == R.id.accountDetailActivity_rb_gps) {
+                    checkedRadioButton = radioGroup.findViewById(i);
+                    if (checkedRadioButton.isChecked()) {
+                        isMapsLocation = false;
+                    }
+                } else if (i == R.id.accountDetailActivity_rb_maps) {
+                    checkedRadioButton = radioGroup.findViewById(i);
+                    if (checkedRadioButton.isChecked()) {
+                        isMapsLocation = true;
+                    }
+                }
+            }
+        });
         detailPartner();
+    }
+
+    private void getLocation() {
+        try {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+            assert locationManager != null;
+            locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true),
+                    0, 0, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(final Location location) {
+                            selectedCurrentLatitude = location.getLatitude();
+                            selectedCurrentLongitude = location.getLongitude();
+
+                            String latitudeLocation = selectedCurrentLatitude + "";
+                            String longitudeLocation = selectedCurrentLongitude + "";
+                            Snackbar.make(getWindow().getDecorView().getRootView(), location.getLatitude() + "", Snackbar.LENGTH_LONG).show();
+                            edtxWorkAddress.setText(getString(R.string.itemConcat, latitudeLocation, longitudeLocation));
+                        }
+
+                        @Override
+                        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String s) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String s) {
+                        }
+                    });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @OnClick(R.id.accountDetailActivity_bt_location)
+    public void onSetLocationClicked() {
+        if (isMapsLocation) {
+            try {
+                edtxWorkAddress.setText("");
+                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                        .setTypeFilter(Place.TYPE_COUNTRY)
+                        .setCountry("ID")
+                        .build();
+
+                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                        .setFilter(typeFilter)
+                        .build(AccountDetailActivity.this);
+
+                startActivityForResult(intent, REQUEST_CODE_PLACE_AUTOCOMPLETE);
+
+            } catch (GooglePlayServicesRepairableException e) {
+                Snackbar.make(getWindow().getDecorView().getRootView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                Snackbar.make(getWindow().getDecorView().getRootView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        } else {
+            String latitudeLocation = selectedCurrentLatitude + "";
+            String longitudeLocation = selectedCurrentLongitude + "";
+            edtxWorkAddress.setText(getString(R.string.itemConcat, latitudeLocation, longitudeLocation));
+            getLocation();
+        }
+        //ImagePicker.pickImage(AccountDetailActivity.this, "Select Image From :");
     }
 
     @OnClick(R.id.accountDetailActivity_iv_userAvatar)
@@ -218,54 +376,18 @@ public class AccountDetailActivity extends AppCompatActivity {
                 .show(getSupportFragmentManager(), "Date Of Birth");
     }
 
-    @OnClick(R.id.accountDetailActivity_et_endOfSipp)
-    public void onExpiredSipClicked() {
-        MonthAdapter.CalendarDay minDate = new MonthAdapter.CalendarDay(System.currentTimeMillis() - 1000);
-        MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(2100, 0, 1);
-
-        new CalendarDatePickerDialogFragment()
-                .setDateRange(minDate, maxDate)
-                .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar selectedEndDate = Calendar.getInstance();
-                        selectedEndDate.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
-                        edtxExpiredSIPP.setText(dateFormatter.format(selectedEndDate.getTime()));
-                    }
-                })
-                .show(getSupportFragmentManager(), "datePicker");
-    }
-
-    @OnClick(R.id.accountDetailActivity_et_endOfStr)
-    public void onExpiredStrClicked() {
-        MonthAdapter.CalendarDay minDate = new MonthAdapter.CalendarDay(System.currentTimeMillis() - 1000);
-        MonthAdapter.CalendarDay maxDate = new MonthAdapter.CalendarDay(2100, 0, 1);
-
-        new CalendarDatePickerDialogFragment()
-                .setDateRange(minDate, maxDate)
-                .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar selectedEndDate = Calendar.getInstance();
-                        selectedEndDate.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
-                        edtxExpiredSTR.setText(dateFormatter.format(selectedEndDate.getTime()));
-                    }
-                })
-                .show(getSupportFragmentManager(), "datePicker");
-    }
-
     private void fillDoctorAvatar(String profilePhoto) {
         ivAvatar = findViewById(R.id.accountDetailActivity_iv_userAvatar);
         if (!profilePhoto.equals("null") && !profilePhoto.isEmpty()) {
-            Picasso.with(getApplicationContext())
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+            Glide.with(this)
                     .load(profilePhoto)
-               /* .transform(new RoundedTransformation(80, 0))*/
-                    .resize(150, 150)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .centerCrop()
+                    .apply(requestOptions)
                     .into(ivAvatar);
         }
     }
@@ -317,15 +439,11 @@ public class AccountDetailActivity extends AppCompatActivity {
         final String mFullName = edtxFullName.getText().toString().trim();
         String mUserAddress = edtxAddress.getText().toString().trim();
         String mPhoneNumber = edtxPhone.getText().toString().trim();
-        String mDOB = edtxDateOfBirth.getText().toString().trim();
+        String fmDOB = edtxDateOfBirth.getText().toString().trim();
         String mProfessionCategory = edtxProfessionCategory.getText().toString().trim();
         String mAreaExpertise = edtxExpertise.getText().toString().trim().split(" - ")[0];
         String mWorkArea = edtxWorkArea.getText().toString().trim();
         String mWorkYears = edtxYearPractice.getText().toString().trim();
-        String mPermitNUmber = edtxSIPP.getText().toString().trim();
-        String mSIPPExpired = edtxExpiredSIPP.getText().toString().trim();
-        String mSTRNo = edtxSTR.getText().toString().trim();
-        String mSTRExpired = edtxExpiredSTR.getText().toString().trim();
         String mInstitution = edtxInstitutionName.getText().toString().trim();
 
         String mWorkDesc = edtxProffesionDesc.getText().toString().trim();
@@ -343,30 +461,6 @@ public class AccountDetailActivity extends AppCompatActivity {
                 break;
         }
 
-        SimpleDateFormat dateParse = new SimpleDateFormat("dd MMM yyyy", Locale.US);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
-        Date tgldob_ = null;
-        Date expiredSIPP_ = null;
-        Date expiredSTR_ = null;
-        try {
-            if (!mDOB.isEmpty()) {
-                tgldob_ = dateParse.parse(mDOB);
-            }
-            if (!mSIPPExpired.isEmpty()) {
-                expiredSIPP_ = dateParse.parse(mSIPPExpired);
-            }
-            if (!mSTRExpired.isEmpty()) {
-                expiredSTR_ = dateParse.parse(mSTRExpired);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        final String finalDateDob = tgldob_ != null ? dateFormatter.format(tgldob_) : "";
-        final String finalExpiredSIPP = expiredSIPP_ != null ? dateFormatter.format(expiredSIPP_) : "";
-        final String finalExpiredSTR = expiredSTR_ != null ? dateFormatter.format(expiredSTR_) : "";
-
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         mHandler.post(new Runnable() {
             @Override
@@ -381,11 +475,11 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("gender", jenisKelamin);
         params.put("address", mUserAddress);
         params.put("mobile_number", mPhoneNumber);
-        params.put("dob", finalDateDob);
-        params.put("no_SIP", mPermitNUmber);
-        params.put("SIP_berakhir", finalExpiredSIPP);
-        params.put("no_STR", mSTRNo);
-        params.put("STR_berakhir", finalExpiredSTR);
+        params.put("dob", "");
+        params.put("no_SIP", "");
+        params.put("SIP_berakhir", "");
+        params.put("no_STR", "");
+        params.put("STR_berakhir", "");
         params.put("partner_type_id", mProfessionCategory);
         params.put("spesialisasi_id", mAreaExpertise);
         params.put("wilayah_kerja", mWorkArea);
@@ -588,6 +682,16 @@ public class AccountDetailActivity extends AppCompatActivity {
                 case REQUEST_CODE_GET_EXPERTISE:
                     edtxExpertise.setText(getString(R.string.itemConcat, item1, item2));
                     break;
+                case REQUEST_CODE_PLACE_AUTOCOMPLETE:
+                    //Snackbar.make(getWindow().getDecorView().getRootView(), resultCode, Snackbar.LENGTH_LONG).show();
+                    if (resultCode == RESULT_OK) {
+                        Place place = PlaceAutocomplete.getPlace(this, data);
+
+                        selectedSearchedLatitude = place.getLatLng().latitude;
+                        selectedSearchedLongitude = place.getLatLng().longitude;
+                        edtxWorkAddress.setText(place.getAddress());
+                    }
+                    break;
                 case 234:
                     if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                         Bitmap bmp = ImagePicker.getImageFromResult(getApplicationContext(), requestCode, resultCode, data);
@@ -669,9 +773,7 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     final String wilayahKerja = data.optString("wilayah_kerja");
                                     final String yearProfession = data.optString("lama_professi");
                                     final String noSip = data.optString("no_SIP");
-                                    final String sipExpiredDate = data.optString("SIP_berakhir");
                                     final String noStr = data.optString("no_STR");
-                                    final String strExpiredDate = data.optString("STR_berakhir");
                                     final String institutionName = data.optString("nama_institusi");
                                     final String profileDesc = data.optString("profile_desc");
                                     final String addressPractice = data.optString("alamat_praktik");
@@ -682,21 +784,12 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                                     SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
                                     Date tgldob_ = null;
-                                    Date expiredSIPP_ = null;
-                                    Date expiredSTR_ = null;
+
                                     if (!dob.isEmpty()) {
                                         tgldob_ = dateParse.parse(dob);
                                     }
-                                    if (!sipExpiredDate.isEmpty()) {
-                                        expiredSIPP_ = dateParse.parse(sipExpiredDate);
-                                    }
-                                    if (!strExpiredDate.isEmpty()) {
-                                        expiredSTR_ = dateParse.parse(strExpiredDate);
-                                    }
 
                                     final String finalDateDob = tgldob_ != null ? dateFormatter.format(tgldob_) : "";
-                                    final String finalExpiredSIPP = expiredSIPP_ != null ? dateFormatter.format(expiredSIPP_) : "";
-                                    final String finalExpiredSTR = expiredSTR_ != null ? dateFormatter.format(expiredSTR_) : "";
 
                                     edtxEmail.setText(email.replace("null", ""));
                                     edtxFullName.setText(fullName.replace("null", ""));
@@ -717,13 +810,14 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     edtxExpertise.setText(getString(R.string.itemConcat, spesialisasiId.replace("null", ""), spesialisasiDesc.replace("null", "")));
                                     edtxWorkArea.setText(wilayahKerja.replace("null", ""));
                                     edtxYearPractice.setText(yearProfession.replace("null", ""));
-                                    edtxSIPP.setText(noSip.replace("null", ""));
-                                    edtxExpiredSIPP.setText(finalExpiredSIPP.replace("null", ""));
-                                    edtxSTR.setText(noStr.replace("null", ""));
-                                    edtxExpiredSTR.setText(finalExpiredSTR.replace("null", ""));
                                     edtxInstitutionName.setText(institutionName.replace("null", ""));
                                     edtxProffesionDesc.setText(profileDesc.replace("null", ""));
                                     edtxWorkAddress.setText(addressPractice.replace("null", ""));
+
+                                    tvFullName.setText(fullName.replace("null", ""));
+                                    tvProfession.setText(partnerTypeDesc.replace("null", ""));
+                                    tvSip.setText(noSip.replace("null", ""));
+                                    tvStr.setText(noStr.replace("null", ""));
                                 }
                             } catch (JSONException | ParseException e) {
                                 e.printStackTrace();
