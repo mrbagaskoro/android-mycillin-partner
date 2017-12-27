@@ -202,7 +202,6 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 String result = response.body().string();
-                Log.d("#8#8#", "onResponse: " + result);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -215,7 +214,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                         if (jsonObject.has("result")) {
                             boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                             if (status) {
-                                Log.d("#8#8#", "onResponse: SIP");
+                                Timber.tag("#8#8#").d("onResponse: SIP");
                             } else {
                                 String message = jsonObject.getJSONObject("result").getString("message");
                                 DialogHelper.showDialog(mHandler, HomeActivity.this, "Warning Firbase", message, false);

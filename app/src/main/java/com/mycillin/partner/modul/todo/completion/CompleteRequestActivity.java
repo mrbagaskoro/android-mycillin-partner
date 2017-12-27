@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CompleteRequestActivity extends AppCompatActivity {
 
@@ -46,6 +48,7 @@ public class CompleteRequestActivity extends AppCompatActivity {
             @Override
             public void onStepClicked(int step) {
                 viewPager.setCurrentItem(step, true);
+                Timber.tag("#8#8#").d("onStepClicked: %s", step);
             }
         });
     }

@@ -128,19 +128,14 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
                         mProgressBarHandler.hide();
                     }
                 });
-                Log.d("###", "onResponse: Cancel 2");
                 ModelRestCancelReason modelRestCancelReason = response.body();
                 if (response.isSuccessful()) {
-                    Log.d("###", "onResponse: Cancel 3");
                     assert modelRestCancelReason != null;
                     for (ModelRestCancelReasonData modelRestCancelReasonData : modelRestCancelReason.getResult().getData()) {
-                        Log.d("###", "onResponse: Cancel 4");
                         cancelReasonList.add(modelRestCancelReasonData.getCancelReasonDesc());
                     }
-                    Log.d("###", "onResponse: TES " + cancelReasonList);
                     cancelReasonDialog(cancelReasonList);
                 } else {
-                    Log.d("###", "onResponse: Cancel 5");
                     DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Error", modelRestCancelReason + "", false);
                 }
             }
