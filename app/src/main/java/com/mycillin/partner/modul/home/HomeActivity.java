@@ -253,16 +253,20 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
     }
 
     private void sendLongLatFunc() {
-        if (isActive) {
+        if (getLocation() != null) {
+            latitude = getLocation().getLatitude();
+            longitude = getLocation().getLongitude();
+            Timber.tag("JINX2").d("%s", latitude);
+            Timber.tag("JINX2").d("%s", longitude);
+        } else {
             latitude = 0.0;
             longitude = 0.0;
+        }
 
-            if (getLocation() != null) {
-                latitude = getLocation().getLatitude();
-                longitude = getLocation().getLongitude();
-                Timber.tag("JINX2").d("%s", latitude);
-                Timber.tag("JINX2").d("%s", longitude);
-            }
+        sessionManager.setKeyUserLatitude(latitude + "");
+        sessionManager.setKeyUserLongitude(longitude + "");
+
+        if (isActive) {
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             OkHttpClient client = new OkHttpClient();
@@ -271,8 +275,6 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             params.put("user_id", sessionManager.getUserId());
             params.put("latitude", latitude);
             params.put("longitude", longitude);
-
-            //Toast.makeText(this, "LATITUDE :" + latitude + " -- " + "LONGITUDE :" + longitude, Toast.LENGTH_SHORT).show();
 
             JSONObject jsonObject = new JSONObject(params);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());

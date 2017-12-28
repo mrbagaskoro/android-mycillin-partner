@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.mycillin.partner.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class CompletePrescriptionsFragment extends Fragment {
 
@@ -44,13 +46,15 @@ public class CompletePrescriptionsFragment extends Fragment {
 
     @OnClick(R.id.accountDetailActivity_iv_prescription)
     public void onPrescriptionClicked() {
-        ImagePicker.pickImage(getActivity(), "Select Image From :");
+        ImagePicker.pickImage(CompletePrescriptionsFragment.this, "Select Image From :");
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         int permissionCheck = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        Timber.tag("#8#8#").d("onActivityResultResep: %s", requestCode + resultCode);
         if (resultCode != Activity.RESULT_CANCELED) {
+
             switch (requestCode) {
                 case 234:
                     if (permissionCheck == PackageManager.PERMISSION_GRANTED) {

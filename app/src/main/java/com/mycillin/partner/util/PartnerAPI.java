@@ -4,6 +4,7 @@ import com.mycillin.partner.modul.account.model.loginModel.ModelRestLogin;
 import com.mycillin.partner.modul.account.model.registerModel.ModelRestRegister;
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
+import com.mycillin.partner.modul.accountProfile.model.serviceType.ModelRestService;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 
 import java.util.HashMap;
@@ -27,11 +28,14 @@ public interface PartnerAPI {
                                        @Field("name") String name,
                                        @Field("ref_id") String referral);
 
-    @GET("list_partner_type/")
-    Call<ModelRestProfession> getProfession();
+    @POST("list_partner_type/")
+    Call<ModelRestProfession> getProfession(@Body HashMap<String, String> params);
 
     @POST("list_spesialisasi/")
     Call<ModelRestExpertise> getExpertise(@Body HashMap<String, String> params);
+
+    @GET("list_service_type/")
+    Call<ModelRestService> getServiceType();
 
     @GET("list_cancel_reason_partner/")
     Call<ModelRestCancelReason> getCancelReason();

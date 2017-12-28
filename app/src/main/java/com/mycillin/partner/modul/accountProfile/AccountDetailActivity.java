@@ -2,15 +2,10 @@ package com.mycillin.partner.modul.accountProfile;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,6 +46,8 @@ import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpert
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertiseData;
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfessionData;
+import com.mycillin.partner.modul.accountProfile.model.serviceType.ModelRestService;
+import com.mycillin.partner.modul.accountProfile.model.serviceType.ModelRestServiceResultData;
 import com.mycillin.partner.modul.searchResult.SearchResultActivity;
 import com.mycillin.partner.modul.searchResult.adapterList.SearchResultList;
 import com.mycillin.partner.util.Configs;
@@ -92,6 +89,7 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_GET_PROFESSION = 1111;
     public static final int REQUEST_CODE_GET_EXPERTISE = 1112;
+    public static final int REQUEST_CODE_GET_SERVICE = 1113;
     public final int REQUEST_CODE_PLACE_AUTOCOMPLETE = 9001;
 
     @BindView(R.id.accountDetailActivity_toolbar)
@@ -104,7 +102,6 @@ public class AccountDetailActivity extends AppCompatActivity {
     LinearLayout locationLayout;
     @BindView(R.id.accountDetailActivity_ll_profile)
     LinearLayout profileDetailLayout;
-
     @BindView(R.id.accountDetailActivity_el_expandableLayout)
     ExpandableLayout professionalDetailExpandableLayout;
     @BindView(R.id.accountDetailActivity_el_expandableLayout_identity)
@@ -114,7 +111,6 @@ public class AccountDetailActivity extends AppCompatActivity {
     @BindView(R.id.accountDetailActivity_el_expandableLayout_desc)
     ExpandableLayout descDetailExpandableLayoutIdentity;
 
-
     @BindView(R.id.accountDetailActivity_ib_addInsurance_data)
     ImageButton ibExpandableLayoutIdentity;
     @BindView(R.id.accountDetailActivity_ib_addInsurance)
@@ -123,7 +119,6 @@ public class AccountDetailActivity extends AppCompatActivity {
     ImageButton ibExpandableLayoutLocation;
     @BindView(R.id.accountDetailActivity_ib_addInsurance_desc)
     ImageButton ibExpandableLayoutDesc;
-
     @BindView(R.id.accountDetailActivity_tv_fullName)
     TextView tvFullName;
     @BindView(R.id.accountDetailActivity_tv_profession)
@@ -132,7 +127,6 @@ public class AccountDetailActivity extends AppCompatActivity {
     TextView tvSip;
     @BindView(R.id.accountDetailActivity_tv_str)
     TextView tvStr;
-
     @BindView(R.id.accountDetailActivity_et_email)
     EditText edtxEmail;
     @BindView(R.id.accountDetailActivity_et_fullName)
@@ -163,12 +157,14 @@ public class AccountDetailActivity extends AppCompatActivity {
     EditText edtxProffesionDesc;
     @BindView(R.id.accountDetailActivity_et_practiceAddress)
     EditText edtxWorkAddress;
-
     @BindView(R.id.accountDetailActivity_rg_location)
     RadioGroup rgLocation;
+    @BindView(R.id.accountDetailActivity_rb_gps)
+    RadioButton rbGps;
+    @BindView(R.id.accountDetailActivity_rb_maps)
+    RadioButton rbMaps;
     @BindView(R.id.accountDetailActivity_bt_location)
     Button btnSetLocation;
-
 
     private CircleImageView ivAvatar;
     private PartnerAPI partnerAPI;
@@ -176,10 +172,8 @@ public class AccountDetailActivity extends AppCompatActivity {
     private ProgressBarHandler mProgressBarHandler;
     private SessionManager sessionManager;
 
-    private double selectedCurrentLatitude = 0.0;
-    private double selectedCurrentLongitude = 0.0;
-    private double selectedSearchedLatitude;
-    private double selectedSearchedLongitude;
+    private double selectedSearchedLatitude = 0.0;
+    private double selectedSearchedLongitude = 0.0;
     private boolean isMapsLocation = false;
 
     private List<SearchResultList> searchResultList = new ArrayList<>();
@@ -283,45 +277,6 @@ public class AccountDetailActivity extends AppCompatActivity {
         detailPartner();
     }
 
-    private void getLocation() {
-        try {
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-
-            assert locationManager != null;
-            locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true),
-                    0, 0, new LocationListener() {
-                        @Override
-                        public void onLocationChanged(final Location location) {
-                            selectedCurrentLatitude = location.getLatitude();
-                            selectedCurrentLongitude = location.getLongitude();
-
-                            String latitudeLocation = selectedCurrentLatitude + "";
-                            String longitudeLocation = selectedCurrentLongitude + "";
-                            Snackbar.make(getWindow().getDecorView().getRootView(), location.getLatitude() + "", Snackbar.LENGTH_LONG).show();
-                            edtxWorkAddress.setText(getString(R.string.itemConcat, latitudeLocation, longitudeLocation));
-                        }
-
-                        @Override
-                        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                        }
-
-                        @Override
-                        public void onProviderEnabled(String s) {
-
-                        }
-
-                        @Override
-                        public void onProviderDisabled(String s) {
-                        }
-                    });
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
     @OnClick(R.id.accountDetailActivity_bt_location)
     public void onSetLocationClicked() {
         if (isMapsLocation) {
@@ -344,17 +299,8 @@ public class AccountDetailActivity extends AppCompatActivity {
                 Snackbar.make(getWindow().getDecorView().getRootView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
             }
         } else {
-            String latitudeLocation = selectedCurrentLatitude + "";
-            String longitudeLocation = selectedCurrentLongitude + "";
-            edtxWorkAddress.setText(getString(R.string.itemConcat, latitudeLocation, longitudeLocation));
-            getLocation();
+            edtxWorkAddress.setText(getString(R.string.itemConcat, sessionManager.getKeyUserLatitude(), sessionManager.getKeyUserLongitude()));
         }
-        //ImagePicker.pickImage(AccountDetailActivity.this, "Select Image From :");
-    }
-
-    @OnClick(R.id.accountDetailActivity_iv_userAvatar)
-    public void onAvatarClicked() {
-        //ImagePicker.pickImage(AccountDetailActivity.this, "Select Image From :");
     }
 
     @OnClick(R.id.accountDetailActivity_et_dob)
@@ -434,12 +380,23 @@ public class AccountDetailActivity extends AppCompatActivity {
 
     private void doUpdateAccount() {
 
+        String latitudeFinal;
+        String longitudeFinal;
+
+        if (isMapsLocation) {
+            latitudeFinal = selectedSearchedLatitude + "";
+            longitudeFinal = selectedSearchedLongitude + "";
+        } else {
+            latitudeFinal = sessionManager.getKeyUserLatitude();
+            longitudeFinal = sessionManager.getKeyUserLongitude();
+        }
+
         final RadioButton rbSelectedAddressType = findViewById(rgGender.getCheckedRadioButtonId());
         //String mEmail = edtxEmail.getText().toString().trim();
         final String mFullName = edtxFullName.getText().toString().trim();
         String mUserAddress = edtxAddress.getText().toString().trim();
         String mPhoneNumber = edtxPhone.getText().toString().trim();
-        String fmDOB = edtxDateOfBirth.getText().toString().trim();
+        String mDOB = edtxDateOfBirth.getText().toString().trim();
         String mProfessionCategory = edtxProfessionCategory.getText().toString().trim();
         String mAreaExpertise = edtxExpertise.getText().toString().trim().split(" - ")[0];
         String mWorkArea = edtxWorkArea.getText().toString().trim();
@@ -475,7 +432,7 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("gender", jenisKelamin);
         params.put("address", mUserAddress);
         params.put("mobile_number", mPhoneNumber);
-        params.put("dob", "");
+        params.put("dob", mDOB);
         params.put("no_SIP", "");
         params.put("SIP_berakhir", "");
         params.put("no_STR", "");
@@ -486,7 +443,8 @@ public class AccountDetailActivity extends AppCompatActivity {
         params.put("profile_desc", mWorkDesc);
         params.put("lama_professi", mWorkYears.equals("") ? "0" : Integer.parseInt(mWorkYears));
         params.put("alamat_praktik", mPracticeAddress);
-        params.put("map_praktik", "");
+        params.put("latitude_praktik", latitudeFinal);
+        params.put("longitude_praktik", longitudeFinal);
         params.put("nama_institusi", mInstitution);
 
         JSONObject jsonObject = new JSONObject(params);
@@ -562,6 +520,8 @@ public class AccountDetailActivity extends AppCompatActivity {
         });
     }
 
+
+    //todo
     @OnClick(R.id.accountDetailActivity_et_professionCategory)
     public void onProfessionCategoryClicked() {
         mHandler.post(new Runnable() {
@@ -570,9 +530,10 @@ public class AccountDetailActivity extends AppCompatActivity {
                 mProgressBarHandler.show();
             }
         });
-        partnerAPI.getProfession().enqueue(new Callback<ModelRestProfession>() {
+
+        partnerAPI.getServiceType().enqueue(new Callback<ModelRestService>() {
             @Override
-            public void onResponse(@NonNull Call<ModelRestProfession> call, @NonNull Response<ModelRestProfession> response) {
+            public void onResponse(@NonNull Call<ModelRestService> call, @NonNull Response<ModelRestService> response) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -580,24 +541,24 @@ public class AccountDetailActivity extends AppCompatActivity {
                     }
                 });
                 searchResultList.clear();
-                ModelRestProfession modelRestProfessions = response.body();
+                ModelRestService modelRestService = response.body();
                 if (response.isSuccessful()) {
-                    assert modelRestProfessions != null;
-                    for (ModelRestProfessionData modelRestProfessionData : modelRestProfessions.getResult().getData()) {
-                        searchResultList.add(new SearchResultList("Code", modelRestProfessionData.getPartnerTypeId(), "Profession", modelRestProfessionData.getPartnerTypeDesc(),
+                    assert modelRestService != null;
+                    for (ModelRestServiceResultData modelRestService1 : modelRestService.getResult().getData()) {
+                        searchResultList.add(new SearchResultList("Code", modelRestService1.getServiceTypeId(), "Service Type", modelRestService1.getServiceTypeDesc(),
                                 "", "", "", "", "", "", "", ""));
                     }
                     Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
                     intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultList);
-                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_PROFESSION);
-                    startActivityForResult(intent, REQUEST_CODE_GET_PROFESSION);
+                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_SERVICE);
+                    startActivityForResult(intent, REQUEST_CODE_GET_SERVICE);
                 } else {
-                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestProfessions + "", false);
+                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestService + "", false);
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ModelRestProfession> call, @NonNull final Throwable t) {
+            public void onFailure(@NonNull Call<ModelRestService> call, @NonNull final Throwable t) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -675,6 +636,9 @@ public class AccountDetailActivity extends AppCompatActivity {
                 item2 = data.getStringExtra("ITEM_2");
             }
             switch (requestCode) {
+                case REQUEST_CODE_GET_SERVICE:
+                    getProfession(item1);
+                    break;
                 case REQUEST_CODE_GET_PROFESSION:
                     edtxProfessionCategory.setText(getString(R.string.itemConcat, item1, item2));
                     edtxExpertise.setText("");
@@ -683,7 +647,6 @@ public class AccountDetailActivity extends AppCompatActivity {
                     edtxExpertise.setText(getString(R.string.itemConcat, item1, item2));
                     break;
                 case REQUEST_CODE_PLACE_AUTOCOMPLETE:
-                    //Snackbar.make(getWindow().getDecorView().getRootView(), resultCode, Snackbar.LENGTH_LONG).show();
                     if (resultCode == RESULT_OK) {
                         Place place = PlaceAutocomplete.getPlace(this, data);
 
@@ -705,6 +668,48 @@ public class AccountDetailActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    private void getProfession(String serviceType) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("service_type_id", serviceType);
+        partnerAPI.getProfession(params).enqueue(new Callback<ModelRestProfession>() {
+            @Override
+            public void onResponse(@NonNull Call<ModelRestProfession> call, @NonNull Response<ModelRestProfession> response) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                searchResultList.clear();
+                ModelRestProfession modelRestProfessions = response.body();
+                if (response.isSuccessful()) {
+                    assert modelRestProfessions != null;
+                    for (ModelRestProfessionData modelRestProfessionData : modelRestProfessions.getResult().getData()) {
+                        searchResultList.add(new SearchResultList("Code", modelRestProfessionData.getPartnerTypeId(), "Profession", modelRestProfessionData.getPartnerTypeDesc(),
+                                "", "", "", "", "", "", "", ""));
+                    }
+                    Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
+                    intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultList);
+                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_PROFESSION);
+                    startActivityForResult(intent, REQUEST_CODE_GET_PROFESSION);
+                } else {
+                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestProfessions + "", false);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ModelRestProfession> call, @NonNull final Throwable t) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", "Connection problem " + t, false);
+                    }
+                });
+            }
+        });
     }
 
     private void detailPartner() {
@@ -813,6 +818,14 @@ public class AccountDetailActivity extends AppCompatActivity {
                                     edtxInstitutionName.setText(institutionName.replace("null", ""));
                                     edtxProffesionDesc.setText(profileDesc.replace("null", ""));
                                     edtxWorkAddress.setText(addressPractice.replace("null", ""));
+
+                                    if (addressPractice.matches(".*[a-z].*")) {
+                                        rbGps.setChecked(false);
+                                        rbMaps.setChecked(true);
+                                    } else {
+                                        rbMaps.setChecked(false);
+                                        rbGps.setChecked(true);
+                                    }
 
                                     tvFullName.setText(fullName.replace("null", ""));
                                     tvProfession.setText(partnerTypeDesc.replace("null", ""));

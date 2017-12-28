@@ -17,6 +17,8 @@ public class SessionManager {
     private static final String KEY_TOKEN = "TOKEN";
     private static final String KEY_USER_PIC_URL = "USER_PIC_URL";
     private static final String KEY_USER_PASS = "USER_PASS";
+    private static final String KEY_USER_LONGITUDE = "USER_LONGITUDE";
+    private static final String KEY_USER_LATITUDE = "USER_LATITUDE";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -93,6 +95,24 @@ public class SessionManager {
 
     public void setKeyCustomerName(String fullName) {
         editor.putString(KEY_FULLNAME, fullName);
+        editor.commit();
+    }
+
+    public String getKeyUserLongitude() {
+        return sharedPreferences.getString(KEY_USER_LONGITUDE, "0.0");
+    }
+
+    public String getKeyUserLatitude() {
+        return sharedPreferences.getString(KEY_USER_LATITUDE, "0.0");
+    }
+
+    public void setKeyUserLongitude(String longitude) {
+        editor.putString(KEY_USER_LONGITUDE, longitude);
+        editor.commit();
+    }
+
+    public void setKeyUserLatitude(String latitude) {
+        editor.putString(KEY_USER_LATITUDE, latitude);
         editor.commit();
     }
 }
