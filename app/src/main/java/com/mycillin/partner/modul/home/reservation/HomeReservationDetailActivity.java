@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +24,7 @@ import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReasonData;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.PartnerAPI;
+import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
 
@@ -44,7 +44,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
     public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
-    public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
+
     @BindView(R.id.homeReservationDetailActivity_toolbar)
     Toolbar toolbar;
     @BindView(R.id.homeReservationDetailActivity_bt_call)
@@ -68,6 +68,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
     private ArrayList<String> cancelReasonList = new ArrayList<>();
+    private PatientManager patientManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,14 +78,15 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
 
         partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(getApplicationContext());
+        patientManager = new PatientManager(getApplicationContext());
 
         toolbar.setTitle(R.string.reservationRequestDetail_title);
 
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
-        bookLocation.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_LOCATION));
+        bookLocation.setText(patientManager.getPatientAddress());
     }
 
     @OnClick(R.id.homeReservationDetailActivity_bt_call)
@@ -92,7 +94,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "085777255225"));
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "" + patientManager.getKeyPatientMobileNo() + ""));
         startActivity(intent);
     }
 

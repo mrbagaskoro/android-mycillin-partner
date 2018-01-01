@@ -10,9 +10,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +53,6 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(homeVisitFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
-        holder.address.setText(resultList.getAddress());
     }
 
     @Override
@@ -68,7 +64,7 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
-        private TextView address;
+        private TextView paymentMethod;
         private CircleImageView patientPic;
 
 
@@ -78,7 +74,7 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
             bookType = itemView.findViewById(R.id.rowVisitList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowVisitList_tv_bookDate);
             patientPic = itemView.findViewById(R.id.rowVisitList_iv_patientAvatar);
-            address = itemView.findViewById(R.id.rowVisitList_tv_address);
+            paymentMethod = itemView.findViewById(R.id.rowVisitList_tv_payment_amount);
         }
     }
 }

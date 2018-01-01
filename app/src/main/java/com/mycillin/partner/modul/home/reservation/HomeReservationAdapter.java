@@ -10,9 +10,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +53,6 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(homeReservationFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
-        holder.address.setText(resultList.getAddress());
     }
 
     @Override
@@ -69,8 +65,6 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
         private TextView bookType;
         private TextView bookDate;
         private CircleImageView patientPic;
-        private TextView address;
-
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -78,7 +72,6 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
             bookType = itemView.findViewById(R.id.rowReservationList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowReservationList_tv_bookDate);
             patientPic = itemView.findViewById(R.id.rowReservationList_iv_patientAvatar);
-            address = itemView.findViewById(R.id.rowReservationList_tv_address);
         }
     }
 }

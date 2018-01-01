@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +24,10 @@ import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReasonData;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.PartnerAPI;
+import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
+import com.mycillin.partner.util.SessionManager;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
     public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
-    public static String KEY_FLAG_PATIENT_LOCATION = "KEY_FLAG_PATIENT_LOCATION";
+
     @BindView(R.id.homeVisitDetailActivity_toolbar)
     Toolbar toolbar;
 
@@ -58,7 +59,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     Button callBtn;
 
     @BindView(R.id.homeVisitDetailActivity_tv_patientName)
-    TextView patientName;
+    TextView patientNames;
     @BindView(R.id.homeVisitDetailActivity_tv_bookDate)
     TextView bookDate;
     @BindView(R.id.homeVisitDetailActivity_tv_bookType)
@@ -70,6 +71,9 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
     private ArrayList cancelReasonList = new ArrayList();
+    private PatientManager patientManager;
+    private SessionManager sessionManager;
+    private String patientName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,18 +84,25 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(this);
-
+        patientManager = new PatientManager(getApplicationContext());
+        sessionManager = new SessionManager(getApplicationContext());
         toolbar.setTitle(R.string.homeVisitDetail_title);
-
-        patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
+        patientName = getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME);
+        patientNames.setText(patientName);
         bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
-        bookLocation.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_LOCATION));
+        bookLocation.setText(patientManager.getPatientAddress());
     }
 
     @OnClick(R.id.homeVisitDetailActivity_bt_maps)
     public void onMapsStart() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr=-6.224190,106.80791&daddr=-2.224190,102.80791"));
+        String patientLatitude = patientManager.getPatientLatitude();
+        String patientLongitude = patientManager.getPatientLongitude();
+
+        String userLatitude = sessionManager.getKeyUserLatitude();
+        String userLongitude = sessionManager.getKeyUserLongitude();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr=" + userLatitude + "," + userLongitude + "&daddr=" + patientLatitude + "," + patientLongitude + ""));
         startActivity(intent);
     }
 
@@ -100,13 +111,18 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "085777255225"));
+        String phoneNumber = patientManager.getKeyPatientMobileNo();
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "" + phoneNumber + ""));
         startActivity(intent);
     }
 
     @OnClick(R.id.homeVisitDetailActivity_bt_chat)
     public void onClickStart() {
         Intent intent = new Intent(HomeVisitDetailActivity.this, ChatActivity.class);
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_ID, patientManager.getPatientId());
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_NAME, patientName);
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_ID, sessionManager.getUserId());
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_NAME, sessionManager.getUserFullName());
         startActivity(intent);
     }
 

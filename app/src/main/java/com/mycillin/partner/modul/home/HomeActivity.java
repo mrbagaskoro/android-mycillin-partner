@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,8 +24,6 @@ import android.widget.Toast;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.about.AboutFragment;
-import com.mycillin.partner.modul.account.LoginActivity;
-import com.mycillin.partner.modul.account.model.loginModel.ModelRestLogin;
 import com.mycillin.partner.modul.accountProfile.AccountActivity;
 import com.mycillin.partner.modul.ewallet.EWalletFragment;
 import com.mycillin.partner.modul.firebase.FirebaseManager;
@@ -61,22 +58,18 @@ import timber.log.Timber;
 public class HomeActivity extends AppCompatActivity implements LocationListener {
 
     private final String EXTRA_STATUS_AVAILABILITY = "available_id";
-
+    @BindView(R.id.accountActivity_sb_availability)
+    SwitchButton sbAvaliability;
+    @BindView(R.id.accountActivity_tv_status)
+    TextView tvStatus;
     private SessionManager sessionManager;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
     private Handler handler;
     private LocationManager locationManager;
     private Location lokasi;
-
     private Double latitude;
     private Double longitude;
-
-    @BindView(R.id.accountActivity_sb_availability)
-    SwitchButton sbAvaliability;
-    @BindView(R.id.accountActivity_tv_status)
-    TextView tvStatus;
-
     private boolean doubleBackToExitPressedOnce = false;
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
@@ -258,15 +251,13 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             longitude = getLocation().getLongitude();
             Timber.tag("JINX2").d("%s", latitude);
             Timber.tag("JINX2").d("%s", longitude);
-        } else {
-            latitude = 0.0;
-            longitude = 0.0;
         }
 
         sessionManager.setKeyUserLatitude(latitude + "");
         sessionManager.setKeyUserLongitude(longitude + "");
 
         if (isActive) {
+            Toast.makeText(this, "LATITUDE : " + latitude + "  LONGITUDE : " + longitude, Toast.LENGTH_SHORT).show();
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             OkHttpClient client = new OkHttpClient();
@@ -308,6 +299,8 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                     }
                 }
             });
+        } else {
+            Toast.makeText(this, "DOKTER OFF", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -542,15 +535,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         Timber.tag("JINX3").d("%s", permissionCheck);
         Timber.tag("JINX4").d("%s", isNetworkEnabled);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            if (isNetworkEnabled) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
-                Timber.tag("JINX5").d("%s", locationManager);
-                if (locationManager != null) {
-                    lokasi = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                }
-                Timber.tag("JINX6").d("%s", locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
-                Timber.tag("JINX7").d("%s", isGPSEnabled);
-            } else if (isGPSEnabled) {
+            if (isGPSEnabled) {
                 if (lokasi == null) {
                     //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
@@ -560,6 +545,14 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                     }
                     Timber.tag("JINX9").d("%s", lokasi);
                 }
+            } else if (isNetworkEnabled) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, this);
+                Timber.tag("JINX5").d("%s", locationManager);
+                if (locationManager != null) {
+                    lokasi = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+                Timber.tag("JINX6").d("%s", locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
+                Timber.tag("JINX7").d("%s", isGPSEnabled);
             }
         }
         return lokasi;

@@ -28,6 +28,11 @@ import butterknife.ButterKnife;
 
 public class ChatActivity extends AppCompatActivity {
 
+    public static String KEY_FLAG_CHAT_PATIENT_ID = "CHAT_PATIENT_ID";
+    public static String KEY_FLAG_CHAT_PATIENT_NAME = "CHAT_PATIENT_NAME";
+    public static String KEY_FLAG_CHAT_USER_ID = "CHAT_USER_ID";
+    public static String KEY_FLAG_CHAT_USER_NAME = "CHAT_USER_NAME";
+
     @BindView(R.id.chat_ll_reference1)
     LinearLayout layoutRef1;
     @BindView(R.id.chat_rl_reference2)

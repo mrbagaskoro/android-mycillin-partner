@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.mycillin.partner.R;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RecyclerTouchListener;
 import com.mycillin.partner.util.SessionManager;
@@ -104,13 +105,21 @@ public class HomeReservationFragment extends Fragment {
             public void onClick(View view, int position) {
                 HomeReservationList list = homeReservationLists.get(position);
 
+                PatientManager patientManager = new PatientManager(getContext());
+
+                patientManager.setPatientId(list.getPatientID());
+                patientManager.setPatientBookingId(list.getBookingID());
+                patientManager.setPatientAddress(list.getAddress());
+                patientManager.setPatientLatitude(list.getPatientLatitude());
+                patientManager.setPatientLongitude(list.getPatientLongitude());
+                patientManager.setKeyPatientMobileNo(list.getPhoneNumber());
+
                 Intent intent = new Intent(getContext(), HomeReservationDetailActivity.class);
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
-                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_LOCATION, list.getAddress());
                 startActivity(intent);
             }
 
@@ -195,7 +204,13 @@ public class HomeReservationFragment extends Fragment {
                                 final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
+
+                                final String priceAmount = data.getJSONObject(i).optString("price_amount").trim();
+                                final String bookingID = data.getJSONObject(i).optString("booking_id").trim();
+                                final String paymentMethod = data.getJSONObject(i).optString("pymt_methode_desc").trim();
+                                final String patientLongitude = data.getJSONObject(i).optString("longitude_origin").trim();
+                                final String patientLatitude = data.getJSONObject(i).optString("latitude_origin").trim();
+                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto, priceAmount, bookingID, paymentMethod, patientLongitude, patientLatitude);
                             }
                         }
                     } catch (JSONException e) {
@@ -206,7 +221,7 @@ public class HomeReservationFragment extends Fragment {
         });
     }
 
-    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
+    private void getDetailUser(final String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto, final String priceAmount, final String bookingID, final String paymentMethod, final String patientLongitude, final String patientLatitude) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -256,6 +271,7 @@ public class HomeReservationFragment extends Fragment {
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
                                 final String address = data.getJSONObject(i).optString("address").trim();
+                                final String mobileNo = data.getJSONObject(i).optString("mobile_no").trim();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -286,7 +302,7 @@ public class HomeReservationFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeReservationLists.add(new HomeReservationList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address));
+                                        homeReservationLists.add(new HomeReservationList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", priceAmount + "-" + paymentMethod, userID, bookingID, address, patientLatitude, patientLongitude, mobileNo));
                                         homeReservationAdapter = new HomeReservationAdapter(homeReservationLists, HomeReservationFragment.this);
                                         homeReservationRecyclerView.setAdapter(homeReservationAdapter);
                                         homeReservationAdapter.notifyDataSetChanged();
