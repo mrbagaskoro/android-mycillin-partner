@@ -53,6 +53,7 @@ public class HomeVisitAdapter extends RecyclerView.Adapter<HomeVisitAdapter.MyVi
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(homeVisitFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
+        holder.paymentMethod.setText(resultList.getPaymentMethod());
     }
 
     @Override

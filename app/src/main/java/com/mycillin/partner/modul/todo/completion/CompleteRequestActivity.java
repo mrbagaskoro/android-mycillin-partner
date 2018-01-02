@@ -1,15 +1,15 @@
 package com.mycillin.partner.modul.todo.completion;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +17,29 @@ import android.widget.EditText;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
+import com.mycillin.partner.modul.firebase.FirebaseManager;
+import com.mycillin.partner.modul.home.HomeActivity;
+import com.mycillin.partner.util.Configs;
+import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PatientManager;
+import com.mycillin.partner.util.ProgressBarHandler;
+import com.mycillin.partner.util.SessionManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import timber.log.Timber;
 
 public class CompleteRequestActivity extends AppCompatActivity {
@@ -40,6 +57,10 @@ public class CompleteRequestActivity extends AppCompatActivity {
     private static Fragment completeDiagnoseFragment;
     private static Fragment completeMedicalActionsFragment;
     private static Fragment completePrescriptionsFragment;
+    private Handler mHandler;
+    private ProgressBarHandler mProgressBarHandler;
+    private SessionManager sessionManager;
+    private PatientManager patientManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +71,10 @@ public class CompleteRequestActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.completeRequestActivity_title);
         }
+        mHandler = new Handler(Looper.getMainLooper());
+        mProgressBarHandler = new ProgressBarHandler(CompleteRequestActivity.this);
+        sessionManager = new SessionManager(getApplicationContext());
+        patientManager = new PatientManager(getApplicationContext());
 
         completeCheckUpResultFragment = new CompleteCheckUpResultFragment();
         completeDiagnoseFragment = new CompleteDiagnoseFragment();
@@ -118,25 +143,140 @@ public class CompleteRequestActivity extends AppCompatActivity {
     }
 
     private void validasiSave() {
-        String systole = ((EditText) findViewById(R.id.accountDetailActivity_et_systole)).getText().toString();
-        String diastole = ((EditText) findViewById(R.id.accountDetailActivity_et_diastole)).getText().toString();
-        String bodyTemp = ((EditText) findViewById(R.id.accountDetailActivity_et_bodyTemperature)).getText().toString();
-        String physicalCond = ((EditText) findViewById(R.id.accountDetailActivity_et_physicalCondition)).getText().toString();
-        String patientComplaints = ((EditText) findViewById(R.id.accountDetailActivity_et_patientComplaints)).getText().toString();
-        String additionalInfo = ((EditText) findViewById(R.id.accountDetailActivity_et_additionalInformation)).getText().toString();
+        final String systole = ((EditText) findViewById(R.id.accountDetailActivity_et_systole)).getText().toString();
+        final String diastole = ((EditText) findViewById(R.id.accountDetailActivity_et_diastole)).getText().toString();
+        final String bodyTemp = ((EditText) findViewById(R.id.accountDetailActivity_et_bodyTemperature)).getText().toString();
+        final String bloodSugar = ((EditText) findViewById(R.id.accountDetailActivity_et_blood_sugar)).getText().toString();
+        final String cholesterolLevel = ((EditText) findViewById(R.id.accountDetailActivity_et_cholesterol_level)).getText().toString();
+        final String physicalCond = ((EditText) findViewById(R.id.accountDetailActivity_et_physicalCondition)).getText().toString();
+        final String diagnosisInformation = ((EditText) findViewById(R.id.completeDiagnoseFragment_et_diagnosisInformation)).getText().toString();
+        final String medicalActionOne = ((EditText) findViewById(R.id.completeMedicalActionsFragment_et_medicalActionOne)).getText().toString().split(" - ")[0];
+        final String prescriptionType = ((EditText) findViewById(R.id.accountDetailActivity_et_prescriptionType)).getText().toString().split(" - ")[0];
 
-        String diagnosisInformation = ((EditText) findViewById(R.id.completeDiagnoseFragment_et_diagnosisInformation)).getText().toString();
-        String additionalInformation = ((EditText) findViewById(R.id.completeDiagnoseFragment_et_additionalInformation)).getText().toString();
+        String message = " Cannot Empty";
+        ArrayList<String> validasiNonDokumen = new ArrayList<>();
+        if (systole.isEmpty()) {
+            validasiNonDokumen.add("Systole" + message);
+        }
+        if (diastole.isEmpty()) {
+            validasiNonDokumen.add("Diastole" + message);
+        }
+        if (bodyTemp.isEmpty()) {
+            validasiNonDokumen.add("Body Temperature" + message);
+        }
+        if (bloodSugar.isEmpty()) {
+            validasiNonDokumen.add("Blood Sugar" + message);
+        }
 
-        String medicalActionOne = ((EditText) findViewById(R.id.completeMedicalActionsFragment_et_medicalActionOne)).getText().toString();
-        String medicalActionTwo = ((EditText) findViewById(R.id.completeMedicalActionsFragment_et_medicalActionTwo)).getText().toString();
-        String medicalActionThree = ((EditText) findViewById(R.id.completeMedicalActionsFragment_et_medicalActionThree)).getText().toString();
-        String medicalRecommendation = ((EditText) findViewById(R.id.completeMedicalActionsFragment_et_medicalRecommendation)).getText().toString();
+        if (physicalCond.isEmpty()) {
+            validasiNonDokumen.add("Physical Condition" + message);
+        }
+        if (diagnosisInformation.isEmpty()) {
+            validasiNonDokumen.add("Diagnose Information" + message);
+        }
+        if (medicalActionOne.isEmpty()) {
+            validasiNonDokumen.add("Medical Action" + message);
+        }
+        if (prescriptionType.isEmpty()) {
+            validasiNonDokumen.add("Prescription" + message);
+        }
 
-        String prescriptionType = ((EditText) findViewById(R.id.accountDetailActivity_et_prescriptionType)).getText().toString();
-        Drawable prescriptionImage = ((AppCompatImageView) findViewById(R.id.accountDetailActivity_iv_prescription)).getDrawable();
+        if (validasiNonDokumen.size() > 0) {
+            DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning1", "Error :\n" + validasiNonDokumen.toString().replace("[", "").replace("]", "").replace(", ", ""), false);
+        } else {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mProgressBarHandler.show();
+                }
+            });
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            FirebaseManager firebaseManager = new FirebaseManager(getApplicationContext());
+            Map<String, Object> params = new HashMap<>();
+            params.put("user_id", sessionManager.getUserId());
+            params.put("booking_id", patientManager.getPatientBookingId());
+            params.put("action_type_id", medicalActionOne);
+            params.put("body_temperature", bodyTemp);
+            params.put("blood_sugar_level", bloodSugar);
+            params.put("cholesterol_level", cholesterolLevel);
+            params.put("blood_press_upper", systole);
+            params.put("blood_press_lower", diastole);
+            params.put("patient_condition", physicalCond);
+            params.put("diagnosa", firebaseManager.getFirebaseToken());
+            params.put("prescription_status", "Y");
+            params.put("prescription_type_id", diagnosisInformation);
 
+            JSONObject jsonObject = new JSONObject(params);
 
+            Timber.tag("###").d("Completion: %s", jsonObject);
+
+            OkHttpClient client = new OkHttpClient();
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Request request = new Request.Builder()
+                    .url(Configs.URL_REST_CLIENT + "partner_task_completed/")
+                    .post(body)
+                    .addHeader("content-type", "application/json; charset=utf-8")
+                    .addHeader("Authorization", sessionManager.getUserToken())
+                    .build();
+
+            Timber.tag("###").d("Completion: %s", sessionManager.getUserToken());
+
+            client.newCall(request).enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressBarHandler.hide();
+                        }
+                    });
+                    DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning Send Token Fbase", "Connection Problem, Please Try Again Later." + e, false);
+                }
+
+                @Override
+                public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                    @SuppressWarnings("ConstantConditions") String result = response.body().string();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressBarHandler.hide();
+                        }
+                    });
+                    if (response.isSuccessful()) {
+                        Timber.tag("#8#8#").d("onResponse: SIP Complete%s", result);
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            if (jsonObject.has("result")) {
+                                boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                                if (status) {
+                                    DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Status", "Data Complete", true);
+                                } else {
+                                    String message = jsonObject.getJSONObject("result").getString("message");
+                                    DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning", "Completion Error : " + message, false);
+                                }
+                            } else {
+                                DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning", "Please Try Again", false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            JSONObject jsonObject = new JSONObject(result);
+                            String message;
+                            if (jsonObject.has("result")) {
+                                message = jsonObject.getJSONObject("result").getString("message");
+                            } else {
+                                message = jsonObject.getString("message");
+                            }
+                            DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning", "Completion Error : " + message, false);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

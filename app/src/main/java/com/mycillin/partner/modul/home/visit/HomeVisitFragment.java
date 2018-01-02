@@ -27,9 +27,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -300,7 +302,10 @@ public class HomeVisitFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        homeVisitLists.add(new HomeVisitList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", priceAmount + "-" + paymentMethod, userID, bookingID, address, patientLatitude, patientLongitude, mobileNo));
+                                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+                                        String v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
+
+                                        homeVisitLists.add(new HomeVisitList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", v_priceAmount + " - " + paymentMethod, userID, bookingID, address, patientLatitude, patientLongitude, mobileNo));
                                         homeVisitAdapter = new HomeVisitAdapter(homeVisitLists, HomeVisitFragment.this);
                                         homeVisitRecyclerView.setAdapter(homeVisitAdapter);
                                         homeVisitAdapter.notifyDataSetChanged();

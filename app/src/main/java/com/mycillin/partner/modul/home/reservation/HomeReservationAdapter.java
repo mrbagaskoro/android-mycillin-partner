@@ -53,6 +53,7 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(homeReservationFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
+        holder.paymentMethod.setText(resultList.getPaymentMethod());
     }
 
     @Override
@@ -64,6 +65,7 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
+        private TextView paymentMethod;
         private CircleImageView patientPic;
 
         public MyViewHolder(View itemView) {
@@ -72,6 +74,7 @@ public class HomeReservationAdapter extends RecyclerView.Adapter<HomeReservation
             bookType = itemView.findViewById(R.id.rowReservationList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowReservationList_tv_bookDate);
             patientPic = itemView.findViewById(R.id.rowReservationList_iv_patientAvatar);
+            paymentMethod = itemView.findViewById(R.id.rowReservationList_tv_payment_amount);
         }
     }
 }

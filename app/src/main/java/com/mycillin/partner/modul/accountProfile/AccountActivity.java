@@ -90,7 +90,7 @@ public class AccountActivity extends AppCompatActivity {
         tvDocterName.setText(sessionManager.getUserFullName());
 
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(AccountActivity.this);
 
         manageAccount.setOnClickListener(new View.OnClickListener() {
             @Override

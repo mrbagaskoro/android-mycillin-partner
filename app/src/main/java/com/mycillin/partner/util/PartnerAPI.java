@@ -6,6 +6,8 @@ import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpert
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
 import com.mycillin.partner.modul.accountProfile.model.serviceType.ModelRestService;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
+import com.mycillin.partner.modul.todo.completion.adapterList.ModelRestMedicalAction;
+import com.mycillin.partner.modul.todo.completion.adapterList.ModelRestPrescriptionType;
 
 import java.util.HashMap;
 
@@ -28,8 +30,8 @@ public interface PartnerAPI {
                                        @Field("name") String name,
                                        @Field("ref_id") String referral);
 
-    @POST("list_partner_type/")
-    Call<ModelRestProfession> getProfession(@Body HashMap<String, String> params);
+    @GET("list_partner_type/")
+    Call<ModelRestProfession> getProfession();
 
     @POST("list_spesialisasi/")
     Call<ModelRestExpertise> getExpertise(@Body HashMap<String, String> params);
@@ -39,4 +41,10 @@ public interface PartnerAPI {
 
     @GET("list_cancel_reason_partner/")
     Call<ModelRestCancelReason> getCancelReason();
+
+    @GET("list_prescription_type/")
+    Call<ModelRestPrescriptionType> getPrescriptionType();
+
+    @GET("list_action_type/")
+    Call<ModelRestMedicalAction> getMedicalAction();
 }

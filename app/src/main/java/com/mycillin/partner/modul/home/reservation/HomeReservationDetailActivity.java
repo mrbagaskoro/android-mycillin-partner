@@ -78,7 +78,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
 
         partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(getApplicationContext());
+        mProgressBarHandler = new ProgressBarHandler(HomeReservationDetailActivity.this);
         patientManager = new PatientManager(getApplicationContext());
 
         toolbar.setTitle(R.string.reservationRequestDetail_title);

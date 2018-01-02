@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(RegisterActivity.this);
 
         setSupportActionBar(toolbar);
 

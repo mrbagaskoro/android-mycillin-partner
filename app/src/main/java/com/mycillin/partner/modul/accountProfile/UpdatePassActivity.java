@@ -55,7 +55,7 @@ public class UpdatePassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_password);
         ButterKnife.bind(this);
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(UpdatePassActivity.this);
         sessionManager = new SessionManager(getApplicationContext());
 
         setSupportActionBar(toolbar);

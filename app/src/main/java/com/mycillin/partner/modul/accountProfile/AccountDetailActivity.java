@@ -185,7 +185,7 @@ public class AccountDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(AccountDetailActivity.this);
         sessionManager = new SessionManager(getApplicationContext());
         edtxYearPractice.setInputType(InputType.TYPE_CLASS_NUMBER);
 
@@ -520,54 +520,10 @@ public class AccountDetailActivity extends AppCompatActivity {
         });
     }
 
-
     //todo
     @OnClick(R.id.accountDetailActivity_et_professionCategory)
     public void onProfessionCategoryClicked() {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBarHandler.show();
-            }
-        });
-
-        partnerAPI.getServiceType().enqueue(new Callback<ModelRestService>() {
-            @Override
-            public void onResponse(@NonNull Call<ModelRestService> call, @NonNull Response<ModelRestService> response) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBarHandler.hide();
-                    }
-                });
-                searchResultList.clear();
-                ModelRestService modelRestService = response.body();
-                if (response.isSuccessful()) {
-                    assert modelRestService != null;
-                    for (ModelRestServiceResultData modelRestService1 : modelRestService.getResult().getData()) {
-                        searchResultList.add(new SearchResultList("Code", modelRestService1.getServiceTypeId(), "Service Type", modelRestService1.getServiceTypeDesc(),
-                                "", "", "", "", "", "", "", ""));
-                    }
-                    Intent intent = new Intent(AccountDetailActivity.this, SearchResultActivity.class);
-                    intent.putParcelableArrayListExtra(SearchResultActivity.EXTRA_SEARCH_DATA, (ArrayList<? extends Parcelable>) searchResultList);
-                    intent.putExtra(SearchResultActivity.EXTRA_SEARCH_REQUEST_CODE, REQUEST_CODE_GET_SERVICE);
-                    startActivityForResult(intent, REQUEST_CODE_GET_SERVICE);
-                } else {
-                    DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", modelRestService + "", false);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ModelRestService> call, @NonNull final Throwable t) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBarHandler.hide();
-                        DialogHelper.showDialog(mHandler, AccountDetailActivity.this, "Error", "Connection problem " + t, false);
-                    }
-                });
-            }
-        });
+        getProfession();
     }
 
     @OnClick(R.id.accountDetailActivity_et_areaOfExpertise)
@@ -637,7 +593,7 @@ public class AccountDetailActivity extends AppCompatActivity {
             }
             switch (requestCode) {
                 case REQUEST_CODE_GET_SERVICE:
-                    getProfession(item1);
+                    //getProfession(item1);
                     break;
                 case REQUEST_CODE_GET_PROFESSION:
                     edtxProfessionCategory.setText(getString(R.string.itemConcat, item1, item2));
@@ -670,10 +626,10 @@ public class AccountDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void getProfession(String serviceType) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("service_type_id", serviceType);
-        partnerAPI.getProfession(params).enqueue(new Callback<ModelRestProfession>() {
+    private void getProfession() {
+       /* HashMap<String, String> params = new HashMap<>();
+        params.put("service_type_id", serviceType);*/
+        partnerAPI.getProfession().enqueue(new Callback<ModelRestProfession>() {
             @Override
             public void onResponse(@NonNull Call<ModelRestProfession> call, @NonNull Response<ModelRestProfession> response) {
                 mHandler.post(new Runnable() {

@@ -159,7 +159,7 @@
     <string name="completeDiagnoseFragment_diagnosisInformation">Diagnosis Information</string>
     <string name="completeDiagnoseFragment_additionalInformation">Additional Information</string>
     <string name="completeMedicalActionsFragment_infoDesc">Please provide the information on the medical actions that has been given to the patient.</string>
-    <string name="completeMedicalActionsFragment_medicalActionOne">Medical Action 1</string>
+    <string name="completeMedicalActionsFragment_medicalActionOne">Medical Action</string>
     <string name="completeMedicalActionsFragment_medicalActionTwo">Medical Action 2</string>
     <string name="completeMedicalActionsFragment_medicalActionThree">Medical Action 3</string>
     <string name="completeMedicalActionsFragment_medicalRecommendation">Medical Recommendation</string>
@@ -203,6 +203,10 @@
     <string name="str_number">STR Number:</string>
     <string name="str_expired">STR Expired</string>
     <string name="institution_name">Institution Name</string>
+    <string name="blood_press_upper">Blood Press Upper</string>
+    <string name="blood_press_lower">Blood Press Lower</string>
+    <string name="blood_sugar">Blood Sugar</string>
+    <string name="cholesterol_level">Cholesterol Level</string>
     <string-array name="stepLabels">
         <item>Check Up Results</item>
         <item>Diagnose</item>

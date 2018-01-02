@@ -83,7 +83,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
 
         partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(HomeVisitDetailActivity.this);
         patientManager = new PatientManager(getApplicationContext());
         sessionManager = new SessionManager(getApplicationContext());
         toolbar.setTitle(R.string.homeVisitDetail_title);

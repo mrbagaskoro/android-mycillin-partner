@@ -114,7 +114,7 @@ public class MedicalRecordDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_medical_record_detail);
         ButterKnife.bind(this);
         sessionManager = new SessionManager(this);
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(MedicalRecordDetailActivity.this);
         mHandler = new Handler(Looper.getMainLooper());
         prescriptionRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         prescriptionRecyclerView.setItemAnimator(new DefaultItemAnimator());

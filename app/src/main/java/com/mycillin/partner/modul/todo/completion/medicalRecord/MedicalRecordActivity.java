@@ -70,7 +70,7 @@ public class MedicalRecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_medical_record);
         ButterKnife.bind(this);
         sessionManager = new SessionManager(getApplicationContext());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(MedicalRecordActivity.this);
         mHandler = new Handler(Looper.getMainLooper());
         toolbar.setTitle(R.string.nav_medical_record);
 

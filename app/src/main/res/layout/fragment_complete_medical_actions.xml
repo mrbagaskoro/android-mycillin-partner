@@ -48,49 +48,9 @@
                     android:id="@+id/completeMedicalActionsFragment_et_medicalActionOne"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:focusable="false"
                     android:hint="@string/completeMedicalActionsFragment_medicalActionOne"
-                    android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small" >
-
-                <EditText
-                    android:id="@+id/completeMedicalActionsFragment_et_medicalActionTwo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/completeMedicalActionsFragment_medicalActionTwo"
-                    android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small" >
-
-                <EditText
-                    android:id="@+id/completeMedicalActionsFragment_et_medicalActionThree"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/completeMedicalActionsFragment_medicalActionThree"
-                    android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small" >
-
-                <EditText
-                    android:id="@+id/completeMedicalActionsFragment_et_medicalRecommendation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/completeMedicalActionsFragment_medicalRecommendation"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 

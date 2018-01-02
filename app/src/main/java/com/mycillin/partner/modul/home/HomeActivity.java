@@ -74,6 +74,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
     private boolean isActive = false;
+    private boolean isApplicationActive = true;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -123,9 +124,11 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(getApplicationContext());
+        latitude = Double.valueOf(sessionManager.getKeyUserLatitude());
+        longitude = Double.valueOf(sessionManager.getKeyUserLongitude());
         ButterKnife.bind(this);
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(HomeActivity.this);
         DataHelper.token = sessionManager.getUserToken();
         handler = new Handler(Looper.getMainLooper());
         checkLocation();
@@ -148,8 +151,21 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             tvStatus.setText("Off");
         }
         getLocation();
+
         sendLocationLoop();
         sendTokenFirebase();
+    }
+
+    @Override
+    public void onDestroy() {
+        isApplicationActive = false;
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        //todo
+        super.onResume();
     }
 
     private void sendTokenFirebase() {
@@ -237,12 +253,15 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
     }
 
     private void sendLocationLoop() {
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendLongLatFunc();
-            }
-        }, 10000);
+        if (isApplicationActive) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sendLongLatFunc();
+                }
+            }, 10000);
+
+        }
     }
 
     private void sendLongLatFunc() {
@@ -301,6 +320,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             });
         } else {
             Toast.makeText(this, "DOKTER OFF", Toast.LENGTH_SHORT).show();
+            sendLocationLoop();
         }
     }
 

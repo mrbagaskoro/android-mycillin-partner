@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         edtxPassword.setText("rahasia");
 
         mHandler = new Handler(Looper.getMainLooper());
-        mProgressBarHandler = new ProgressBarHandler(this);
+        mProgressBarHandler = new ProgressBarHandler(LoginActivity.this);
         checkGpsPermission();
     }
 
