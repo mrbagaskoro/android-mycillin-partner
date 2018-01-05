@@ -21,15 +21,16 @@ import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.mycillin.partner.R;
-import com.mycillin.partner.modul.home.HomeActivity;
-import com.mycillin.partner.modul.firebase.FirebaseManager;
-import com.mycillin.partner.util.PartnerAPI;
-import com.mycillin.partner.util.RestClient;
+import com.mycillin.partner.modul.account.model.bannerModel.ModelRestBanner;
+import com.mycillin.partner.modul.account.model.bannerModel.ModelRestBannerResultData;
 import com.mycillin.partner.modul.account.model.loginModel.ModelRestLogin;
+import com.mycillin.partner.modul.home.HomeActivity;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DataHelper;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.ProgressBarHandler;
+import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.util.SessionManager;
 
 import org.json.JSONException;
@@ -85,6 +86,9 @@ public class LoginActivity extends AppCompatActivity {
     private int MENU_FLAG_LOGIN = 1003;
     private int MENU_FLAG_FORGET = 1004;
     private int MENU_FLAG;
+
+    private String imageBanner64 = "";
+    private String urlBanner = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,9 +243,17 @@ public class LoginActivity extends AppCompatActivity {
                                 password
                         );
                         DataHelper.token = result.getResult().getToken();
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if (imageBanner64.isEmpty()) {
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, BannerActivity.class);
+                            intent.putExtra(BannerActivity.EXTRA_STATUS_BASE_64, imageBanner64);
+                            intent.putExtra(BannerActivity.EXTRA_STATUS_URL, urlBanner);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 } else {
                     mProgressBarHandler.hide();
@@ -256,102 +268,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void sendTokenFirebase(final ModelRestLogin resultLogin, final String password) {
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mProgressBarHandler.show();
-            }
-        });
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        FirebaseManager firebaseManager = new FirebaseManager(getApplicationContext());
-        Map<String, Object> params = new HashMap<>();
-        params.put("user_id", resultLogin.getResult().getData().getUserId());
-        params.put("token", firebaseManager.getFirebaseToken());
-
-        JSONObject jsonObject = new JSONObject(params);
-
-        Timber.tag("###").d("Firebase: %s", jsonObject);
-
-        OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-        Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "complete_account_partner/")
-                .post(body)
-                .addHeader("content-type", "application/json; charset=utf-8")
-                .addHeader("Authorization", resultLogin.getResult().getToken())
-                .build();
-
-        Timber.tag("###").d("sendTokenFirebase: %s", resultLogin.getResult().getToken());
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBarHandler.hide();
-                    }
-                });
-                DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e, false);
-            }
-
-            @Override
-            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
-                String result = response.body().string();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBarHandler.hide();
-                    }
-                });
-                if (response.isSuccessful()) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        if (jsonObject.has("result")) {
-                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
-                            if (status) {
-                                session.createLoginSession(
-                                        resultLogin.getResult().getData().getEmail(),
-                                        resultLogin.getResult().getData().getFullName(),
-                                        resultLogin.getResult().getData().getUserId(),
-                                        resultLogin.getResult().getToken(),
-                                        "",
-                                        password
-                                );
-                                DataHelper.token = resultLogin.getResult().getToken();
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                String message = jsonObject.getJSONObject("result").getString("message");
-                                DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning Firbase", message, false);
-                            }
-                        } else {
-                            DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning Firbase", "Please Try Again", false);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String message;
-                        if (jsonObject.has("result")) {
-                            message = jsonObject.getJSONObject("result").getString("message");
-                        } else {
-                            message = jsonObject.getString("message");
-                        }
-                        DialogHelper.showDialog(mHandler, LoginActivity.this, "Warning Firbase", message, false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
 
     public void toLandingView() {
         loginLandingContainer.setVisibility(View.VISIBLE);
@@ -394,12 +310,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SessionManager session = new SessionManager(getApplicationContext());
-        if (session.isLoggedIn()) {
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        getBigBanner();
     }
 
     private void checkGpsPermission() {
@@ -417,6 +328,56 @@ public class LoginActivity extends AppCompatActivity {
                     .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     .withListener(dialogPermissionListener)
                     .check();
+        }
+    }
+
+    private void getBigBanner() {
+
+        mProgressBarHandler.show();
+
+        partnerAPI.getBigBanner().enqueue(new Callback<ModelRestBanner>() {
+            @Override
+            public void onResponse(@NonNull Call<ModelRestBanner> call, @NonNull Response<ModelRestBanner> response) {
+                mProgressBarHandler.hide();
+                ModelRestBanner modelRestBanner = response.body();
+                if (response.isSuccessful()) {
+                    assert modelRestBanner != null;
+                    if (modelRestBanner.getResult().getStatus()) {
+                        if (modelRestBanner.getResult().getData().size() > 0) {
+                            for (ModelRestBannerResultData modelRestBannerResultData : modelRestBanner.getResult().getData()) {
+                                imageBanner64 = modelRestBannerResultData.getBaseData();
+                                urlBanner = modelRestBannerResultData.getUrlLink();
+                            }
+                            if (session.isLoggedIn()) {
+                                Intent intent = new Intent(LoginActivity.this, BannerActivity.class);
+                                intent.putExtra(BannerActivity.EXTRA_STATUS_BASE_64, imageBanner64);
+                                intent.putExtra(BannerActivity.EXTRA_STATUS_URL, urlBanner);
+                                startActivity(intent);
+                                finish();
+                            }
+                        } else {
+                            loginCheck();
+                        }
+                    } else {
+                        loginCheck();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ModelRestBanner> call, @NonNull Throwable t) {
+                mProgressBarHandler.hide();
+                loginCheck();
+            }
+        });
+
+    }
+
+    private void loginCheck() {
+        if (session.isLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

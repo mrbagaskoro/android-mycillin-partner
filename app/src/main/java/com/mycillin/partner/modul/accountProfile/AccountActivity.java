@@ -49,7 +49,7 @@ import timber.log.Timber;
 
 public class AccountActivity extends AppCompatActivity {
 
-    public static final String EXTRA_STATUS_ON = "0";
+    public static final String EXTRA_STATUS_ON = "1";
     private final String EXTRA_STATUS_HOUSE_VISIT = "visit_id";
     private final String EXTRA_STATUS_RESERVASI = "reservasi_id";
     private final String EXTRA_STATUS_CONSULTATION = "consul_id";
@@ -159,14 +159,14 @@ public class AccountActivity extends AppCompatActivity {
     @OnCheckedChanged(R.id.accountActivity_sb_houseVisit)
     public void doHomeVisit() {
         boolean isActive = sbHouseVisit.isChecked();
-        String value = isActive ? "0" : "1";
+        String value = !isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_HOUSE_VISIT);
     }
 
     @OnCheckedChanged(R.id.accountActivity_sb_consultation)
     public void doConsultation() {
         boolean isActive = sbConsultation.isChecked();
-        String value = isActive ? "0" : "1";
+        String value = !isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_CONSULTATION);
 
     }
@@ -174,14 +174,14 @@ public class AccountActivity extends AppCompatActivity {
     @OnCheckedChanged(R.id.accountActivity_sb_reservation)
     public void doReservation() {
         boolean isActive = sbReservation.isChecked();
-        String value = isActive ? "0" : "1";
+        String value = !isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_RESERVASI);
     }
 
     @OnCheckedChanged(R.id.accountActivity_sb_bpjs)
     public void doBpjs() {
         boolean isActive = sbBpjs.isChecked();
-        String value = isActive ? "0" : "1";
+        String value = !isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_BPJS);
     }
 
@@ -222,28 +222,28 @@ public class AccountActivity extends AppCompatActivity {
 
                         switch (status) {
                             case EXTRA_STATUS_HOUSE_VISIT:
-                                if (value.equals("0")) {
+                                if (value.equals(EXTRA_STATUS_ON)) {
                                     sbHouseVisit.setChecked(false);
                                 } else {
                                     sbHouseVisit.setChecked(true);
                                 }
                                 break;
                             case EXTRA_STATUS_RESERVASI:
-                                if (value.equals("0")) {
+                                if (value.equals(EXTRA_STATUS_ON)) {
                                     sbReservation.setChecked(false);
                                 } else {
                                     sbReservation.setChecked(true);
                                 }
                                 break;
                             case EXTRA_STATUS_CONSULTATION:
-                                if (value.equals("0")) {
+                                if (value.equals(EXTRA_STATUS_ON)) {
                                     sbConsultation.setChecked(false);
                                 } else {
                                     sbConsultation.setChecked(true);
                                 }
                                 break;
                             case EXTRA_STATUS_BPJS:
-                                if (value.equals("0")) {
+                                if (value.equals(EXTRA_STATUS_ON)) {
                                     sbBpjs.setChecked(false);
                                 } else {
                                     sbBpjs.setChecked(true);
@@ -263,28 +263,28 @@ public class AccountActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             switch (status) {
                                 case EXTRA_STATUS_HOUSE_VISIT:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbHouseVisit.setChecked(true);
                                     } else {
                                         sbHouseVisit.setChecked(false);
                                     }
                                     break;
                                 case EXTRA_STATUS_RESERVASI:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbReservation.setChecked(true);
                                     } else {
                                         sbReservation.setChecked(false);
                                     }
                                     break;
                                 case EXTRA_STATUS_CONSULTATION:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbConsultation.setChecked(true);
                                     } else {
                                         sbConsultation.setChecked(false);
                                     }
                                     break;
                                 case EXTRA_STATUS_BPJS:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbBpjs.setChecked(true);
                                     } else {
                                         sbBpjs.setChecked(false);
@@ -294,28 +294,28 @@ public class AccountActivity extends AppCompatActivity {
                         } else {
                             switch (status) {
                                 case EXTRA_STATUS_HOUSE_VISIT:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbHouseVisit.setChecked(false);
                                     } else {
                                         sbHouseVisit.setChecked(true);
                                     }
                                     break;
                                 case EXTRA_STATUS_RESERVASI:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbReservation.setChecked(false);
                                     } else {
                                         sbReservation.setChecked(true);
                                     }
                                     break;
                                 case EXTRA_STATUS_CONSULTATION:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbConsultation.setChecked(false);
                                     } else {
                                         sbConsultation.setChecked(true);
                                     }
                                     break;
                                 case EXTRA_STATUS_BPJS:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbBpjs.setChecked(false);
                                     } else {
                                         sbBpjs.setChecked(true);

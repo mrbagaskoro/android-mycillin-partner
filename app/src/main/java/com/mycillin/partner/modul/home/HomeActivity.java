@@ -55,6 +55,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import timber.log.Timber;
 
+import static com.mycillin.partner.modul.accountProfile.AccountActivity.EXTRA_STATUS_ON;
+
 public class HomeActivity extends AppCompatActivity implements LocationListener {
 
     private final String EXTRA_STATUS_AVAILABILITY = "available_id";
@@ -332,7 +334,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         } else {
             tvStatus.setText("Off");
         }
-        String value = isActive ? "0" : "1";
+        String value = !isActive ? "0" : "1";
         doToggleUpdate(value, EXTRA_STATUS_AVAILABILITY);
     }
 
@@ -419,7 +421,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
 
                         switch (status) {
                             case EXTRA_STATUS_AVAILABILITY:
-                                if (value.equals("0")) {
+                                if (value.equals(EXTRA_STATUS_ON)) {
                                     sbAvaliability.setChecked(false);
                                 } else {
                                     sbAvaliability.setChecked(true);
@@ -441,7 +443,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                         if (response.isSuccessful()) {
                             switch (status) {
                                 case EXTRA_STATUS_AVAILABILITY:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbAvaliability.setChecked(true);
                                         isActive = true;
                                     } else {
@@ -453,7 +455,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                         } else {
                             switch (status) {
                                 case EXTRA_STATUS_AVAILABILITY:
-                                    if (value.equals("0")) {
+                                    if (value.equals(EXTRA_STATUS_ON)) {
                                         sbAvaliability.setChecked(false);
                                     } else {
                                         sbAvaliability.setChecked(true);
@@ -522,7 +524,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                                     final String availability = data.optString("available_status");
 
                                     switch (availability) {
-                                        case AccountActivity.EXTRA_STATUS_ON:
+                                        case EXTRA_STATUS_ON:
                                             sbAvaliability.setChecked(true);
                                             break;
                                         default:

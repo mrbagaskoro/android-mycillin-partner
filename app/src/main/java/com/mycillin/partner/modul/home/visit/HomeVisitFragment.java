@@ -28,7 +28,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -108,6 +111,7 @@ public class HomeVisitFragment extends Fragment {
 
                 patientManager.setPatientId(list.getPatientID());
                 patientManager.setPatientBookingId(list.getBookingID());
+                patientManager.setKeyPatientPhoto(list.getPatientPic());
                 patientManager.setPatientAddress(list.getAddress());
                 patientManager.setPatientLatitude(list.getPatientLatitude());
                 patientManager.setPatientLongitude(list.getPatientLongitude());
@@ -116,6 +120,7 @@ public class HomeVisitFragment extends Fragment {
                 Intent intent = new Intent(getContext(), HomeVisitDetailActivity.class);
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_FEE, list.getPaymentMethod());
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
@@ -166,10 +171,11 @@ public class HomeVisitFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                swipeRefreshLayout.setRefreshing(false);
+
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         mProgressBarHandler.hide();
                     }
                 });
@@ -178,10 +184,11 @@ public class HomeVisitFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                swipeRefreshLayout.setRefreshing(false);
+
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         mProgressBarHandler.hide();
                     }
                 });
@@ -194,7 +201,7 @@ public class HomeVisitFragment extends Fragment {
                         boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                         if (status) {
                             JSONArray data = jsonObject.getJSONObject("result").getJSONArray("data");
-                            Timber.tag("###").d("onResponse2: %s", data);
+                            Timber.tag("###").d("onResponse2x: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
                                 final String userID = data.getJSONObject(i).optString("patient_id").trim();
@@ -208,13 +215,28 @@ public class HomeVisitFragment extends Fragment {
                                 final String priceAmount = data.getJSONObject(i).optString("price_amount").trim();
                                 final String bookingID = data.getJSONObject(i).optString("booking_id").trim();
                                 final String paymentMethod = data.getJSONObject(i).optString("pymt_methode_desc").trim();
-                                final String patientLongitude = data.getJSONObject(i).optString("longitude_origin").trim();
-                                final String patientLatitude = data.getJSONObject(i).optString("latitude_origin").trim();
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto, priceAmount, bookingID, paymentMethod, patientLongitude, patientLatitude);
+                                final String patientLongitude = data.getJSONObject(i).optString("longitude_request").trim();
+                                final String patientLatitude = data.getJSONObject(i).optString("latitude_request").trim();
+
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+
+                                Date orderDate_;
+                                final String orderDates;
+                                if (!dateBookingS.equals("null") && !dateBookingS.isEmpty()) {
+                                    orderDate_ = dateParse.parse(dateBookingS);
+                                    orderDates = orderDate_ != null ? dateFormatter.format(orderDate_) : "";
+                                } else {
+                                    orderDates = "";
+                                }
+
+                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, priceAmount, bookingID, paymentMethod, patientLongitude, patientLatitude);
                             }
                         }
                     } catch (JSONException e) {
                         Timber.tag("###").d("onResponseror: %s", e.getMessage());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package com.mycillin.partner.util;
 
+import com.mycillin.partner.modul.account.model.bannerModel.ModelRestBanner;
 import com.mycillin.partner.modul.account.model.loginModel.ModelRestLogin;
 import com.mycillin.partner.modul.account.model.registerModel.ModelRestRegister;
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
@@ -47,4 +48,7 @@ public interface PartnerAPI {
 
     @GET("list_action_type/")
     Call<ModelRestMedicalAction> getMedicalAction();
+
+    @GET("bigbanner_partner/")
+    Call<ModelRestBanner> getBigBanner();
 }

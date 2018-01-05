@@ -8,6 +8,7 @@ public class PatientManager {
 
     private static final String KEY_PATIENT_ID = "PATIENT_ID";
     private static final String KEY_PATIENT_BOOKING_ID = "PATIENT_BOOKING_ID";
+    private static final String KEY_PATIENT_PHOTO = "PATIENT_PHOTO";
     private static final String KEY_PATIENT_ADDRESS = "PATIENT_ADDRESS";
     private static final String KEY_PATIENT_LONGITUDE = "PATIENT_LONGITUDE";
     private static final String KEY_PATIENT_LATITUDE = "PATIENT_LATITUDE";
@@ -81,4 +82,16 @@ public class PatientManager {
         editor.putString(KEY_PATIENT_MOBILE_NO, mobileNo);
         editor.commit();
     }
+
+    public String getKeyPatientPhoto() {
+        return sharedPreferences.getString(KEY_PATIENT_PHOTO, KEY_DEFAULT_VALUE);
+    }
+
+    public void setKeyPatientPhoto(String patientPhoto) {
+        editor.putString(KEY_PATIENT_PHOTO, patientPhoto);
+        editor.commit();
+    }
+
+
+
 }

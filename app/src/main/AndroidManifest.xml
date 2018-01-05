@@ -75,6 +75,7 @@
         <activity android:name=".modul.account.RegisterActivity" />
         <activity android:name=".modul.accountProfile.UpdatePassActivity" />
         <activity android:name=".modul.searchResult.SearchResultActivity" />
+        <activity android:name=".modul.account.BannerActivity" />
 
         <!--<meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

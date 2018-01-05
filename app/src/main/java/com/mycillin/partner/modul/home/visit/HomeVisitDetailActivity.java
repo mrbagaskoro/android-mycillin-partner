@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class HomeVisitDetailActivity extends AppCompatActivity {
 
@@ -44,6 +46,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_TYPE = "KEY_FLAG_PATIENT_TYPE";
     public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
     public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
+    public static String KEY_FLAG_PATIENT_FEE = "KEY_FLAG_PATIENT_FEE";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
 
     @BindView(R.id.homeVisitDetailActivity_toolbar)
@@ -66,7 +69,9 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     TextView bookType;
     @BindView(R.id.homeVisitDetailActivity_tv_bookLocation)
     TextView bookLocation;
-    private GoogleMap gMap;
+    @BindView(R.id.homeVisitDetailActivity_tv_bookFee)
+    TextView bookFee;
+
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
@@ -89,9 +94,10 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.homeVisitDetail_title);
         patientName = getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME);
         patientNames.setText(patientName);
-        bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
+        bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + "\n" + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
         bookLocation.setText(patientManager.getPatientAddress());
+        bookFee.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_FEE));
     }
 
     @OnClick(R.id.homeVisitDetailActivity_bt_maps)
@@ -170,6 +176,12 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void cancelReasonDialog(ArrayList<String> cancelReasonList) {
