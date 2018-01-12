@@ -28,7 +28,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -119,6 +122,7 @@ public class HomeReservationFragment extends Fragment {
                 Intent intent = new Intent(getContext(), HomeReservationDetailActivity.class);
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
+                intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_FEE, list.getPaymentMethod());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
@@ -148,9 +152,6 @@ public class HomeReservationFragment extends Fragment {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
-        data.put("booking_status_id", "01");
-        data.put("service_type_id", "01");
-        data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
 
@@ -160,7 +161,7 @@ public class HomeReservationFragment extends Fragment {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "list_partner_booking/")
+                .url(Configs.URL_REST_CLIENT + "list_dash_reservasi/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())
@@ -212,11 +213,26 @@ public class HomeReservationFragment extends Fragment {
                                 final String paymentMethod = data.getJSONObject(i).optString("pymt_methode_desc").trim();
                                 final String patientLongitude = data.getJSONObject(i).optString("longitude_origin").trim();
                                 final String patientLatitude = data.getJSONObject(i).optString("latitude_origin").trim();
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto, priceAmount, bookingID, paymentMethod, patientLongitude, patientLatitude);
+
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+
+                                Date orderDate_;
+                                final String orderDates;
+                                if (!dateBookingS.equals("null") && !dateBookingS.isEmpty()) {
+                                    orderDate_ = dateParse.parse(dateBookingS);
+                                    orderDates = orderDate_ != null ? dateFormatter.format(orderDate_) : "";
+                                } else {
+                                    orderDates = "";
+                                }
+
+                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, priceAmount, bookingID, paymentMethod, patientLongitude, patientLatitude);
                             }
                         }
                     } catch (JSONException e) {
                         Timber.tag("###").d("onResponseror: %s", e.getMessage());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -305,7 +321,12 @@ public class HomeReservationFragment extends Fragment {
                                                 break;
                                         }
                                         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
-                                        String v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
+                                        String v_priceAmount;
+                                        if (!priceAmount.equals("null")) {
+                                            v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
+                                        } else {
+                                            v_priceAmount = "0";
+                                        }
                                         homeReservationLists.add(new HomeReservationList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", v_priceAmount + " - " + paymentMethod, userID, bookingID, address, patientLatitude, patientLongitude, mobileNo));
                                         homeReservationAdapter = new HomeReservationAdapter(homeReservationLists, HomeReservationFragment.this);
                                         homeReservationRecyclerView.setAdapter(homeReservationAdapter);

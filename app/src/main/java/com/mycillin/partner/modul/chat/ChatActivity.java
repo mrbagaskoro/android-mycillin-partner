@@ -2,6 +2,7 @@ package com.mycillin.partner.modul.chat;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,8 @@ public class ChatActivity extends AppCompatActivity {
         patientName = getIntent().getStringExtra(KEY_FLAG_CHAT_PATIENT_NAME);
         doctorID = getIntent().getStringExtra(KEY_FLAG_CHAT_USER_ID);
         doctorName = getIntent().getStringExtra(KEY_FLAG_CHAT_USER_NAME);
+
+        Log.d("#8#8#", "onCreate: " + patientID + " # " + patientName + " # " + doctorID + " # " + doctorName);
 
         final DatabaseReference user1 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://android-mycillin-1507307522195.firebaseio.com/messages/" + patientID + "_" + doctorID + "");
         final DatabaseReference user2 = FirebaseDatabase.getInstance().getReferenceFromUrl("https://android-mycillin-1507307522195.firebaseio.com/messages/" + doctorID + "_" + patientID + "");

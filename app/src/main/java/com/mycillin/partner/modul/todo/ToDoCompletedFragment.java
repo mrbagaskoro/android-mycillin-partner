@@ -105,9 +105,6 @@ public class ToDoCompletedFragment extends Fragment {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
-        data.put("booking_status_id", "04");
-        data.put("service_type_id", "");
-        data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
 
@@ -117,7 +114,7 @@ public class ToDoCompletedFragment extends Fragment {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "list_partner_booking/")
+                .url(Configs.URL_REST_CLIENT + "list_todo_completed/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())

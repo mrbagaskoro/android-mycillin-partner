@@ -11,9 +11,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.todo.ToDoInProgressFragment;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +62,7 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         holder.gender.setText(resultList.getGender());
         holder.userID.setText(resultList.getUserID());
         holder.relID.setText(resultList.getRelID());
+        holder.paymentMethod.setText(resultList.getPaymentMethod());
     }
 
     @Override
@@ -84,8 +82,8 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
         private TextView gender;
         private TextView userID;
         private TextView relID;
+        private TextView paymentMethod;
         private CircleImageView patientPic;
-
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -101,6 +99,7 @@ public class ToDoInProgressAdapter extends RecyclerView.Adapter<ToDoInProgressAd
             gender = itemView.findViewById(R.id.rowInProgressList_tv_gender);
             userID = itemView.findViewById(R.id.rowInProgressList_tv_userID);
             relID = itemView.findViewById(R.id.rowInProgressList_tv_relID);
+            paymentMethod = itemView.findViewById(R.id.rowInProgressList_tv_payment_amount);
         }
     }
 }

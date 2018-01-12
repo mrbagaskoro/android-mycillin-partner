@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
@@ -27,6 +26,7 @@ import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
+import com.mycillin.partner.util.SessionManager;
 
 import java.util.ArrayList;
 
@@ -43,7 +43,11 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_TYPE = "KEY_FLAG_PATIENT_TYPE";
     public static String KEY_FLAG_PATIENT_DATE = "KEY_FLAG_PATIENT_DATE";
     public static String KEY_FLAG_PATIENT_TIME = "KEY_FLAG_PATIENT_TIME";
+    public static String KEY_FLAG_PATIENT_FEE = "KEY_FLAG_PATIENT_FEE";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
+    public static String KEY_FLAG_FROM = "KEY_FLAG_FROM";
+    public static String FLAG_FROM_RESERVE = "FLAG_FROM_RESERVE";
+    public static String FLAG_FROM_CONSULT = "FLAG_FROM_CONSULT";
 
     @BindView(R.id.homeReservationDetailActivity_toolbar)
     Toolbar toolbar;
@@ -63,12 +67,17 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     TextView bookType;
     @BindView(R.id.homeReservationDetailActivity_tv_bookLocation)
     TextView bookLocation;
-    private GoogleMap gMap;
+    @BindView(R.id.homeReservationDetailActivity_tv_bookFee)
+    TextView bookFee;
+
     private PartnerAPI partnerAPI;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
     private ArrayList<String> cancelReasonList = new ArrayList<>();
     private PatientManager patientManager;
+    private SessionManager sessionManager;
+    private String patientNames;
+    private String flagFrom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +89,17 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(HomeReservationDetailActivity.this);
         patientManager = new PatientManager(getApplicationContext());
+        sessionManager = new SessionManager(getApplicationContext());
+
+        flagFrom = getIntent().getStringExtra(KEY_FLAG_FROM);
 
         toolbar.setTitle(R.string.reservationRequestDetail_title);
-
-        patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
-        bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + ", " + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
+        patientNames = getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME);
+        patientName.setText(patientNames);
+        bookDate.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE) + "\n" + getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME));
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
         bookLocation.setText(patientManager.getPatientAddress());
+        bookFee.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_FEE));
     }
 
     @OnClick(R.id.homeReservationDetailActivity_bt_call)
@@ -101,6 +114,10 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     @OnClick(R.id.homeReservationDetailActivity_bt_chat)
     public void onClickStart() {
         Intent intent = new Intent(HomeReservationDetailActivity.this, ChatActivity.class);
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_ID, patientManager.getPatientId());
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_NAME, patientNames);
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_ID, sessionManager.getUserId());
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_NAME, sessionManager.getUserFullName());
         startActivity(intent);
     }
 

@@ -11,12 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.todo.completion.CompleteRequestActivity;
 import com.mycillin.partner.modul.todo.completion.medicalRecord.MedicalRecordActivity;
 import com.mycillin.partner.modul.todo.completion.requesterProfile.RequesterProfileActivity;
 import com.mycillin.partner.util.DataHelper;
+import com.mycillin.partner.util.PatientManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +36,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_GENDER = "KEY_FLAG_PATIENT_GENDER";
     public static String KEY_FLAG_PATIENT_USER_ID = "KEY_FLAG_PATIENT_USER_ID";
     public static String KEY_FLAG_PATIENT_REL_ID = "KEY_FLAG_PATIENT_REL_ID";
+    public static String KEY_FLAG_PATIENT_BOOKING_ID = "KEY_FLAG_PATIENT_BOOKING_ID";
+
     @BindView(R.id.toDoInProgressDetailActivity_toolbar)
     Toolbar toolbar;
     @BindView(R.id.toDoInProgressDetailActivity_tv_patientName)
@@ -50,7 +52,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     Button completeButton;
     @BindView(R.id.toDoInProgressDetailActivity_tv_bookLocation)
     TextView bookLocation;
-    private GoogleMap gMap;
+
+    private PatientManager patientManager;
     private String name;
     private String age;
     private String height;
@@ -68,6 +71,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
 
         toolbar.setTitle(R.string.toDoInProgressDetail_title);
         setSupportActionBar(toolbar);
+
+        patientManager = new PatientManager(getApplicationContext());
 
         patientName.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_NAME));
         bookDate.setText(getString(R.string.itemConcat2, getIntent().getStringExtra(KEY_FLAG_PATIENT_DATE), getIntent().getStringExtra(KEY_FLAG_PATIENT_TIME)));
@@ -94,7 +99,7 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "085777255225"));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + patientManager.getKeyPatientMobileNo()));
                 startActivity(intent);
             }
         });

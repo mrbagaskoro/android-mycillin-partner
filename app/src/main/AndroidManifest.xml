@@ -62,16 +62,12 @@
         <activity android:name=".modul.todo.completion.CompleteRequestActivity" />
         <activity android:name=".modul.chat.ChatActivity">
             <intent-filter>
-                <action android:name="REQUEST" />
+                <action android:name="CHAT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity">
-            <intent-filter>
-                <action android:name="REQUEST" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity" />
+
         <activity android:name=".modul.account.RegisterActivity" />
         <activity android:name=".modul.accountProfile.UpdatePassActivity" />
         <activity android:name=".modul.searchResult.SearchResultActivity" />

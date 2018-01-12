@@ -1,5 +1,6 @@
 package com.mycillin.partner.modul.home.consultation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycillin.partner.R;
+import com.mycillin.partner.modul.home.visit.HomeVisitDetailActivity;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RecyclerTouchListener;
 import com.mycillin.partner.util.SessionManager;
@@ -25,9 +28,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -41,10 +49,10 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import timber.log.Timber;
 
-import static com.mycillin.partner.modul.home.visit.HomeVisitFragment.EXTRA_FLAG_FROM_NO_SWIPE;
-import static com.mycillin.partner.modul.home.visit.HomeVisitFragment.EXTRA_FLAG_FROM_SWIPE;
-
 public class HomeConsultationFragment extends Fragment {
+    public static final String EXTRA_FLAG_FROM_SWIPE = "SWIPE";
+    public static final String EXTRA_FLAG_FROM_NO_SWIPE = "NO_SWIPE";
+
     @BindView(R.id.homeConsultationFragment_sr_swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.homeConsultationFragment_rv_recyclerView)
@@ -53,6 +61,7 @@ public class HomeConsultationFragment extends Fragment {
     private List<HomeConsultationList> homeConsultationLists = new ArrayList<>();
     private HomeConsultationAdapter homeConsultationAdapter;
     private SessionManager sessionManager;
+    private PatientManager patientManager;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
 
@@ -71,20 +80,13 @@ public class HomeConsultationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home_consultation, container, false);
         ButterKnife.bind(this, rootView);
         sessionManager = new SessionManager(getActivity());
+        patientManager = new PatientManager(getContext());
         mProgressBarHandler = new ProgressBarHandler(getActivity());
         mHandler = new Handler(Looper.getMainLooper());
         homeConsultationRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         homeConsultationRecyclerView.setItemAnimator(new DefaultItemAnimator());
         homeConsultationLists.clear();
         getHomeConsultationList();
-
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getConsultationData(EXTRA_FLAG_FROM_NO_SWIPE);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -93,6 +95,14 @@ public class HomeConsultationFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getConsultationData(EXTRA_FLAG_FROM_NO_SWIPE);
     }
 
     public void getHomeConsultationList() {
@@ -100,14 +110,22 @@ public class HomeConsultationFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 HomeConsultationList list = homeConsultationLists.get(position);
+                patientManager.setPatientId(list.getPatientID());
+                patientManager.setPatientBookingId(list.getBookingID());
+                patientManager.setKeyPatientPhoto(list.getPatientPic());
+                patientManager.setPatientAddress(list.getAddress());
+                patientManager.setPatientLatitude(list.getPatientLatitude());
+                patientManager.setPatientLongitude(list.getPatientLongitude());
+                patientManager.setKeyPatientMobileNo(list.getPhoneNumber());
 
-                /*Intent intent = new Intent(getContext(), HomeConsultationDetailActivity.class);
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
-                intent.putExtra(HomeConsultationDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
-                startActivity(intent);*/
+                Intent intent = new Intent(getContext(), HomeVisitDetailActivity.class);
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_FEE, list.getPaymentMethod());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
+                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
+                startActivity(intent);
             }
 
             @Override
@@ -131,9 +149,6 @@ public class HomeConsultationFragment extends Fragment {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
-        data.put("booking_status_id", "01");
-        data.put("service_type_id", "02");
-        data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
 
@@ -143,7 +158,7 @@ public class HomeConsultationFragment extends Fragment {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "list_partner_booking/")
+                .url(Configs.URL_REST_CLIENT + "list_dash_konsultasi/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())
@@ -187,21 +202,41 @@ public class HomeConsultationFragment extends Fragment {
                                 final String serviceType = data.getJSONObject(i).optString("service_type_id").trim();
                                 final String timeBooking = data.getJSONObject(i).optString("order_date").trim();
                                 final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
-
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
+
+                                final String priceAmount = data.getJSONObject(i).optString("price_amount").trim();
+                                final String bookingID = data.getJSONObject(i).optString("booking_id").trim();
+                                final String paymentMethod = data.getJSONObject(i).optString("pymt_methode_desc").trim();
+                                final String patientLongitude = data.getJSONObject(i).optString("longitude_request").trim();
+                                final String patientLatitude = data.getJSONObject(i).optString("latitude_request").trim();
+
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+
+                                Date orderDate_;
+                                final String orderDates;
+                                if (!dateBookingS.equals("null") && !dateBookingS.isEmpty()) {
+                                    orderDate_ = dateParse.parse(dateBookingS);
+                                    orderDates = orderDate_ != null ? dateFormatter.format(orderDate_) : "";
+                                } else {
+                                    orderDates = "";
+                                }
+
+                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, priceAmount, bookingID, paymentMethod, patientLongitude, patientLatitude);
                             }
                         }
                     } catch (JSONException e) {
                         Timber.tag("###").d("onResponseror: %s", e.getMessage());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         });
     }
 
-    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
+    private void getDetailUser(final String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto, final String priceAmount, final String bookingID, final String paymentMethod, final String patientLongitude, final String patientLatitude) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -251,6 +286,7 @@ public class HomeConsultationFragment extends Fragment {
                             for (int i = 0; i < data.length(); i++) {
                                 final String fullName = data.getJSONObject(i).optString("full_name").trim();
                                 final String address = data.getJSONObject(i).optString("address").trim();
+                                final String mobileNo = data.getJSONObject(i).optString("mobile_no").trim();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -281,7 +317,16 @@ public class HomeConsultationFragment extends Fragment {
                                                 serviceType = "Unknown";
                                                 break;
                                         }
-                                        homeConsultationLists.add(new HomeConsultationList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address));
+                                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+
+                                        String v_priceAmount;
+                                        if (!priceAmount.equals("null")) {
+                                            v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
+                                        } else {
+                                            v_priceAmount = "0";
+                                        }
+
+                                        homeConsultationLists.add(new HomeConsultationList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", v_priceAmount + " - " + paymentMethod, userID, bookingID, address, patientLatitude, patientLongitude, mobileNo));
                                         homeConsultationAdapter = new HomeConsultationAdapter(homeConsultationLists, HomeConsultationFragment.this);
                                         homeConsultationRecyclerView.setAdapter(homeConsultationAdapter);
                                         homeConsultationAdapter.notifyDataSetChanged();

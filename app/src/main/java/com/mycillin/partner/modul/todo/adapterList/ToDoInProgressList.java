@@ -14,8 +14,11 @@ public class ToDoInProgressList {
     private String gender;
     private String userID;
     private String relID;
+    private String bookingID;
+    private String phoneNumber;
+    private String paymentMethod;
 
-    public ToDoInProgressList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address, String age, String height, String weight, String bloodType, String gender, String userID, String relID) {
+    public ToDoInProgressList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address, String age, String height, String weight, String bloodType, String gender, String userID, String relID, String bookingID, String phoneNumber, String paymentMethod) {
         this.patientPic = patientPic;
         this.patientName = patientName;
         this.bookType = bookType;
@@ -29,6 +32,9 @@ public class ToDoInProgressList {
         this.gender = gender;
         this.userID = userID;
         this.relID = relID;
+        this.bookingID = bookingID;
+        this.phoneNumber = phoneNumber;
+        this.paymentMethod = paymentMethod;
     }
 
     public String getPatientPic() {
@@ -133,5 +139,29 @@ public class ToDoInProgressList {
 
     public void setRelID(String relID) {
         this.relID = relID;
+    }
+
+    public String getBookingID() {
+        return bookingID;
+    }
+
+    public void setBookingID(String bookingID) {
+        this.bookingID = bookingID;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

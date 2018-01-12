@@ -18,7 +18,6 @@ import android.widget.EditText;
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.firebase.FirebaseManager;
-import com.mycillin.partner.modul.home.HomeActivity;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.PatientManager;
@@ -153,7 +152,7 @@ public class CompleteRequestActivity extends AppCompatActivity {
         final String medicalActionOne = ((EditText) findViewById(R.id.completeMedicalActionsFragment_et_medicalActionOne)).getText().toString().split(" - ")[0];
         final String prescriptionType = ((EditText) findViewById(R.id.accountDetailActivity_et_prescriptionType)).getText().toString().split(" - ")[0];
 
-        String message = " Cannot Empty";
+        String message = " Cannot Empty\n";
         ArrayList<String> validasiNonDokumen = new ArrayList<>();
         if (systole.isEmpty()) {
             validasiNonDokumen.add("Systole" + message);
@@ -182,7 +181,7 @@ public class CompleteRequestActivity extends AppCompatActivity {
         }
 
         if (validasiNonDokumen.size() > 0) {
-            DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning1", "Error :\n" + validasiNonDokumen.toString().replace("[", "").replace("]", "").replace(", ", ""), false);
+            DialogHelper.showDialog(mHandler, CompleteRequestActivity.this, "Warning!", "Error :\n" + validasiNonDokumen.toString().replace("[", "").replace("]", "").replace(", ", ""), false);
         } else {
             mHandler.post(new Runnable() {
                 @Override

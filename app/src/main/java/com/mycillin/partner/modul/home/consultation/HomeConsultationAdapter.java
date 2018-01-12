@@ -53,7 +53,7 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
         holder.patientName.setText(resultList.getPatientName());
         holder.bookType.setText(resultList.getBookType());
         holder.bookDate.setText(homeConsultationFragment.getString(R.string.itemConcat3, resultList.getBookDate(), resultList.getBookTime()));
-        holder.address.setText(resultList.getAddress());
+        holder.paymentMethod.setText(resultList.getPaymentMethod());
     }
 
     @Override
@@ -65,8 +65,8 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
         private TextView patientName;
         private TextView bookType;
         private TextView bookDate;
+        private TextView paymentMethod;
         private CircleImageView patientPic;
-        private TextView address;
 
 
         MyViewHolder(View itemView) {
@@ -75,7 +75,7 @@ public class HomeConsultationAdapter extends RecyclerView.Adapter<HomeConsultati
             bookType = itemView.findViewById(R.id.rowConsultationList_tv_bookType);
             bookDate = itemView.findViewById(R.id.rowConsultationList_tv_bookDate);
             patientPic = itemView.findViewById(R.id.rowConsultationList_iv_patientAvatar);
-            address = itemView.findViewById(R.id.rowConsultationList_tv_address);
+            paymentMethod = itemView.findViewById(R.id.rowConsultationList_tv_payment_amount);
         }
     }
 }

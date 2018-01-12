@@ -274,11 +274,8 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
             Timber.tag("JINX2").d("%s", longitude);
         }
 
-        sessionManager.setKeyUserLatitude(latitude + "");
-        sessionManager.setKeyUserLongitude(longitude + "");
-
         if (isActive) {
-            Toast.makeText(this, "LATITUDE : " + latitude + "  LONGITUDE : " + longitude, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "LATITUDE : " + latitude + "  LONGITUDE : " + longitude, Toast.LENGTH_SHORT).show();
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             OkHttpClient client = new OkHttpClient();
@@ -321,7 +318,7 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                 }
             });
         } else {
-            Toast.makeText(this, "DOKTER OFF", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "DOKTER OFF", Toast.LENGTH_SHORT).show();
             sendLocationLoop();
         }
     }
@@ -577,6 +574,8 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                 Timber.tag("JINX7").d("%s", isGPSEnabled);
             }
         }
+        sessionManager.setKeyUserLatitude(lokasi.getLatitude() + "");
+        sessionManager.setKeyUserLongitude(lokasi.getLongitude() + "");
         return lokasi;
     }
 
@@ -585,6 +584,8 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
         if (location != null) {
             longitude = location.getLongitude();
             latitude = location.getLatitude();
+            sessionManager.setKeyUserLatitude(latitude + "");
+            sessionManager.setKeyUserLongitude(longitude + "");
         }
     }
 

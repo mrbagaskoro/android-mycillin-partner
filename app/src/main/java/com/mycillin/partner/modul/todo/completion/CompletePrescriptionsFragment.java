@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,17 +25,31 @@ import com.mycillin.partner.modul.searchResult.SearchResultActivity;
 import com.mycillin.partner.modul.searchResult.adapterList.SearchResultList;
 import com.mycillin.partner.modul.todo.completion.adapterList.ModelRestPrescriptionType;
 import com.mycillin.partner.modul.todo.completion.adapterList.ModelRestPrescriptionTypeResultData;
+import com.mycillin.partner.util.CompressPicture;
+import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.PartnerAPI;
+import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
+import com.mycillin.partner.util.SessionManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -141,6 +156,7 @@ public class CompletePrescriptionsFragment extends Fragment {
                         Bitmap bmp = ImagePicker.getImageFromResult(getContext(), requestCode, resultCode, data);
                         if (bmp != null) {
                             prescriptionImage.setImageBitmap(bmp);
+                            uploadPrescriptionImage(bmp);
                         }
                     }
                     break;
@@ -148,5 +164,95 @@ public class CompletePrescriptionsFragment extends Fragment {
                     edtxPrescriptionType.setText(getString(R.string.itemConcat, item1, item2));
             }
         }
+    }
+
+    private void uploadPrescriptionImage(Bitmap bitmap) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+
+        SessionManager sessionManager = new SessionManager(getContext());
+        PatientManager patientManager = new PatientManager(getContext());
+
+        CompressPicture compressPicture = new CompressPicture();
+        Bitmap out = compressPicture.scaleBitmap(bitmap);
+
+        Uri fileUri = compressPicture.saveResizedImage(out);
+        File compressedFile = new File(fileUri.getPath());
+
+        MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("user_id", sessionManager.getUserId())
+                .addFormDataPart("booking_id", patientManager.getPatientBookingId())
+                .addFormDataPart("prescription_img", "IMG", RequestBody.create(MEDIA_TYPE_JPG, compressedFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "add_prescription_photo/")
+                .post(requestBody)
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                DialogHelper.showDialog(mHandler, getActivity(), "Warning Send Token Fbase", "Connection Problem, Please Try Again Later." + e, false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                @SuppressWarnings("ConstantConditions") String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                if (response.isSuccessful()) {
+                    Timber.tag("#8#8#").d("onResponse: UPLOAD%s", result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                DialogHelper.showDialog(mHandler, getActivity(), "Status", "Upload Success", false);
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                DialogHelper.showDialog(mHandler, getActivity(), "Warning", "Error : " + message, false);
+                            }
+                        } else {
+                            DialogHelper.showDialog(mHandler, getActivity(), "Warning", "Please Try Again", false);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        DialogHelper.showDialog(mHandler, getActivity(), "Warning", "Error : " + message, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

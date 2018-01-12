@@ -6,6 +6,7 @@ import com.mycillin.partner.modul.account.model.registerModel.ModelRestRegister;
 import com.mycillin.partner.modul.accountProfile.model.expertise.ModelRestExpertise;
 import com.mycillin.partner.modul.accountProfile.model.profession.ModelRestProfession;
 import com.mycillin.partner.modul.accountProfile.model.serviceType.ModelRestService;
+import com.mycillin.partner.modul.chat.firebaseGet.ModelResultFirebaseGet;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.todo.completion.adapterList.ModelRestMedicalAction;
 import com.mycillin.partner.modul.todo.completion.adapterList.ModelRestPrescriptionType;
@@ -17,6 +18,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface PartnerAPI {
@@ -51,4 +53,7 @@ public interface PartnerAPI {
 
     @GET("bigbanner_partner/")
     Call<ModelRestBanner> getBigBanner();
+
+    @POST("detail_token_fcm/")
+    Call<ModelResultFirebaseGet> getFirebaseToken(@Header("Authorization") String token, @Body HashMap<String, String> params);
 }

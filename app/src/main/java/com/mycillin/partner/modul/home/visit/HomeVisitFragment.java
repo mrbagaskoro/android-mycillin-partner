@@ -150,9 +150,6 @@ public class HomeVisitFragment extends Fragment {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
-        data.put("booking_status_id", "01");
-        data.put("service_type_id", "00");
-        data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
 
@@ -162,7 +159,7 @@ public class HomeVisitFragment extends Fragment {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "list_partner_booking/")
+                .url(Configs.URL_REST_CLIENT + "list_dash_kunjungan/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())
@@ -325,8 +322,12 @@ public class HomeVisitFragment extends Fragment {
                                                 break;
                                         }
                                         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
-                                        String v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
-
+                                        String v_priceAmount;
+                                        if (!priceAmount.equals("null")) {
+                                            v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
+                                        } else {
+                                            v_priceAmount = "0";
+                                        }
                                         homeVisitLists.add(new HomeVisitList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", v_priceAmount + " - " + paymentMethod, userID, bookingID, address, patientLatitude, patientLongitude, mobileNo));
                                         homeVisitAdapter = new HomeVisitAdapter(homeVisitLists, HomeVisitFragment.this);
                                         homeVisitRecyclerView.setAdapter(homeVisitAdapter);

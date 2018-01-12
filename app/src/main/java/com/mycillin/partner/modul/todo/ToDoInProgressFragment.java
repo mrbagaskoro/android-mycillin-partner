@@ -19,6 +19,7 @@ import com.mycillin.partner.modul.todo.adapterList.ToDoInProgressAdapter;
 import com.mycillin.partner.modul.todo.adapterList.ToDoInProgressList;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RecyclerTouchListener;
 import com.mycillin.partner.util.SessionManager;
@@ -28,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +62,7 @@ public class ToDoInProgressFragment extends Fragment {
     private List<ToDoInProgressList> toDoInProgressLists = new ArrayList<>();
     private ToDoInProgressAdapter toDoInProgressAdapter;
     private SessionManager sessionManager;
+    private PatientManager patientManager;
     private Handler mHandler;
     private ProgressBarHandler mProgressBarHandler;
 
@@ -77,6 +81,7 @@ public class ToDoInProgressFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_to_do_in_progress, container, false);
         ButterKnife.bind(this, rootView);
         sessionManager = new SessionManager(getActivity());
+        patientManager = new PatientManager(getContext());
         mProgressBarHandler = new ProgressBarHandler(getActivity());
         mHandler = new Handler(Looper.getMainLooper());
         toDoInProgressRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -102,6 +107,12 @@ public class ToDoInProgressFragment extends Fragment {
                 ToDoInProgressList list = toDoInProgressLists.get(position);
 
                 Intent intent = new Intent(getContext(), ToDoInProgressDetailActivity.class);
+
+                patientManager.setPatientBookingId(list.getBookingID());
+                patientManager.setKeyPatientPhoto(list.getPatientPic());
+                patientManager.setPatientAddress(list.getAddress());
+                patientManager.setKeyPatientMobileNo(list.getPhoneNumber());
+
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
@@ -115,6 +126,8 @@ public class ToDoInProgressFragment extends Fragment {
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_GENDER, list.getGender());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_USER_ID, list.getUserID());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_REL_ID, list.getRelID());
+                intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_BOOKING_ID, list.getBookingID());
+
                 startActivity(intent);
             }
 
@@ -139,9 +152,6 @@ public class ToDoInProgressFragment extends Fragment {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", sessionManager.getUserId());
-        data.put("booking_status_id", "03");
-        data.put("service_type_id", "");
-        data.put("booking_id", "");
 
         JSONObject jsonObject = new JSONObject(data);
 
@@ -151,7 +161,7 @@ public class ToDoInProgressFragment extends Fragment {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "list_partner_booking/")
+                .url(Configs.URL_REST_CLIENT + "list_todo_onprogress/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())
@@ -190,6 +200,7 @@ public class ToDoInProgressFragment extends Fragment {
                             Timber.tag("###").d("onResponse2: %s", data);
 
                             for (int i = 0; i < data.length(); i++) {
+                                final String bookingID = data.getJSONObject(i).optString("booking_id").trim();
                                 final String userID = data.getJSONObject(i).optString("patient_id").trim();
                                 String relationID = data.getJSONObject(i).optString("relation_id").trim();
                                 final String serviceType = data.getJSONObject(i).optString("service_type_id").trim();
@@ -197,18 +208,34 @@ public class ToDoInProgressFragment extends Fragment {
                                 final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
+                                final String priceAmount = data.getJSONObject(i).optString("price_amount").trim();
+
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+
+                                Date orderDate_;
+                                final String orderDates;
+                                if (!dateBookingS.equals("null") && !dateBookingS.isEmpty()) {
+                                    orderDate_ = dateParse.parse(dateBookingS);
+                                    orderDates = orderDate_ != null ? dateFormatter.format(orderDate_) : "";
+                                } else {
+                                    orderDates = "";
+                                }
+
+                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, bookingID, priceAmount);
                             }
                         }
                     } catch (JSONException e) {
                         Timber.tag("###").d("onResponseror: %s", e.getMessage());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         });
     }
 
-    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
+    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto, final String bookingID, final String priceAmount) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -263,6 +290,7 @@ public class ToDoInProgressFragment extends Fragment {
                                 final String height = data.getJSONObject(i).optString("height").trim();
                                 final String weight = data.getJSONObject(i).optString("weight").trim();
                                 final String bloodType = data.getJSONObject(i).optString("blood_type").trim();
+                                final String mobileNo = data.getJSONObject(i).optString("mobile_no").trim();
 
                                 SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy", Locale.US);
                                 String yearNow = dateFormatter.format(new Date());
@@ -304,7 +332,16 @@ public class ToDoInProgressFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoInProgressLists.add(new ToDoInProgressList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID));
+
+                                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+                                        String v_priceAmount;
+                                        if (!priceAmount.equals("null")) {
+                                            v_priceAmount = numberFormat.format(Double.parseDouble(priceAmount.isEmpty() ? "0" : priceAmount));
+                                        } else {
+                                            v_priceAmount = "0";
+                                        }
+
+                                        toDoInProgressLists.add(new ToDoInProgressList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID, bookingID, mobileNo, v_priceAmount));
                                         toDoInProgressAdapter = new ToDoInProgressAdapter(toDoInProgressLists, ToDoInProgressFragment.this);
                                         toDoInProgressRecyclerView.setAdapter(toDoInProgressAdapter);
                                         toDoInProgressAdapter.notifyDataSetChanged();
@@ -318,5 +355,11 @@ public class ToDoInProgressFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getTodoData(EXTRA_FLAG_FROM_NO_SWIPE);
     }
 }

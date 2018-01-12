@@ -9,18 +9,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
+import com.mycillin.partner.modul.chat.firebaseGet.ModelResultFirebaseGet;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReasonData;
 import com.mycillin.partner.util.DialogHelper;
@@ -30,7 +30,12 @@ import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.util.SessionManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +43,6 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class HomeVisitDetailActivity extends AppCompatActivity {
 
@@ -79,6 +83,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     private PatientManager patientManager;
     private SessionManager sessionManager;
     private String patientName;
+    private String userToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,49 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         bookType.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_TYPE));
         bookLocation.setText(patientManager.getPatientAddress());
         bookFee.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_FEE));
+
+        getFirebaseToken(patientManager.getPatientId());
+    }
+
+    private void getFirebaseToken(String patientId) {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("user_id", patientId);
+
+        partnerAPI.getFirebaseToken(sessionManager.getUserToken(), data).enqueue(new Callback<ModelResultFirebaseGet>() {
+            @Override
+            public void onResponse(@NonNull Call<ModelResultFirebaseGet> call, @NonNull Response<ModelResultFirebaseGet> response) {
+                if (response.isSuccessful()) {
+                    ModelResultFirebaseGet modelResultDataFirebaseGet = response.body();
+                    assert modelResultDataFirebaseGet != null;
+                    userToken = modelResultDataFirebaseGet.getResult().getData().get(0).getToken();
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        Snackbar.make(getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_SHORT).show();
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                    getFirebaseToken(patientManager.getPatientId());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ModelResultFirebaseGet> call, @NonNull final Throwable t) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        DialogHelper.showDialog(mHandler, HomeVisitDetailActivity.this, "Error", "Connection problem " + t.getMessage(), false);
+                    }
+                });
+            }
+        });
     }
 
     @OnClick(R.id.homeVisitDetailActivity_bt_maps)
@@ -124,12 +172,17 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.homeVisitDetailActivity_bt_chat)
     public void onClickStart() {
+        sendNotification();
         Intent intent = new Intent(HomeVisitDetailActivity.this, ChatActivity.class);
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_ID, patientManager.getPatientId());
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_NAME, patientName);
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_ID, sessionManager.getUserId());
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_NAME, sessionManager.getUserFullName());
         startActivity(intent);
+    }
+
+    private void sendNotification() {
+
     }
 
     @OnClick(R.id.homeVisitDetailActivity_bt_reject)

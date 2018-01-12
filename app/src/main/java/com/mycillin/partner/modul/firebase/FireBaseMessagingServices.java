@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -16,7 +15,14 @@ import com.mycillin.partner.modul.chat.ChatActivity;
 import com.mycillin.partner.modul.home.HomeActivity;
 import com.mycillin.partner.util.SessionManager;
 
+import java.util.Map;
+
 import timber.log.Timber;
+
+import static com.mycillin.partner.modul.chat.ChatActivity.KEY_FLAG_CHAT_PATIENT_ID;
+import static com.mycillin.partner.modul.chat.ChatActivity.KEY_FLAG_CHAT_PATIENT_NAME;
+import static com.mycillin.partner.modul.chat.ChatActivity.KEY_FLAG_CHAT_USER_ID;
+import static com.mycillin.partner.modul.chat.ChatActivity.KEY_FLAG_CHAT_USER_NAME;
 
 public class FireBaseMessagingServices extends FirebaseMessagingService {
     private final String EXTRA_NOTIFICATION_REQUEST = "REQUEST";
@@ -68,12 +74,13 @@ public class FireBaseMessagingServices extends FirebaseMessagingService {
 
             if (remoteMessage.getNotification().getBody() != null) {
                 String messageFbase = remoteMessage.getNotification().getBody();
+                Map<String, String> getData = remoteMessage.getData();
                 if (messageFbase.contains("Request")) {
-                    sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_REQUEST);
+                    sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_REQUEST, getData);
                 } else if (messageFbase.contains("Chat")) {
-                    sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_CHAT);
+                    sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_CHAT, getData);
                 } else {
-                    sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle(), EXTRA_NOTIFICATION_BLAST);
+                    sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle(), EXTRA_NOTIFICATION_BLAST, getData);
                 }
             }
         }
@@ -106,8 +113,9 @@ public class FireBaseMessagingServices extends FirebaseMessagingService {
      * Create and show a simple notification containing the received FCM message.
      *
      * @param messageBody FCM message body received.
+     * @param getData
      */
-    private void sendNotification(String messageBody, String titleMessage, String flagFrom) {
+    private void sendNotification(String messageBody, String titleMessage, String flagFrom, Map<String, String> getData) {
         SessionManager sessionManager = new SessionManager(this);
         switch (flagFrom) {
             case EXTRA_NOTIFICATION_REQUEST:
@@ -138,6 +146,10 @@ public class FireBaseMessagingServices extends FirebaseMessagingService {
             case EXTRA_NOTIFICATION_CHAT:
                 Timber.tag("#8#8#").d("sendNotification2: ");
                 Intent intentChat = new Intent(this, ChatActivity.class);
+                intentChat.putExtra(KEY_FLAG_CHAT_PATIENT_ID, getData.get(KEY_FLAG_CHAT_PATIENT_ID));
+                intentChat.putExtra(KEY_FLAG_CHAT_PATIENT_NAME, getData.get(KEY_FLAG_CHAT_PATIENT_NAME));
+                intentChat.putExtra(KEY_FLAG_CHAT_USER_ID, getData.get(KEY_FLAG_CHAT_USER_ID));
+                intentChat.putExtra(KEY_FLAG_CHAT_USER_NAME, getData.get(KEY_FLAG_CHAT_USER_NAME));
                 intentChat.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntentChat = PendingIntent.getActivity(this, 0 /* Request code */, intentChat,
                         PendingIntent.FLAG_ONE_SHOT);
