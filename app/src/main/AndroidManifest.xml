@@ -98,6 +98,10 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a779dcd0ac8f53c28219ae82b58a0ddcb126c386" />
     </application>
 
 </manifest>

@@ -17,7 +17,6 @@ import android.widget.EditText;
 
 import com.badoualy.stepperindicator.StepperIndicator;
 import com.mycillin.partner.R;
-import com.mycillin.partner.modul.firebase.FirebaseManager;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.PatientManager;
@@ -190,7 +189,6 @@ public class CompleteRequestActivity extends AppCompatActivity {
                 }
             });
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            FirebaseManager firebaseManager = new FirebaseManager(getApplicationContext());
             Map<String, Object> params = new HashMap<>();
             params.put("user_id", sessionManager.getUserId());
             params.put("booking_id", patientManager.getPatientBookingId());
@@ -201,9 +199,9 @@ public class CompleteRequestActivity extends AppCompatActivity {
             params.put("blood_press_upper", systole);
             params.put("blood_press_lower", diastole);
             params.put("patient_condition", physicalCond);
-            params.put("diagnosa", firebaseManager.getFirebaseToken());
+            params.put("diagnosa", diagnosisInformation);
             params.put("prescription_status", "Y");
-            params.put("prescription_type_id", diagnosisInformation);
+            params.put("prescription_type_id", prescriptionType);
 
             JSONObject jsonObject = new JSONObject(params);
 
