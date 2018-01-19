@@ -166,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "partner_booking_confirmationh/")
+                .url(Configs.URL_REST_CLIENT + "partner_booking_confirmation/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())

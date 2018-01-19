@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,10 +37,15 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -182,6 +188,77 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
     }
 
     private void sendNotification() {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, String> paramsNotif = new HashMap<>();
+        paramsNotif.put("body", "You Have New Chat");
+        paramsNotif.put("click_action", "CHAT");
+
+        Map<String, String> paramsData = new HashMap<>();
+        paramsData.put("CHAT_PATIENT_ID", patientManager.getPatientId());
+        paramsData.put("CHAT_PATIENT_NAME", patientName);
+        paramsData.put("CHAT_USER_ID", sessionManager.getUserId());
+        paramsData.put("CHAT_USER_NAME", sessionManager.getUserFullName());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("notification", paramsNotif);
+        params.put("data", paramsData);
+        params.put("to", userToken);
+
+        JSONObject jsonObject = new JSONObject(params);
+        Log.d("#8#8#", "sendNotif: " + jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url("https://fcm.googleapis.com/fcm/send")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", "key=AAAAbynyk1I:APA91bENZXh3N4QC-HrUy4ApIVe8CnW3F0k5mG5OXdUMApskyFTKDYnjd6Pdwko-hqvkekZoH5KxtC-gyxu0-XoXcItm9PJYGw9zzrc5Wbzr6CY3FuaSvXb7MCYMNfmNEVmUWZA8SqB5")
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                String result = response.body().string();
+                Log.d("#8#8#", "onResponse: " + result);
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                Log.d("#8#8#", "onResponse: SIP");
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                Log.d("#8#8#", "onResponse: SIP" + message);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+
+                        Log.d("#8#8#", "onResponse: gagal" + message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
     }
 
