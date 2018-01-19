@@ -123,11 +123,11 @@ public class ToDoCompletedFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mProgressBarHandler.hide();
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
                 DialogHelper.showDialog(mHandler, getActivity(), "Warning", "Connection Problem, Please Try Again Later." + e, false);
@@ -135,10 +135,10 @@ public class ToDoCompletedFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         mProgressBarHandler.hide();
                     }
                 });

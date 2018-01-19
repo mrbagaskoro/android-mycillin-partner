@@ -131,7 +131,6 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();
                     }
-                    getFirebaseToken(patientManager.getPatientId());
                 }
             }
 
@@ -178,6 +177,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_NAME, patientName);
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_ID, sessionManager.getUserId());
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_NAME, sessionManager.getUserFullName());
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_BOOKING_ID, patientManager.getPatientBookingId());
         startActivity(intent);
     }
 
@@ -263,5 +263,11 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        finish();
     }
 }

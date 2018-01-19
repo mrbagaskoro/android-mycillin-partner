@@ -21,6 +21,7 @@ import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReason;
 import com.mycillin.partner.modul.home.cancelAdapterList.ModelRestCancelReasonData;
+import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
 import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.PatientManager;
@@ -28,11 +29,20 @@ import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.util.SessionManager;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,8 +56,6 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     public static String KEY_FLAG_PATIENT_FEE = "KEY_FLAG_PATIENT_FEE";
     public static String KEY_FLAG_PATIENT_PIC = "KEY_FLAG_PATIENT_PIC";
     public static String KEY_FLAG_FROM = "KEY_FLAG_FROM";
-    public static String FLAG_FROM_RESERVE = "FLAG_FROM_RESERVE";
-    public static String FLAG_FROM_CONSULT = "FLAG_FROM_CONSULT";
 
     @BindView(R.id.homeReservationDetailActivity_toolbar)
     Toolbar toolbar;
@@ -118,6 +126,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_PATIENT_NAME, patientNames);
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_ID, sessionManager.getUserId());
         intent.putExtra(ChatActivity.KEY_FLAG_CHAT_USER_NAME, sessionManager.getUserFullName());
+        intent.putExtra(ChatActivity.KEY_FLAG_CHAT_BOOKING_ID, patientManager.getPatientBookingId());
         startActivity(intent);
     }
 
@@ -128,7 +137,41 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.homeReservationDetailActivity_bt_confirmed)
     public void onConfirmedClicked() {
-        //todo confirmed
+        final Handler mHandler = new Handler(Looper.getMainLooper());
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_id", sessionManager.getUserId());
+        data.put("booking_id", patientManager.getPatientBookingId());
+
+        JSONObject jsonObject = new JSONObject(data);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "partner_booking_confirmation/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e.getMessage(), false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                String result = response.body().toString();
+
+                if (response.isSuccessful()) {
+                    DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Confirm", "Confirm Success.", true);
+                } else {
+                    DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Warning", "Please Try Again : " + result, false);
+                }
+            }
+        });
     }
 
     public void cancelReason() {
@@ -198,5 +241,17 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

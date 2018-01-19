@@ -45,7 +45,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivityConsultation extends AppCompatActivity {
 
     public static String KEY_FLAG_CHAT_PATIENT_ID = "CHAT_PATIENT_ID";
     public static String KEY_FLAG_CHAT_PATIENT_NAME = "CHAT_PATIENT_NAME";
@@ -154,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
     @OnClick(R.id.chat_btn_confirm)
     public void onConfirmClick() {
         final Handler mHandler = new Handler(Looper.getMainLooper());
-        SessionManager sessionManager = new SessionManager(ChatActivity.this);
+        SessionManager sessionManager = new SessionManager(ChatActivityConsultation.this);
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", doctorID);
@@ -166,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .url(Configs.URL_REST_CLIENT + "partner_booking_confirmationh/")
+                .url(Configs.URL_REST_CLIENT + "partner_consultation_completed/")
                 .post(body)
                 .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("Authorization", sessionManager.getUserToken())
@@ -175,23 +175,22 @@ public class ChatActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                DialogHelper.showDialog(mHandler, ChatActivity.this, "Warning", "Connection Problem, Please Try Again Later." + e.getMessage(), false);
+                DialogHelper.showDialog(mHandler, ChatActivityConsultation.this, "Warning", "Connection Problem, Please Try Again Later." + e.getMessage(), false);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    DialogHelper.showDialog(mHandler, ChatActivity.this, "Confirm", "Confirm Success.", true);
+                    DialogHelper.showDialog(mHandler, ChatActivityConsultation.this, "Confirm", "Confirm Success.", true);
                 } else {
-                    DialogHelper.showDialog(mHandler, ChatActivity.this, "Warning", "Please Try Again", false);
+                    DialogHelper.showDialog(mHandler, ChatActivityConsultation.this, "Warning", "Please Try Again", false);
                 }
             }
         });
-
     }
 
     public void addMessageBox(String message, int type) {
-        TextView textView = new TextView(ChatActivity.this);
+        TextView textView = new TextView(ChatActivityConsultation.this);
         textView.setText(message);
 
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

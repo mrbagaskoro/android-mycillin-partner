@@ -12,6 +12,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
+import com.mycillin.partner.modul.chat.ChatActivityConsultation;
 import com.mycillin.partner.modul.home.HomeActivity;
 import com.mycillin.partner.util.SessionManager;
 
@@ -28,6 +29,7 @@ public class FireBaseMessagingServices extends FirebaseMessagingService {
     private final String EXTRA_NOTIFICATION_REQUEST = "REQUEST";
     private final String EXTRA_NOTIFICATION_CHAT = "CHAT";
     private final String EXTRA_NOTIFICATION_BLAST = "BLAST";
+    private final String EXTRA_NOTIFICATION_CONSULTATION = "CONSULTATION";
 
     private static final String TAG = "firebase";
 
@@ -79,6 +81,8 @@ public class FireBaseMessagingServices extends FirebaseMessagingService {
                     sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_REQUEST, getData);
                 } else if (messageFbase.contains("Chat")) {
                     sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_CHAT, getData);
+                } else if (messageFbase.contains("Consultation")) {
+                    sendNotification(remoteMessage.getNotification().getBody(), "", EXTRA_NOTIFICATION_CONSULTATION, getData);
                 } else {
                     sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle(), EXTRA_NOTIFICATION_BLAST, getData);
                 }
@@ -170,6 +174,35 @@ public class FireBaseMessagingServices extends FirebaseMessagingService {
 
                 if (notificationManagerChat != null) {
                     notificationManagerChat.notify(0 /* ID of notification */, notificationBuilderChat.build());
+                }
+                break;
+            case EXTRA_NOTIFICATION_CONSULTATION:
+                Timber.tag("#8#8#").d("sendNotification2: ");
+                Intent intentConsultation = new Intent(this, ChatActivityConsultation.class);
+                intentConsultation.putExtra(KEY_FLAG_CHAT_PATIENT_ID, getData.get(KEY_FLAG_CHAT_PATIENT_ID));
+                intentConsultation.putExtra(KEY_FLAG_CHAT_PATIENT_NAME, getData.get(KEY_FLAG_CHAT_PATIENT_NAME));
+                intentConsultation.putExtra(KEY_FLAG_CHAT_USER_ID, getData.get(KEY_FLAG_CHAT_USER_ID));
+                intentConsultation.putExtra(KEY_FLAG_CHAT_USER_NAME, getData.get(KEY_FLAG_CHAT_USER_NAME));
+                intentConsultation.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntentConsultation = PendingIntent.getActivity(this, 0 /* Request code */, intentConsultation,
+                        PendingIntent.FLAG_ONE_SHOT);
+
+                String channelIdConsultation = getString(R.string.default_notification_channel_id);
+                Uri defaultSoundUriConsultation = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                NotificationCompat.Builder notificationBuilderConsultation =
+                        new NotificationCompat.Builder(this, channelIdConsultation)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle(sessionManager.getUserFullName())
+                                .setContentText("You Have New Message")
+                                .setAutoCancel(true)
+                                .setSound(defaultSoundUriConsultation)
+                                .setContentIntent(pendingIntentConsultation);
+
+                NotificationManager notificationManagerConsultation =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                if (notificationManagerConsultation != null) {
+                    notificationManagerConsultation.notify(0 /* ID of notification */, notificationBuilderConsultation.build());
                 }
                 break;
             case EXTRA_NOTIFICATION_BLAST:

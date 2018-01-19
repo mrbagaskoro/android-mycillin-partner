@@ -53,6 +53,8 @@ public class EWalletFragment extends Fragment {
     RecyclerView eWalletHistoryRecyclerView;
     @BindView(R.id.eWalletFragment_tv_amount)
     TextView tvAmount;
+    @BindView(R.id.eWalletFragment_tv_accountNumberTxt)
+    TextView tvAccountNUmber;
 
     private List<EWalletHistoryList> eWalletHistoryLists = new ArrayList<>();
     private EWalletHistoryAdapter eWalletHistoryAdapter;
@@ -81,6 +83,7 @@ public class EWalletFragment extends Fragment {
 
         getAmount();
         getEWalletHistoryList();
+        tvAccountNUmber.setText(sessionManager.getUserId());
 
         return rootView;
     }

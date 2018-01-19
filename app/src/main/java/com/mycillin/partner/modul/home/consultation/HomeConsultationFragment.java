@@ -5,22 +5,27 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mycillin.partner.R;
-import com.mycillin.partner.modul.home.visit.HomeVisitDetailActivity;
+import com.mycillin.partner.modul.chat.ChatActivityConsultation;
+import com.mycillin.partner.modul.chat.firebaseGet.ModelResultFirebaseGet;
 import com.mycillin.partner.util.Configs;
 import com.mycillin.partner.util.DialogHelper;
+import com.mycillin.partner.util.PartnerAPI;
 import com.mycillin.partner.util.PatientManager;
 import com.mycillin.partner.util.ProgressBarHandler;
 import com.mycillin.partner.util.RecyclerTouchListener;
+import com.mycillin.partner.util.RestClient;
 import com.mycillin.partner.util.SessionManager;
 
 import org.json.JSONArray;
@@ -110,21 +115,14 @@ public class HomeConsultationFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 HomeConsultationList list = homeConsultationLists.get(position);
-                patientManager.setPatientId(list.getPatientID());
-                patientManager.setPatientBookingId(list.getBookingID());
-                patientManager.setKeyPatientPhoto(list.getPatientPic());
-                patientManager.setPatientAddress(list.getAddress());
-                patientManager.setPatientLatitude(list.getPatientLatitude());
-                patientManager.setPatientLongitude(list.getPatientLongitude());
-                patientManager.setKeyPatientMobileNo(list.getPhoneNumber());
+                Intent intent = new Intent(getContext(), ChatActivityConsultation.class);
+                getFirebaseToken(list.getPatientID(), list.getPatientName());
+                intent.putExtra(ChatActivityConsultation.KEY_FLAG_CHAT_PATIENT_ID, list.getPatientID());
+                intent.putExtra(ChatActivityConsultation.KEY_FLAG_CHAT_PATIENT_NAME, list.getPatientName());
+                intent.putExtra(ChatActivityConsultation.KEY_FLAG_CHAT_USER_ID, sessionManager.getUserId());
+                intent.putExtra(ChatActivityConsultation.KEY_FLAG_CHAT_USER_NAME, sessionManager.getUserFullName());
+                intent.putExtra(ChatActivityConsultation.KEY_FLAG_CHAT_BOOKING_ID, list.getBookingID());
 
-                Intent intent = new Intent(getContext(), HomeVisitDetailActivity.class);
-                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
-                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
-                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_FEE, list.getPaymentMethod());
-                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TIME, list.getBookTime());
-                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_TYPE, list.getBookType());
-                intent.putExtra(HomeVisitDetailActivity.KEY_FLAG_PATIENT_PIC, list.getPatientPic());
                 startActivity(intent);
             }
 
@@ -134,6 +132,122 @@ public class HomeConsultationFragment extends Fragment {
             }
         }));
     }
+
+    private void getFirebaseToken(final String patientId, final String patientName) {
+        PartnerAPI partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
+        HashMap<String, String> data = new HashMap<>();
+        data.put("user_id", patientId);
+
+        partnerAPI.getFirebaseToken(sessionManager.getUserToken(), data).enqueue(new retrofit2.Callback<ModelResultFirebaseGet>() {
+            @Override
+            public void onResponse(@NonNull retrofit2.Call<ModelResultFirebaseGet> call, @NonNull retrofit2.Response<ModelResultFirebaseGet> response) {
+                if (response.isSuccessful()) {
+                    ModelResultFirebaseGet modelResultDataFirebaseGet = response.body();
+                    assert modelResultDataFirebaseGet != null;
+                    sendNotification(modelResultDataFirebaseGet.getResult().getData().get(0).getToken(), patientId, patientName);
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.errorBody().string());
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+                        Snackbar.make(getActivity().getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_SHORT).show();
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull retrofit2.Call<ModelResultFirebaseGet> call, @NonNull final Throwable t) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        DialogHelper.showDialog(mHandler, getActivity(), "Error", "Connection problem " + t.getMessage(), false);
+                    }
+                });
+            }
+        });
+    }
+
+    private void sendNotification(String token, String patientID, String patientName) {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, String> paramsNotif = new HashMap<>();
+        paramsNotif.put("body", "You Have New Chat");
+        paramsNotif.put("click_action", "CHAT");
+
+        Map<String, String> paramsData = new HashMap<>();
+        paramsData.put("CHAT_PATIENT_ID", patientID);
+        paramsData.put("CHAT_PATIENT_NAME", patientName);
+        paramsData.put("CHAT_USER_ID", sessionManager.getUserId());
+        paramsData.put("CHAT_USER_NAME", sessionManager.getUserFullName());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("notification", paramsNotif);
+        params.put("data", paramsData);
+        params.put("to", token);
+
+        JSONObject jsonObject = new JSONObject(params);
+        Log.d("#8#8#", "sendNotif: " + jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url("https://fcm.googleapis.com/fcm/send")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", "key=AAAAbynyk1I:APA91bENZXh3N4QC-HrUy4ApIVe8CnW3F0k5mG5OXdUMApskyFTKDYnjd6Pdwko-hqvkekZoH5KxtC-gyxu0-XoXcItm9PJYGw9zzrc5Wbzr6CY3FuaSvXb7MCYMNfmNEVmUWZA8SqB5")
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                String result = response.body().string();
+                Log.d("#8#8#", "onResponse: " + result);
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        if (jsonObject.has("result")) {
+                            boolean status = jsonObject.getJSONObject("result").getBoolean("status");
+                            if (status) {
+                                Log.d("#8#8#", "onResponse: SIP");
+                            } else {
+                                String message = jsonObject.getJSONObject("result").getString("message");
+                                Log.d("#8#8#", "onResponse: SIP" + message);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String message;
+                        if (jsonObject.has("result")) {
+                            message = jsonObject.getJSONObject("result").getString("message");
+                        } else {
+                            message = jsonObject.getString("message");
+                        }
+
+                        Log.d("#8#8#", "onResponse: gagal" + message);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
 
     public void getConsultationData(String flagFrom) {
         switch (flagFrom) {
@@ -341,5 +455,4 @@ public class HomeConsultationFragment extends Fragment {
             }
         });
     }
-
 }

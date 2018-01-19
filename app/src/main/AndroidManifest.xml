@@ -66,8 +66,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".modul.chat.ChatActivityConsultation">
+            <intent-filter>
+                <action android:name="CONSULTATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".modul.accountProfile.termsCondition.TermAndPrivacyPolicyActivity" />
-
         <activity android:name=".modul.account.RegisterActivity" />
         <activity android:name=".modul.accountProfile.UpdatePassActivity" />
         <activity android:name=".modul.searchResult.SearchResultActivity" />

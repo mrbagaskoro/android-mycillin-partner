@@ -170,10 +170,10 @@ public class ToDoInProgressFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                swipeRefreshLayout.setRefreshing(false);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         mProgressBarHandler.hide();
                     }
                 });
@@ -185,10 +185,10 @@ public class ToDoInProgressFragment extends Fragment {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
                         mProgressBarHandler.hide();
                     }
                 });
-                swipeRefreshLayout.setRefreshing(false);
                 final String result = response.body().string();
                 if (response.isSuccessful()) {
                     try {
