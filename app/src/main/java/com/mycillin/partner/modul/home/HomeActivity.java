@@ -574,8 +574,13 @@ public class HomeActivity extends AppCompatActivity implements LocationListener 
                 Timber.tag("JINX7").d("%s", isGPSEnabled);
             }
         }
-        sessionManager.setKeyUserLatitude(lokasi.getLatitude() + "");
-        sessionManager.setKeyUserLongitude(lokasi.getLongitude() + "");
+        try {
+            sessionManager.setKeyUserLatitude(lokasi.getLatitude() + "");
+            sessionManager.setKeyUserLongitude(lokasi.getLongitude() + "");
+        } catch (NullPointerException e) {
+            e.getMessage();
+        }
+
         return lokasi;
     }
 

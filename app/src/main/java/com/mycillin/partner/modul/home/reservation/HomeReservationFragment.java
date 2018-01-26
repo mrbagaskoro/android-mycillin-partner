@@ -86,13 +86,6 @@ public class HomeReservationFragment extends Fragment {
         homeReservationLists.clear();
 
         getHomeReservationList();
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         getReservationData(EXTRA_FLAG_FROM_NO_SWIPE);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -102,6 +95,8 @@ public class HomeReservationFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        return rootView;
     }
 
     public void getHomeReservationList() {
@@ -118,6 +113,7 @@ public class HomeReservationFragment extends Fragment {
                 patientManager.setPatientLatitude(list.getPatientLatitude());
                 patientManager.setPatientLongitude(list.getPatientLongitude());
                 patientManager.setKeyPatientMobileNo(list.getPhoneNumber());
+                patientManager.setKeyPatientPhoto(list.getPatientPic());
 
                 Intent intent = new Intent(getContext(), HomeReservationDetailActivity.class);
                 intent.putExtra(HomeReservationDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());

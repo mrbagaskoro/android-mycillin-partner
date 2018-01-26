@@ -33,9 +33,9 @@ public class RequesterProfileActivity extends AppCompatActivity {
 
         tvName.setText(DataHelper.name);
         tvGender.setText(DataHelper.gender);
-        tvAge.setText(DataHelper.age);
-        tvHeight.setText(DataHelper.height);
-        tvWeight.setText(DataHelper.weight);
+        tvAge.setText(DataHelper.age + " Years Old");
+        tvHeight.setText(DataHelper.height + " Cm");
+        tvWeight.setText(DataHelper.weight + " Kg");
         tvBloodType.setText(DataHelper.bloodType);
     }
 }

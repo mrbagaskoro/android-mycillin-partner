@@ -104,12 +104,6 @@ public class HomeConsultationFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getConsultationData(EXTRA_FLAG_FROM_NO_SWIPE);
-    }
-
     public void getHomeConsultationList() {
         homeConsultationRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), homeConsultationRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -193,7 +187,7 @@ public class HomeConsultationFragment extends Fragment {
         params.put("to", token);
 
         JSONObject jsonObject = new JSONObject(params);
-        Log.d("#8#8#", "sendNotif: " + jsonObject);
+        Timber.tag("#8#8#").d("sendNotif: %s", jsonObject);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
@@ -213,17 +207,17 @@ public class HomeConsultationFragment extends Fragment {
             @Override
             public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 String result = response.body().string();
-                Log.d("#8#8#", "onResponse: " + result);
+                Timber.tag("#8#8#").d("onResponse: %s", result);
                 if (response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         if (jsonObject.has("result")) {
                             boolean status = jsonObject.getJSONObject("result").getBoolean("status");
                             if (status) {
-                                Log.d("#8#8#", "onResponse: SIP");
+                                Timber.tag("#8#8#").d("onResponse: SIP");
                             } else {
                                 String message = jsonObject.getJSONObject("result").getString("message");
-                                Log.d("#8#8#", "onResponse: SIP" + message);
+                                Timber.tag("#8#8#").d("onResponse: SIP%s", message);
                             }
                         }
                     } catch (JSONException e) {
@@ -247,7 +241,6 @@ public class HomeConsultationFragment extends Fragment {
             }
         });
     }
-
 
     public void getConsultationData(String flagFrom) {
         switch (flagFrom) {

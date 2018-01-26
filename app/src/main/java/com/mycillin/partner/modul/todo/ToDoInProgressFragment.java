@@ -112,6 +112,7 @@ public class ToDoInProgressFragment extends Fragment {
                 patientManager.setKeyPatientPhoto(list.getPatientPic());
                 patientManager.setPatientAddress(list.getAddress());
                 patientManager.setKeyPatientMobileNo(list.getPhoneNumber());
+                patientManager.setKeyPatientPhoto(list.getPatientPic());
 
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_NAME, list.getPatientName());
                 intent.putExtra(ToDoInProgressDetailActivity.KEY_FLAG_PATIENT_DATE, list.getBookDate());
@@ -209,6 +210,7 @@ public class ToDoInProgressFragment extends Fragment {
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
                                 final String priceAmount = data.getJSONObject(i).optString("price_amount").trim();
+                                final String paymentMethod = data.getJSONObject(i).optString("pymt_methode_desc").trim();
 
                                 SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                                 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
@@ -222,7 +224,7 @@ public class ToDoInProgressFragment extends Fragment {
                                     orderDates = "";
                                 }
 
-                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, bookingID, priceAmount);
+                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, bookingID, priceAmount, paymentMethod);
                             }
                         }
                     } catch (JSONException e) {
@@ -235,7 +237,7 @@ public class ToDoInProgressFragment extends Fragment {
         });
     }
 
-    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto, final String bookingID, final String priceAmount) {
+    private void getDetailUser(final String userID, final String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto, final String bookingID, final String priceAmount, final String paymentMethod) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -341,7 +343,7 @@ public class ToDoInProgressFragment extends Fragment {
                                             v_priceAmount = "0";
                                         }
 
-                                        toDoInProgressLists.add(new ToDoInProgressList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID, bookingID, mobileNo, v_priceAmount));
+                                        toDoInProgressLists.add(new ToDoInProgressList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, age_ + "", height, weight, bloodType, gender, userID, relationID, bookingID, mobileNo, v_priceAmount + " - " + paymentMethod));
                                         toDoInProgressAdapter = new ToDoInProgressAdapter(toDoInProgressLists, ToDoInProgressFragment.this);
                                         toDoInProgressRecyclerView.setAdapter(toDoInProgressAdapter);
                                         toDoInProgressAdapter.notifyDataSetChanged();
@@ -355,11 +357,5 @@ public class ToDoInProgressFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getTodoData(EXTRA_FLAG_FROM_NO_SWIPE);
     }
 }

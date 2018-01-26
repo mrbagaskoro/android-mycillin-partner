@@ -83,6 +83,7 @@ public class HomeVisitFragment extends Fragment {
         homeVisitRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         homeVisitRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        getHomeVisitList();
         homeVisitLists.clear();
 
         getVisitData(EXTRA_FLAG_FROM_NO_SWIPE);
@@ -95,12 +96,6 @@ public class HomeVisitFragment extends Fragment {
         });
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getHomeVisitList();
     }
 
     public void getHomeVisitList() {

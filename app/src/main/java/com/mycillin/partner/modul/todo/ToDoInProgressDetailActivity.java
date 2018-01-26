@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.todo.completion.CompleteRequestActivity;
 import com.mycillin.partner.modul.todo.completion.medicalRecord.MedicalRecordActivity;
@@ -20,6 +23,7 @@ import com.mycillin.partner.util.PatientManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ToDoInProgressDetailActivity extends AppCompatActivity {
 
@@ -52,6 +56,8 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
     Button completeButton;
     @BindView(R.id.toDoInProgressDetailActivity_tv_bookLocation)
     TextView bookLocation;
+    @BindView(R.id.toDoInProgressDetailActivity_iv_patientAvatar)
+    CircleImageView circleImageView;
 
     private PatientManager patientManager;
     private String name;
@@ -103,6 +109,20 @@ public class ToDoInProgressDetailActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        if (!patientManager.getKeyPatientPhoto().equals("")) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+
+            Glide.with(ToDoInProgressDetailActivity.this)
+                    .load(patientManager.getKeyPatientPhoto())
+                    .apply(requestOptions)
+                    .into(circleImageView);
+        }
     }
 
     @Override

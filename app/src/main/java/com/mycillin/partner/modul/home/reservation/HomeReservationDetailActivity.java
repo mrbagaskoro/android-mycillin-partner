@@ -19,6 +19,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.mycillin.partner.R;
 import com.mycillin.partner.modul.chat.ChatActivity;
 import com.mycillin.partner.modul.chat.firebaseGet.ModelResultFirebaseGet;
@@ -43,6 +46,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -50,6 +54,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class HomeReservationDetailActivity extends AppCompatActivity {
 
@@ -81,6 +86,8 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
     TextView bookLocation;
     @BindView(R.id.homeReservationDetailActivity_tv_bookFee)
     TextView bookFee;
+    @BindView(R.id.homeReservationDetailActivity_iv_patientAvatar)
+    CircleImageView circleImageView;
 
     private PartnerAPI partnerAPI;
     private Handler mHandler;
@@ -115,6 +122,78 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
         bookFee.setText(getIntent().getStringExtra(KEY_FLAG_PATIENT_FEE));
 
         getFirebaseToken(patientManager.getPatientId(), patientNames);
+
+        if (!patientManager.getKeyPatientPhoto().equals("")) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fitCenter()
+                    .circleCrop();
+
+            Glide.with(HomeReservationDetailActivity.this)
+                    .load(patientManager.getKeyPatientPhoto())
+                    .apply(requestOptions)
+                    .into(circleImageView);
+        }
+    }
+
+    private void rejectRequestor(String kodeReject) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mProgressBarHandler.show();
+            }
+        });
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("user_id", sessionManager.getUserId());
+        data.put("booking_id", patientManager.getPatientBookingId());
+        data.put("cancel_reason_id", kodeReject);
+
+        JSONObject jsonObject = new JSONObject(data);
+
+        Timber.tag("JINX").d("saveAddress: OBJEK %s", jsonObject);
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .url(Configs.URL_REST_CLIENT + "partner_cancel_transaction/")
+                .post(body)
+                .addHeader("content-type", "application/json; charset=utf-8")
+                .addHeader("Authorization", sessionManager.getUserToken())
+                .build();
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                    }
+                });
+                DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Warning", "Please Try Again : " + e.getMessage(), false);
+            }
+
+            @Override
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull final okhttp3.Response response) throws IOException {
+                @SuppressWarnings("ConstantConditions") final String result = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBarHandler.hide();
+                        if (response.isSuccessful()) {
+                            DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Status", "Rejected", true);
+
+                        } else {
+                            DialogHelper.showDialog(mHandler, HomeReservationDetailActivity.this, "Warning", "Please Try Again : " + result, false);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @OnClick(R.id.homeReservationDetailActivity_bt_call)
@@ -317,7 +396,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     assert modelRestCancelReason != null;
                     for (ModelRestCancelReasonData modelRestCancelReasonData : modelRestCancelReason.getResult().getData()) {
-                        cancelReasonList.add(modelRestCancelReasonData.getCancelReasonDesc());
+                        cancelReasonList.add(modelRestCancelReasonData.getCancelReasonId() + " - " + modelRestCancelReasonData.getCancelReasonDesc());
                     }
                     cancelReasonDialog(cancelReasonList);
                 } else {
@@ -353,7 +432,7 @@ public class HomeReservationDetailActivity extends AppCompatActivity {
         builder.setPositiveButton("Ya",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(HomeReservationDetailActivity.this, "Berhasil " + batal[0], Toast.LENGTH_SHORT).show();
+                        rejectRequestor(batal[0].split(" - ")[0]);
                     }
                 });
         builder.setNegativeButton("Tidak",

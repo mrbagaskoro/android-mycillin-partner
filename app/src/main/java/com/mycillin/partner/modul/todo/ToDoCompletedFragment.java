@@ -26,9 +26,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -160,18 +165,36 @@ public class ToDoCompletedFragment extends Fragment {
                                 final String profilePhoto = data.getJSONObject(i).optString("profile_photo").trim();
                                 final String dateBookingS = timeBooking.split(" ")[0];
                                 final String timeBookingS = timeBooking.split(" ")[1];
-                                getDetailUser(userID, relationID, serviceType, dateBookingS, timeBookingS, profilePhoto);
+                                final String priceAmount = data.getJSONObject(i).optString("price_amount").trim();
+                                final String paymentMethod = data.getJSONObject(i).optString("pymt_methode_desc").trim();
+
+                                SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+
+                                Date orderDate_;
+                                final String orderDates;
+                                if (!dateBookingS.equals("null") && !dateBookingS.isEmpty()) {
+                                    orderDate_ = dateParse.parse(dateBookingS);
+                                    orderDates = orderDate_ != null ? dateFormatter.format(orderDate_) : "";
+                                } else {
+                                    orderDates = "";
+                                }
+
+                                getDetailUser(userID, relationID, serviceType, orderDates, timeBookingS, profilePhoto, priceAmount, paymentMethod);
+
                             }
                         }
                     } catch (JSONException e) {
                         Timber.tag("###").d("onResponseror: %s", e.getMessage());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         });
     }
 
-    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto) {
+    private void getDetailUser(String userID, String relationID, final String serviceTypeID, final String dateBookingS, final String timeBookingS, final String profilePhoto, final String paymentAmount, final String paymentMethod) {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         Map<String, Object> data = new HashMap<>();
         data.put("user_id", userID);
@@ -253,7 +276,16 @@ public class ToDoCompletedFragment extends Fragment {
                                                 serviceType = "Servis Type";
                                                 break;
                                         }
-                                        toDoCompletedLists.add(new ToDoCompletedList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address));
+
+                                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+                                        String v_priceAmount;
+                                        if (!paymentAmount.equals("null")) {
+                                            v_priceAmount = numberFormat.format(Double.parseDouble(paymentAmount.isEmpty() ? "0" : paymentAmount));
+                                        } else {
+                                            v_priceAmount = "0";
+                                        }
+
+                                        toDoCompletedLists.add(new ToDoCompletedList(profilePhoto, fullName, serviceType, dateBookingS, timeBookingS + " WIB", address, v_priceAmount + " - " + paymentMethod));
                                         toDoCompletedAdapter = new ToDoCompletedAdapter(toDoCompletedLists, ToDoCompletedFragment.this);
                                         toDoCompletedRecyclerView.setAdapter(toDoCompletedAdapter);
                                         toDoCompletedAdapter.notifyDataSetChanged();

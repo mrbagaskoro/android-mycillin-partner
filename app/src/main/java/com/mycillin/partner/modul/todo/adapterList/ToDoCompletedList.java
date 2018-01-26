@@ -7,6 +7,17 @@ public class ToDoCompletedList {
     private String bookDate;
     private String bookTime;
     private String address;
+    private String paymentMethod;
+
+    public ToDoCompletedList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address, String paymentMethod) {
+        this.patientPic = patientPic;
+        this.patientName = patientName;
+        this.bookType = bookType;
+        this.bookDate = bookDate;
+        this.bookTime = bookTime;
+        this.address = address;
+        this.paymentMethod = paymentMethod;
+    }
 
     public String getPatientPic() {
         return patientPic;
@@ -56,12 +67,11 @@ public class ToDoCompletedList {
         this.address = address;
     }
 
-    public ToDoCompletedList(String patientPic, String patientName, String bookType, String bookDate, String bookTime, String address) {
-        this.patientPic = patientPic;
-        this.patientName = patientName;
-        this.bookType = bookType;
-        this.bookDate = bookDate;
-        this.bookTime = bookTime;
-        this.address = address;
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
