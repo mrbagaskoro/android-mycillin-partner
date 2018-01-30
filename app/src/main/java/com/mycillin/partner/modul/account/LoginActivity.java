@@ -98,8 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         partnerAPI = RestClient.getPartnerRestInterfaceNoToken();
         session = new SessionManager(getApplicationContext());
         MENU_FLAG = MENU_FLAG_LANDING;
-        edtxEmail.setText("tommi.asmara3@gmail.com");
-        edtxPassword.setText("rahasia");
 
         mHandler = new Handler(Looper.getMainLooper());
         mProgressBarHandler = new ProgressBarHandler(LoginActivity.this);
