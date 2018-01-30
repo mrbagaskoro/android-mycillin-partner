@@ -23,3 +23,35 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+#OkHttp
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *; }
+
+#Picasso
+-dontwarn com.squareup.picasso.**
+
+# Retrofit
+-keep class com.squareup.retrofit2.**
+-keep class okio.**
+-keep class retrofit2.**
+-keep class android.databinding.**
+-keep class org.apache.http.**
+-keep class android.net.http.**
+-dontwarn com.squareup.retrofit2.**
+-dontwarn okio.**
+-dontwarn retrofit2.**
+-dontwarn android.databinding.**
+-keepattributes *Annotation*
+
+# Crashlytics
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

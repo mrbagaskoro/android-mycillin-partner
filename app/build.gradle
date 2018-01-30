@@ -27,10 +27,24 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+    signingConfigs {
+        release {
+            // File keystore tidak di attach pada project untuk antisipasi reverse engineering apk
+            storeFile file("D:/16003041/Work/keystore-mycillin-partner.jks")
+            storePassword '@Mycillin_2018'
+            keyAlias 'keymcpartner'
+            keyPassword '@Mycillin_2018'
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable true
+        }
+        debug {
+            debuggable true
         }
     }
 }
@@ -79,7 +93,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.6.0'
     apply plugin: 'com.google.gms.google-services'
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-        transitive = true;
+        transitive = true
     }
     compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.6@aar') {
         transitive = true
