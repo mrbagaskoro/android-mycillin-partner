@@ -212,19 +212,16 @@ public class EWalletFragment extends Fragment {
                                 final String transactionTipeId = data.getJSONObject(i).optString("transaction_type_id").trim();
                                 final String refNo = data.getJSONObject(i).optString("ref_no").trim();
                                 final String amount = data.getJSONObject(i).optString("amount").trim();
+                                final String transactionDesc = data.getJSONObject(i).optString("transaction_desc").trim();
 
                                 boolean isTopUp;
-                                switch (transactionTipeId) {
-                                    case "TOP UP":
-                                        isTopUp = true;
-                                        break;
-                                    default:
-                                        isTopUp = false;
-                                        break;
-                                }
+
+                                isTopUp = !amount.contains("-");
+
+                                String finalAmount = amount.replace("-", "");
 
                                 NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
-                                final String formatAmount = numberFormat.format(Double.parseDouble(amount.isEmpty() ? "0" : amount));
+                                final String formatAmount = numberFormat.format(Double.parseDouble(finalAmount.isEmpty() ? "0" : finalAmount));
                                 SimpleDateFormat dateParse = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                                 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
                                 Date tglTrx_ = null;
@@ -237,7 +234,7 @@ public class EWalletFragment extends Fragment {
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        eWalletHistoryLists.add(new EWalletHistoryList("Apotek Antar", formatAmount, finalDateTrx, finalIsTopUp));
+                                        eWalletHistoryLists.add(new EWalletHistoryList(transactionDesc, formatAmount, finalDateTrx, finalIsTopUp));
                                         eWalletHistoryAdapter = new EWalletHistoryAdapter(eWalletHistoryLists);
                                         eWalletHistoryRecyclerView.setAdapter(eWalletHistoryAdapter);
                                         eWalletHistoryAdapter.notifyDataSetChanged();
