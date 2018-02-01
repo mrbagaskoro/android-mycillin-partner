@@ -202,4 +202,10 @@
     <string name="blood_press_lower">Blood Press Lower</string>
     <string name="blood_sugar">Blood Sugar</string>
     <string name="cholesterol_level">Cholesterol Level</string>
+    <string name="result_list">%1$d Data Ditemukan</string>
+    <string name="clear">Hapus</string>
+    <string name="loginActivity_passwordMatchWarning">Konfirmasi Password tidak sesuai !</string>
+    <string name="loginActivity_passwordWarning">Password wajib diisi !</string>
+    <string name="loginActivity_passwordConfirmationWarning">Konfirmasi Password wajib diisi !</string>
+    <string name="accountDetailActivity_IdentityInformationDesc">Informasi Identitas</string>
 </resources>

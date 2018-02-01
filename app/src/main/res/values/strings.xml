@@ -52,7 +52,7 @@
     <string name="eWalletFragment_virtualAccNumber">1019270000001</string>
     <string name="rowEWalletHistoryList_amount">Rp 175.000</string>
     <string name="rowEWalletHistoryList_date">25 Maret 2017</string>
-    <string name="row_date">25 Maret 2017, 10:00 PM</string>
+    <string name="row_date" translatable="false">25 Maret 2017, 10:00 PM</string>
     <string name="accountActivity_manageAccountTitle">Manage Account</string>
     <string name="accountActivity_changePasswordTitle">Change Password</string>
     <string name="accountActivity_signOutTitle">Sign Out</string>
@@ -94,7 +94,7 @@
     <string name="rowVisitList_bookTime">15.00 WIB</string>
     <string name="homeVisitDetailActivity_addressInfo">Jl.Asem No.32, Sawangan, Depok</string>
     <string name="homeVisitDetailActivity_feeAmount">Rp 200.000</string>
-    <string name="row_payment">Rp 200.000 - CASH</string>
+    <string name="row_payment" translatable="false">Rp 200.000 - CASH</string>
     <string name="homeVisitDetail_title">Visit Request Detail</string>
     <string name="rowReservationList_bookType">Reservation Request</string>
     <string name="homeReservationDetailActivity_scheduleTitle">Schedule</string>
@@ -191,11 +191,11 @@
     <string name="task">Task</string>
     <string name="new_password">New Password</string>
     <string name="find">Find</string>
-    <string name="result_list">%1$d Finded Entry</string>
+    <string name="result_list">%1$d Entry Found</string>
     <string name="clear">Clear</string>
-    <string name="itemConcat">%1$s - %2$s</string>
-    <string name="itemConcat2">%1$s %2$s</string>
-    <string name="itemConcat3">%1$s, %2$s</string>
+    <string name="itemConcat" translatable="false">%1$s - %2$s</string>
+    <string name="itemConcat2" translatable="false">%1$s %2$s</string>
+    <string name="itemConcat3" translatable="false">%1$s, %2$s</string>
     <string name="default_notification_channel_id" translatable="false">default_channel_notification</string>
     <string name="available">Availability</string>
     <string name="aboutFragment_chooseEmailMessage">Choose an Email client :</string>
