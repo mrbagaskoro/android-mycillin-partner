@@ -309,6 +309,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
                 });
                 ModelRestCancelReason modelRestCancelReason = response.body();
                 if (response.isSuccessful()) {
+                    cancelReasonList.clear();
                     assert modelRestCancelReason != null;
                     for (ModelRestCancelReasonData modelRestCancelReasonData : modelRestCancelReason.getResult().getData()) {
                         cancelReasonList.add(modelRestCancelReasonData.getCancelReasonId() + " - " + modelRestCancelReasonData.getCancelReasonDesc());
@@ -343,7 +344,7 @@ public class HomeVisitDetailActivity extends AppCompatActivity {
         final String[] items = cancelReasonList.toArray(new String[cancelReasonList.size()]);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeVisitDetailActivity.this);
-        builder.setTitle("Alasan pembatalan survey");
+        builder.setTitle("Alasan pembatalan request");
         builder.setIcon(R.mipmap.ic_launcher);
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
