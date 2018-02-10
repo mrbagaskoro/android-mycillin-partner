@@ -47,6 +47,23 @@ android {
             debuggable true
         }
     }
+    flavorDimensions "mcpartner"
+    productFlavors {
+        dev {
+            //applicationIdSuffix ".dev"
+            buildConfigField("String", "API_URL", "\"http://mycillin.com/dev1/api/\"")
+            resValue "string", "app_name", "devmycillinpartner"
+            dimension "mcpartner"
+            versionNameSuffix "-DEV"
+        }
+        prd {
+            //applicationIdSuffix ".prd"
+            buildConfigField("String", "API_URL", "\"http://mycillin.com/services/api/\"")
+            resValue "string", "app_name", "MyCillin Partner"
+            dimension "mcpartner"
+            versionNameSuffix ""
+        }
+    }
 }
 
 dependencies {

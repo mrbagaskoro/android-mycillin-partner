@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">MyCillin Partner</string>
     <string name="permission_desc">In order to use MyCillin, you have to allow permissions on your Android device.</string>
     <string name="permission_rationale_title">This permission needed</string>
     <string name="permission_rationale_message">All permissions needed to access all features</string>

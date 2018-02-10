@@ -176,7 +176,6 @@
         <item>Penanganan Medis</item>
         <item>Resep Obat</item>
     </string-array>
-    <string name="app_name">MyCillin Partner</string>
     <string name="toDoInProgressDetailActivity_bt_completeBtn">SELESAIKAN REQUEST</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
