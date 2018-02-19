@@ -55,3 +55,8 @@
 # Crashlytics
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
+
+# BottomNavigationMenuView
+-keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+    boolean mShiftingMode;
+}
